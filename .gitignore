@@ -3,6 +3,10 @@ __pycache__/
 *.py[codz]
 *$py.class
 
+lag-Llama/
+lightning_logs/
+lightning_logs_lag_llama/
+
 # C extensions
 *.so
 
