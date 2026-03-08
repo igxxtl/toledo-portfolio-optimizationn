@@ -1,0 +1,13 @@
+numpy>=1.20
+openai>=1.0
+python-dotenv>=1.0
+
+# news_scrapping.py (notícias B3)
+requests>=2.28
+beautifulsoup4>=4.11
+lxml>=4.9
+trafilatura>=1.6
+readability-lxml>=0.8
+
+# Opcional: busca via Tavily (como no main.py). Defina TAVILY_API_KEY.
+# tavily-python>=0.3
