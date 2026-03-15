@@ -43,7 +43,7 @@ TICKER = "ABEV3"
 PREDICTION_LENGTH = 7
 PERIOD_START = "202506"  # yyyymm
 PERIOD_END = "202512"    # yyyymm
-ALPHA = 0.75
+ALPHA = 0.50
 B3_SESSION_HOURS = set(range(13, 20))  # 13h ... 19h => 7 barras horárias
 
 
@@ -202,7 +202,7 @@ def walk_forward_predict_7h(
         forecast_it, _ = make_evaluation_predictions(
             dataset=dataset_loop,
             predictor=predictor,
-            num_samples=10,
+            num_samples=50,
         )
         forecast = list(forecast_it)[0]
 
@@ -238,7 +238,7 @@ def walk_forward_predict_7h(
         )
 
     out = pd.DataFrame(results).sort_values("view_date").reset_index(drop=True)
-    out["ret_scale"] = out["ret_7h_real"].abs().rolling(20, min_periods=5).mean().shift(1)
+    out["ret_scale"] = out["ret_7h_real"].abs().rolling(14, min_periods=5).mean().shift(1)
     fallback = out["ret_7h_real"].abs().median()
     if not np.isfinite(fallback) or fallback == 0:
         fallback = 0.005
