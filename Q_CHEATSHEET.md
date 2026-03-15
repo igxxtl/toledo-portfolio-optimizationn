@@ -23,7 +23,7 @@ O periodo do teste esta configurado no proprio arquivo:
 O script respeita a logica de pregão da B3:
 
 - somente dias uteis (`segunda` a `sexta`)
-- somente barras horarias de `13:00` a `19:00`
+- somente barras horarias de `13:00` a `19:00` (lembrando que o fuso do BR é GMT -3H)
 - total de `7` barras por dia (equivalente ao horizonte de previsao)
 
 Dias incompletos (sem as 7 barras esperadas) sao ignorados no walk-forward.
