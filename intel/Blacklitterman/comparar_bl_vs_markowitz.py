@@ -17,76 +17,55 @@ Saidas:
 """
 from __future__ import annotations
 
-from pathlib import Path
+import sys
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-BL_DIR = Path(__file__).resolve().parent
+try:
+    from .config import (
+        EXECUTION_LAG_DAYS,
+        INITIAL_CAPITAL_BRL,
+        MAX_WEIGHT_PER_ASSET,
+        OUT_MKZ_COMP,
+        OUT_MKZ_PLOT,
+        OUT_MKZ_SUMMARY,
+        OUT_MKZ_W_DAILY,
+        OUT_MKZ_W_MONTHLY,
+        OUT_MKZ_W_WEEKLY,
+        OUT_GAIN_SERIES_DAILY,
+        OUT_GAIN_SERIES_MONTHLY,
+        OUT_GAIN_SERIES_WEEKLY,
+        OUT_Q_LONG,
+        SELIC_ANNUAL,
+    )
+    from .weights import long_only_capped_weights
+    from .xgb_views import normalize_return_columns
+except ImportError:
+    from config import (
+        EXECUTION_LAG_DAYS,
+        INITIAL_CAPITAL_BRL,
+        MAX_WEIGHT_PER_ASSET,
+        OUT_MKZ_COMP,
+        OUT_MKZ_PLOT,
+        OUT_MKZ_SUMMARY,
+        OUT_MKZ_W_DAILY,
+        OUT_MKZ_W_MONTHLY,
+        OUT_MKZ_W_WEEKLY,
+        OUT_GAIN_SERIES_DAILY,
+        OUT_GAIN_SERIES_MONTHLY,
+        OUT_GAIN_SERIES_WEEKLY,
+        OUT_Q_LONG,
+        SELIC_ANNUAL,
+    )
+    from weights import long_only_capped_weights
+    from xgb_views import normalize_return_columns
 
-Q_LONG_PATH = BL_DIR / "bl_hibrido_q_long.csv"
-BL_DAILY_PATH = BL_DIR / "bl_hibrido_ganho_series_daily.csv"
-BL_WEEKLY_PATH = BL_DIR / "bl_hibrido_ganho_series_weekly.csv"
-BL_MONTHLY_PATH = BL_DIR / "bl_hibrido_ganho_series_monthly.csv"
-
-OUT_COMP = BL_DIR / "bl_vs_markowitz_comparativo.csv"
-OUT_SUMMARY = BL_DIR / "bl_vs_markowitz_resumo.csv"
-OUT_PLOT = BL_DIR / "bl_vs_markowitz_plot.png"
-OUT_W_MKV_DAILY = BL_DIR / "markowitz_weights_daily.csv"
-OUT_W_MKV_WEEKLY = BL_DIR / "markowitz_weights_weekly.csv"
-OUT_W_MKV_MONTHLY = BL_DIR / "markowitz_weights_monthly.csv"
-
-INITIAL_CAPITAL_BRL = 100_000.0
-SELIC_ANNUAL = 0.15
 ROLLING_WINDOW = 60
 MIN_OBS = 40
-EXECUTION_LAG_DAYS = 1
-MAX_WEIGHT_PER_ASSET = 0.35
 RIDGE = 1e-6
 MODES = ("daily", "weekly", "monthly")
-
-
-def _long_only_capped_weights(raw_w: np.ndarray, max_w: float) -> np.ndarray:
-    n = len(raw_w)
-    if n == 0:
-        return raw_w
-    if max_w <= 0 or max_w * n < 1.0:
-        raise ValueError(f"MAX_WEIGHT_PER_ASSET={max_w} invalido para {n} ativos.")
-
-    scores = np.maximum(raw_w.astype(float), 0.0)
-    if (not np.isfinite(scores).all()) or float(scores.sum()) <= 1e-12:
-        return np.full(n, 1.0 / n, dtype=float)
-
-    w = np.zeros(n, dtype=float)
-    remaining = np.ones(n, dtype=bool)
-    budget = 1.0
-
-    while budget > 1e-12 and np.any(remaining):
-        idx = np.where(remaining)[0]
-        s = scores[idx]
-        s_sum = float(s.sum())
-        if s_sum <= 1e-12:
-            w[idx] += budget / len(idx)
-            break
-
-        proposal = budget * (s / s_sum)
-        saturated = proposal >= max_w - 1e-12
-        if not np.any(saturated):
-            w[idx] += proposal
-            break
-
-        sat_idx = idx[saturated]
-        for j in sat_idx:
-            alloc = max_w - w[j]
-            if alloc > 0:
-                w[j] += alloc
-                budget -= alloc
-            remaining[j] = False
-
-    w = np.clip(w, 0.0, max_w)
-    s = float(w.sum())
-    return (w / s) if s > 1e-12 else np.full(n, 1.0 / n, dtype=float)
 
 
 def _mode_period_key(dates: pd.Series, mode: str) -> pd.Series:
@@ -100,13 +79,13 @@ def _mode_period_key(dates: pd.Series, mode: str) -> pd.Series:
 
 
 def load_returns_matrix() -> pd.DataFrame:
-    q = pd.read_csv(Q_LONG_PATH)
+    q = normalize_return_columns(pd.read_csv(OUT_Q_LONG))
     q["view_date"] = pd.to_datetime(q["view_date"], errors="coerce")
     q = q.dropna(subset=["view_date"]).copy()
     q["ticker_sa"] = q["ticker"].astype(str).str.upper() + ".SA"
-    q["ret_7h_real"] = pd.to_numeric(q["ret_7h_real"], errors="coerce")
-    q = q.dropna(subset=["ret_7h_real"])
-    pivot = q.pivot(index="view_date", columns="ticker_sa", values="ret_7h_real").sort_index()
+    q["ret_real"] = pd.to_numeric(q["ret_real"], errors="coerce")
+    q = q.dropna(subset=["ret_real"])
+    pivot = q.pivot(index="view_date", columns="ticker_sa", values="ret_real").sort_index()
     pivot = pivot.dropna(how="any")
     if pivot.empty:
         raise ValueError("Nao foi possivel montar matriz de retornos para Markowitz.")
@@ -135,7 +114,7 @@ def compute_markowitz_curve(returns_mat: pd.DataFrame, mode: str) -> tuple[pd.Da
                 raw_w = np.linalg.pinv(sigma) @ mu
                 if np.isfinite(raw_w).all() and abs(float(raw_w.sum())) > 1e-12:
                     raw_w = raw_w / float(raw_w.sum())
-                current_w = _long_only_capped_weights(raw_w, MAX_WEIGHT_PER_ASSET)
+                current_w = long_only_capped_weights(raw_w, MAX_WEIGHT_PER_ASSET)
         weights[i] = current_w
 
     w_exec = np.roll(weights, shift=EXECUTION_LAG_DAYS, axis=0)
@@ -173,9 +152,9 @@ def compute_markowitz_curve(returns_mat: pd.DataFrame, mode: str) -> tuple[pd.Da
 
 def load_bl_curve(mode: str) -> pd.DataFrame:
     path_map = {
-        "daily": BL_DAILY_PATH,
-        "weekly": BL_WEEKLY_PATH,
-        "monthly": BL_MONTHLY_PATH,
+        "daily": OUT_GAIN_SERIES_DAILY,
+        "weekly": OUT_GAIN_SERIES_WEEKLY,
+        "monthly": OUT_GAIN_SERIES_MONTHLY,
     }
     path = path_map[mode]
     if not path.exists():
@@ -279,31 +258,31 @@ def main() -> None:
     comp = pd.concat(parts, axis=0, ignore_index=True).sort_values(["mode", "view_date"]).reset_index(drop=True)
     comp_out = comp.copy()
     comp_out["view_date"] = pd.to_datetime(comp_out["view_date"]).dt.strftime("%Y-%m-%d")
-    comp_out.to_csv(OUT_COMP, index=False)
+    comp_out.to_csv(OUT_MKZ_COMP, index=False)
 
     summary = summarize(comp)
-    summary.to_csv(OUT_SUMMARY, index=False)
-    plot_comparison(comp, OUT_PLOT)
+    summary.to_csv(OUT_MKZ_SUMMARY, index=False)
+    plot_comparison(comp, OUT_MKZ_PLOT)
 
     w_all = pd.concat(weights_parts, axis=0, ignore_index=True).sort_values(["mode", "view_date"]).reset_index(drop=True)
     w_daily = w_all[w_all["mode"] == "daily"].copy()
     w_weekly = w_all[w_all["mode"] == "weekly"].copy()
     w_monthly = w_all[w_all["mode"] == "monthly"].copy()
     for df, path in (
-        (w_daily, OUT_W_MKV_DAILY),
-        (w_weekly, OUT_W_MKV_WEEKLY),
-        (w_monthly, OUT_W_MKV_MONTHLY),
+        (w_daily, OUT_MKZ_W_DAILY),
+        (w_weekly, OUT_MKZ_W_WEEKLY),
+        (w_monthly, OUT_MKZ_W_MONTHLY),
     ):
         out_df = df.copy()
         out_df["view_date"] = pd.to_datetime(out_df["view_date"]).dt.strftime("%Y-%m-%d")
         out_df.to_csv(path, index=False)
 
-    print(f"Comparativo salvo em: {OUT_COMP}")
-    print(f"Resumo salvo em: {OUT_SUMMARY}")
-    print(f"Grafico salvo em: {OUT_PLOT}")
-    print(f"Pesos Markowitz daily: {OUT_W_MKV_DAILY}")
-    print(f"Pesos Markowitz weekly: {OUT_W_MKV_WEEKLY}")
-    print(f"Pesos Markowitz monthly: {OUT_W_MKV_MONTHLY}")
+    print(f"Comparativo salvo em: {OUT_MKZ_COMP}")
+    print(f"Resumo salvo em: {OUT_MKZ_SUMMARY}")
+    print(f"Gráfico salvo em: {OUT_MKZ_PLOT}")
+    print(f"Pesos Markowitz daily: {OUT_MKZ_W_DAILY}")
+    print(f"Pesos Markowitz weekly: {OUT_MKZ_W_WEEKLY}")
+    print(f"Pesos Markowitz monthly: {OUT_MKZ_W_MONTHLY}")
 
 
 if __name__ == "__main__":

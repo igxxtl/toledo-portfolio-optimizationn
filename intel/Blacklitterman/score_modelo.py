@@ -16,37 +16,61 @@ Saidas:
 """
 from __future__ import annotations
 
-from pathlib import Path
+import sys
 
 import numpy as np
 import pandas as pd
 
-BL_DIR = Path(__file__).resolve().parent
+try:
+    from .config import (
+        INITIAL_CAPITAL_BRL,
+        OUT_GAIN_SERIES_DAILY,
+        OUT_GAIN_SERIES_MONTHLY,
+        OUT_GAIN_SERIES_WEEKLY,
+        OUT_POSTERIOR_W,
+        OUT_POSTERIOR_W_CONTROLLED,
+        OUT_POSTERIOR_W_CTRL_DAILY,
+        OUT_POSTERIOR_W_CTRL_MONTHLY,
+        OUT_POSTERIOR_W_CTRL_WEEKLY,
+        OUT_Q_LONG,
+        OUT_SCORE_MONTHLY,
+        OUT_SCORE_PRED_METRICS,
+        OUT_SCORE_PRED_MONTH,
+        OUT_SCORE_PRED_TICKER,
+        OUT_SCORE_REBALANCE,
+        OUT_GAIN_FALLBACK,
+        OUT_SCORE_SUMMARY,
+        TRADING_DAYS_YEAR,
+    )
+    from .io_utils import read_csv_with_date
+    from .xgb_views import normalize_return_columns
+except ImportError:
+    from config import (
+        INITIAL_CAPITAL_BRL,
+        OUT_GAIN_SERIES_DAILY,
+        OUT_GAIN_SERIES_MONTHLY,
+        OUT_GAIN_SERIES_WEEKLY,
+        OUT_POSTERIOR_W,
+        OUT_POSTERIOR_W_CONTROLLED,
+        OUT_POSTERIOR_W_CTRL_DAILY,
+        OUT_POSTERIOR_W_CTRL_MONTHLY,
+        OUT_POSTERIOR_W_CTRL_WEEKLY,
+        OUT_Q_LONG,
+        OUT_SCORE_MONTHLY,
+        OUT_SCORE_PRED_METRICS,
+        OUT_SCORE_PRED_MONTH,
+        OUT_SCORE_PRED_TICKER,
+        OUT_SCORE_REBALANCE,
+        OUT_GAIN_FALLBACK,
+        OUT_SCORE_SUMMARY,
+        TRADING_DAYS_YEAR,
+    )
+    from io_utils import read_csv_with_date
+    from xgb_views import normalize_return_columns
 
-Q_LONG_PATH = BL_DIR / "bl_hibrido_q_long.csv"
-GAIN_DAILY_PATH = BL_DIR / "bl_hibrido_ganho_series_daily.csv"
-GAIN_WEEKLY_PATH = BL_DIR / "bl_hibrido_ganho_series_weekly.csv"
-GAIN_MONTHLY_PATH = BL_DIR / "bl_hibrido_ganho_series_monthly.csv"
-GAIN_FALLBACK_PATH = BL_DIR / "bl_hibrido_ganho_series.csv"
-WEIGHTS_CTRL_DAILY_PATH = BL_DIR / "bl_hibrido_posterior_weights_controlled_daily.csv"
-WEIGHTS_CTRL_WEEKLY_PATH = BL_DIR / "bl_hibrido_posterior_weights_controlled_weekly.csv"
-WEIGHTS_CTRL_MONTHLY_PATH = BL_DIR / "bl_hibrido_posterior_weights_controlled_monthly.csv"
-WEIGHTS_CTRL_PATH = BL_DIR / "bl_hibrido_posterior_weights_controlled.csv"
-WEIGHTS_PATH = BL_DIR / "bl_hibrido_posterior_weights.csv"
-
-OUT_SUMMARY = BL_DIR / "bl_hibrido_score_summary.csv"
-OUT_MONTHLY = BL_DIR / "bl_hibrido_score_mensal.csv"
-OUT_REBALANCE = BL_DIR / "bl_hibrido_rebalance_resumo.csv"
-OUT_PRED_METRICS = BL_DIR / "bl_hibrido_score_previsao_metricas.csv"
-OUT_PRED_TICKER = BL_DIR / "bl_hibrido_score_previsao_por_ticker.csv"
-OUT_PRED_MONTH = BL_DIR / "bl_hibrido_score_previsao_por_mes.csv"
-
-# Pesos do score final
 W_PRED = 0.35
 W_PORT = 0.45
 W_RISK = 0.20
-
-TRADING_DAYS_YEAR = 252
 
 
 def clamp01(x: float) -> float:
@@ -57,53 +81,46 @@ def safe_div(a: float, b: float, default: float = 0.0) -> float:
     return default if abs(b) < 1e-12 else float(a / b)
 
 
-def _read_with_date(path: Path) -> pd.DataFrame:
-    df = pd.read_csv(path)
-    df["view_date"] = pd.to_datetime(df["view_date"], errors="coerce")
-    df = df.dropna(subset=["view_date"]).sort_values("view_date").reset_index(drop=True)
-    return df
-
-
 def load_inputs() -> tuple[pd.DataFrame, dict[str, pd.DataFrame], dict[str, pd.DataFrame]]:
-    q = pd.read_csv(Q_LONG_PATH)
+    q = normalize_return_columns(pd.read_csv(OUT_Q_LONG))
     q["view_date"] = pd.to_datetime(q["view_date"], errors="coerce")
     q = q.dropna(subset=["view_date"]).sort_values("view_date").reset_index(drop=True)
 
     gains_by_mode: dict[str, pd.DataFrame] = {}
-    if GAIN_DAILY_PATH.exists() and GAIN_WEEKLY_PATH.exists() and GAIN_MONTHLY_PATH.exists():
-        gains_by_mode["daily"] = _read_with_date(GAIN_DAILY_PATH)
-        gains_by_mode["weekly"] = _read_with_date(GAIN_WEEKLY_PATH)
-        gains_by_mode["monthly"] = _read_with_date(GAIN_MONTHLY_PATH)
-    elif GAIN_FALLBACK_PATH.exists():
-        gains_by_mode["daily"] = _read_with_date(GAIN_FALLBACK_PATH)
+    if OUT_GAIN_SERIES_DAILY.exists() and OUT_GAIN_SERIES_WEEKLY.exists() and OUT_GAIN_SERIES_MONTHLY.exists():
+        gains_by_mode["daily"] = read_csv_with_date(OUT_GAIN_SERIES_DAILY)
+        gains_by_mode["weekly"] = read_csv_with_date(OUT_GAIN_SERIES_WEEKLY)
+        gains_by_mode["monthly"] = read_csv_with_date(OUT_GAIN_SERIES_MONTHLY)
+    elif OUT_GAIN_FALLBACK.exists():
+        gains_by_mode["daily"] = read_csv_with_date(OUT_GAIN_FALLBACK)
     else:
-        raise FileNotFoundError("Nao encontrei series de ganho. Rode plot_ganho_estimado.py antes.")
+        raise FileNotFoundError("Não encontrei séries de ganho. Execute plot_ganho_estimado.py antes.")
 
     weights_by_mode: dict[str, pd.DataFrame] = {}
-    if WEIGHTS_CTRL_DAILY_PATH.exists() and WEIGHTS_CTRL_WEEKLY_PATH.exists() and WEIGHTS_CTRL_MONTHLY_PATH.exists():
-        weights_by_mode["daily"] = _read_with_date(WEIGHTS_CTRL_DAILY_PATH)
-        weights_by_mode["weekly"] = _read_with_date(WEIGHTS_CTRL_WEEKLY_PATH)
-        weights_by_mode["monthly"] = _read_with_date(WEIGHTS_CTRL_MONTHLY_PATH)
+    if OUT_POSTERIOR_W_CTRL_DAILY.exists() and OUT_POSTERIOR_W_CTRL_WEEKLY.exists() and OUT_POSTERIOR_W_CTRL_MONTHLY.exists():
+        weights_by_mode["daily"] = read_csv_with_date(OUT_POSTERIOR_W_CTRL_DAILY)
+        weights_by_mode["weekly"] = read_csv_with_date(OUT_POSTERIOR_W_CTRL_WEEKLY)
+        weights_by_mode["monthly"] = read_csv_with_date(OUT_POSTERIOR_W_CTRL_MONTHLY)
     else:
-        w_path = WEIGHTS_CTRL_PATH if WEIGHTS_CTRL_PATH.exists() else WEIGHTS_PATH
-        weights_by_mode["daily"] = _read_with_date(w_path)
+        w_path = OUT_POSTERIOR_W_CONTROLLED if OUT_POSTERIOR_W_CONTROLLED.exists() else OUT_POSTERIOR_W
+        weights_by_mode["daily"] = read_csv_with_date(w_path)
 
     return q, gains_by_mode, weights_by_mode
 
 
 def score_predicao(q: pd.DataFrame) -> tuple[float, dict[str, float]]:
-    q2 = q.copy()
-    q2["ret_7h_pred"] = pd.to_numeric(q2["ret_7h_pred"], errors="coerce")
-    q2["ret_7h_real"] = pd.to_numeric(q2["ret_7h_real"], errors="coerce")
-    q2 = q2.dropna(subset=["ret_7h_pred", "ret_7h_real"])
+    q2 = normalize_return_columns(q.copy())
+    q2["ret_pred"] = pd.to_numeric(q2["ret_pred"], errors="coerce")
+    q2["ret_real"] = pd.to_numeric(q2["ret_real"], errors="coerce")
+    q2 = q2.dropna(subset=["ret_pred", "ret_real"])
     if q2.empty:
         return 0.0, {"hit_ratio": 0.0, "mae": np.nan, "mae_score": 0.0}
 
-    hit_ratio = float((np.sign(q2["ret_7h_pred"]) == np.sign(q2["ret_7h_real"])).mean())
-    mae = float((q2["ret_7h_pred"] - q2["ret_7h_real"]).abs().mean())
+    hit_ratio = float((np.sign(q2["ret_pred"]) == np.sign(q2["ret_real"])).mean())
+    mae = float((q2["ret_pred"] - q2["ret_real"]).abs().mean())
 
     # Referencia robusta: mediana de |ret_real| para escalar o erro.
-    mae_ref = float(q2["ret_7h_real"].abs().median())
+    mae_ref = float(q2["ret_real"].abs().median())
     if not np.isfinite(mae_ref) or mae_ref <= 0:
         mae_ref = 0.01
     mae_score = clamp01(1.0 - (mae / mae_ref))
@@ -114,10 +131,10 @@ def score_predicao(q: pd.DataFrame) -> tuple[float, dict[str, float]]:
 
 
 def forecast_metrics(q: pd.DataFrame) -> dict[str, float]:
-    q2 = q.copy()
-    q2["ret_7h_pred"] = pd.to_numeric(q2["ret_7h_pred"], errors="coerce")
-    q2["ret_7h_real"] = pd.to_numeric(q2["ret_7h_real"], errors="coerce")
-    q2 = q2.dropna(subset=["ret_7h_pred", "ret_7h_real"])
+    q2 = normalize_return_columns(q.copy())
+    q2["ret_pred"] = pd.to_numeric(q2["ret_pred"], errors="coerce")
+    q2["ret_real"] = pd.to_numeric(q2["ret_real"], errors="coerce")
+    q2 = q2.dropna(subset=["ret_pred", "ret_real"])
     if q2.empty:
         return {
             "n": 0.0,
@@ -130,8 +147,8 @@ def forecast_metrics(q: pd.DataFrame) -> dict[str, float]:
             "score_pred_metricas": 0.0,
         }
 
-    y_true = q2["ret_7h_real"].to_numpy(dtype=float)
-    y_pred = q2["ret_7h_pred"].to_numpy(dtype=float)
+    y_true = q2["ret_real"].to_numpy(dtype=float)
+    y_pred = q2["ret_pred"].to_numpy(dtype=float)
     err = y_pred - y_true
 
     hit_ratio = float((np.sign(y_pred) == np.sign(y_true)).mean())
@@ -362,18 +379,18 @@ def main() -> None:
             }
         ]
     )
-    summary.to_csv(OUT_SUMMARY, index=False)
+    summary.to_csv(OUT_SCORE_SUMMARY, index=False)
 
     pred_overall, pred_by_ticker, pred_by_month = build_forecast_metric_tables(q)
-    pred_overall.to_csv(OUT_PRED_METRICS, index=False)
-    pred_by_ticker.to_csv(OUT_PRED_TICKER, index=False)
-    pred_by_month.to_csv(OUT_PRED_MONTH, index=False)
+    pred_overall.to_csv(OUT_SCORE_PRED_METRICS, index=False)
+    pred_by_ticker.to_csv(OUT_SCORE_PRED_TICKER, index=False)
+    pred_by_month.to_csv(OUT_SCORE_PRED_MONTH, index=False)
 
     monthly = score_mensal(q, gain, w)
-    monthly.to_csv(OUT_MONTHLY, index=False)
+    monthly.to_csv(OUT_SCORE_MONTHLY, index=False)
 
     rebalance, winner = summarize_rebalance_modes(q, gains_by_mode, weights_by_mode)
-    rebalance.to_csv(OUT_REBALANCE, index=False)
+    rebalance.to_csv(OUT_SCORE_REBALANCE, index=False)
 
     print(f"Score total: {s_total:.2f}/100")
     print(f"- Predicao: {100.0 * s_pred:.2f}")
@@ -393,12 +410,12 @@ def main() -> None:
                 score=float(p["score_pred_metricas"]) if np.isfinite(p["score_pred_metricas"]) else float("nan"),
             )
         )
-    print(f"Resumo salvo em: {OUT_SUMMARY}")
-    print(f"Score mensal salvo em: {OUT_MONTHLY}")
-    print(f"Resumo por modo salvo em: {OUT_REBALANCE}")
-    print(f"Predicao (geral) salva em: {OUT_PRED_METRICS}")
-    print(f"Predicao por ticker salva em: {OUT_PRED_TICKER}")
-    print(f"Predicao por mes salva em: {OUT_PRED_MONTH}")
+    print(f"Resumo salvo em: {OUT_SCORE_SUMMARY}")
+    print(f"Score mensal salvo em: {OUT_SCORE_MONTHLY}")
+    print(f"Resumo por modo salvo em: {OUT_SCORE_REBALANCE}")
+    print(f"Predição (geral) salva em: {OUT_SCORE_PRED_METRICS}")
+    print(f"Predição por ticker salva em: {OUT_SCORE_PRED_TICKER}")
+    print(f"Predição por mês salva em: {OUT_SCORE_PRED_MONTH}")
 
 
 if __name__ == "__main__":
