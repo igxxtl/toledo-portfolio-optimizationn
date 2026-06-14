@@ -73,7 +73,11 @@ def load_xgb_predictions(
     period_start: str = PERIOD_START,
     period_end: str = PERIOD_END,
 ) -> pd.DataFrame:
-    """Carrega predições OOF do XGBoost. Colunas: view_date, ticker, ret_pred, ret_real."""
+    """Carrega predições OOF do XGBoost.
+
+    ``ret_pred`` / ``ret_real``: log-retorno do horizonte do modelo (~21 dias).
+    Usar apenas para views (Q) e métricas de previsão — não para backtest diário.
+    """
     xgb_dir = xgb_dir or XGB_DIR
     base = ticker.upper().replace(".SA", "")
     pred_path = prediction_file_for_ticker(base, xgb_dir)

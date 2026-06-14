@@ -25,6 +25,7 @@ import pandas as pd
 
 try:
     from .config import (
+        ATIVOS,
         EXECUTION_LAG_DAYS,
         INITIAL_CAPITAL_BRL,
         MAX_WEIGHT_PER_ASSET,
@@ -37,13 +38,16 @@ try:
         OUT_GAIN_SERIES_DAILY,
         OUT_GAIN_SERIES_MONTHLY,
         OUT_GAIN_SERIES_WEEKLY,
-        OUT_Q_LONG,
+        PERIOD_END,
+        PERIOD_START,
         SELIC_ANNUAL,
     )
+    from .prior import get_daily_returns_for_prior
     from .weights import long_only_capped_weights
-    from .xgb_views import normalize_return_columns
+    from .xgb_views import month_bounds
 except ImportError:
     from config import (
+        ATIVOS,
         EXECUTION_LAG_DAYS,
         INITIAL_CAPITAL_BRL,
         MAX_WEIGHT_PER_ASSET,
@@ -56,11 +60,13 @@ except ImportError:
         OUT_GAIN_SERIES_DAILY,
         OUT_GAIN_SERIES_MONTHLY,
         OUT_GAIN_SERIES_WEEKLY,
-        OUT_Q_LONG,
+        PERIOD_END,
+        PERIOD_START,
         SELIC_ANNUAL,
     )
+    from prior import get_daily_returns_for_prior
     from weights import long_only_capped_weights
-    from xgb_views import normalize_return_columns
+    from xgb_views import month_bounds
 
 ROLLING_WINDOW = 60
 MIN_OBS = 40
@@ -79,17 +85,17 @@ def _mode_period_key(dates: pd.Series, mode: str) -> pd.Series:
 
 
 def load_returns_matrix() -> pd.DataFrame:
-    q = normalize_return_columns(pd.read_csv(OUT_Q_LONG))
-    q["view_date"] = pd.to_datetime(q["view_date"], errors="coerce")
-    q = q.dropna(subset=["view_date"]).copy()
-    q["ticker_sa"] = q["ticker"].astype(str).str.upper() + ".SA"
-    q["ret_real"] = pd.to_numeric(q["ret_real"], errors="coerce")
-    q = q.dropna(subset=["ret_real"])
-    pivot = q.pivot(index="view_date", columns="ticker_sa", values="ret_real").sort_index()
-    pivot = pivot.dropna(how="any")
-    if pivot.empty:
-        raise ValueError("Nao foi possivel montar matriz de retornos para Markowitz.")
-    return pivot
+    """Log-retornos diários reais de ``dados_diarios/`` (não usar ``y_real`` do XGB)."""
+    start_date, end_date = month_bounds(PERIOD_START, PERIOD_END)
+    returns = get_daily_returns_for_prior(
+        tickers=ATIVOS,
+        start_date=start_date.strftime("%Y-%m-%d"),
+        end_date=end_date.strftime("%Y-%m-%d"),
+    )
+    returns.index = pd.to_datetime(returns.index)
+    if returns.empty:
+        raise ValueError("Nao foi possivel montar matriz de retornos diarios para Markowitz.")
+    return returns.sort_index()
 
 
 def compute_markowitz_curve(returns_mat: pd.DataFrame, mode: str) -> tuple[pd.DataFrame, pd.DataFrame]:
@@ -119,8 +125,9 @@ def compute_markowitz_curve(returns_mat: pd.DataFrame, mode: str) -> tuple[pd.Da
 
     w_exec = np.roll(weights, shift=EXECUTION_LAG_DAYS, axis=0)
     w_exec[:EXECUTION_LAG_DAYS, :] = np.nan
-    ret = returns_mat.to_numpy(dtype=float)
-    ret_port = np.nansum(w_exec * ret, axis=1)
+    ret_log = returns_mat.to_numpy(dtype=float)
+    ret_simple = np.expm1(ret_log)
+    ret_port = np.nansum(w_exec * ret_simple, axis=1)
     ret_port[:EXECUTION_LAG_DAYS] = np.nan
 
     out = pd.DataFrame(

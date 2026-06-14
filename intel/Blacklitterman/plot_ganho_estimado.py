@@ -22,11 +22,10 @@ try:
         OUT_POSTERIOR_W_CTRL_DAILY,
         OUT_POSTERIOR_W_CTRL_MONTHLY,
         OUT_POSTERIOR_W_CTRL_WEEKLY,
-        OUT_Q_LONG,
         SELIC_ANNUAL,
     )
     from .io_utils import asset_columns, save_csv_with_date
-    from .xgb_views import normalize_return_columns
+    from .prior import get_daily_returns_for_prior
 except ImportError:
     from config import (
         EXECUTION_LAG_DAYS,
@@ -41,16 +40,14 @@ except ImportError:
         OUT_POSTERIOR_W_CTRL_DAILY,
         OUT_POSTERIOR_W_CTRL_MONTHLY,
         OUT_POSTERIOR_W_CTRL_WEEKLY,
-        OUT_Q_LONG,
         SELIC_ANNUAL,
     )
     from io_utils import asset_columns, save_csv_with_date
-    from xgb_views import normalize_return_columns
+    from prior import get_daily_returns_for_prior
 
 
 def load_inputs() -> tuple[pd.DataFrame, dict[str, pd.DataFrame], pd.DataFrame]:
     mu = pd.read_csv(OUT_POSTERIOR_MU)
-    q_long = normalize_return_columns(pd.read_csv(OUT_Q_LONG))
     weights_by_mode: dict[str, pd.DataFrame] = {}
 
     if OUT_POSTERIOR_W_CTRL_DAILY.exists() and OUT_POSTERIOR_W_CTRL_WEEKLY.exists() and OUT_POSTERIOR_W_CTRL_MONTHLY.exists():
@@ -63,18 +60,32 @@ def load_inputs() -> tuple[pd.DataFrame, dict[str, pd.DataFrame], pd.DataFrame]:
         raise FileNotFoundError("Pesos controlados não encontrados. Execute pipeline.py primeiro.")
 
     mu["view_date"] = pd.to_datetime(mu["view_date"], errors="coerce")
-    q_long["view_date"] = pd.to_datetime(q_long["view_date"], errors="coerce")
     mu = mu.dropna(subset=["view_date"]).sort_values("view_date").reset_index(drop=True)
-    q_long = q_long.dropna(subset=["view_date"]).sort_values("view_date").reset_index(drop=True)
 
     for mode, w_df in list(weights_by_mode.items()):
         w_df["view_date"] = pd.to_datetime(w_df["view_date"], errors="coerce")
         weights_by_mode[mode] = w_df.dropna(subset=["view_date"]).sort_values("view_date").reset_index(drop=True)
 
-    return mu, weights_by_mode, q_long
+    assets = sorted(set(asset_columns(mu)))
+    for w_df in weights_by_mode.values():
+        assets = sorted(set(assets).intersection(asset_columns(w_df)))
+    if not assets:
+        raise ValueError("Não encontrei colunas de ativos (.SA) em posterior_mu e pesos.")
+
+    start = mu["view_date"].min().strftime("%Y-%m-%d")
+    end = mu["view_date"].max().strftime("%Y-%m-%d")
+    daily_log_returns = get_daily_returns_for_prior(assets, start_date=start, end_date=end)
+    daily_log_returns.index = pd.to_datetime(daily_log_returns.index)
+
+    return mu, weights_by_mode, daily_log_returns
 
 
-def build_gain_series(mu: pd.DataFrame, w: pd.DataFrame, q_long: pd.DataFrame, mode_label: str) -> pd.DataFrame:
+def build_gain_series(
+    mu: pd.DataFrame,
+    w: pd.DataFrame,
+    daily_log_returns: pd.DataFrame,
+    mode_label: str,
+) -> pd.DataFrame:
     assets = sorted(set(asset_columns(mu)).intersection(asset_columns(w)))
     if not assets:
         raise ValueError("Não encontrei colunas de ativos (.SA) em posterior_mu e posterior_weights.")
@@ -90,18 +101,17 @@ def build_gain_series(mu: pd.DataFrame, w: pd.DataFrame, q_long: pd.DataFrame, m
         merged[f"{asset}_w_exec"] = merged[f"{asset}_w"].shift(EXECUTION_LAG_DAYS)
     merged = merged.dropna(subset=[f"{a}_w_exec" for a in assets]).reset_index(drop=True)
 
-    est_parts = [merged[f"{a}_mu"] * merged[f"{a}_w_exec"] for a in assets]
+    # μ posterior e retornos diários estão em log-retorno; converte para simples no P&L.
+    est_parts = [merged[f"{a}_w_exec"] * np.expm1(merged[f"{a}_mu"]) for a in assets]
     merged["ret_est_portfolio"] = np.sum(np.column_stack(est_parts), axis=1)
 
-    q_real = q_long.copy()
-    q_real["ticker_sa"] = q_real["ticker"].astype(str).str.upper() + ".SA"
-    real_pivot = q_real.pivot(index="view_date", columns="ticker_sa", values="ret_real")
-    real_assets = [a for a in assets if a in real_pivot.columns]
-
+    real_assets = [a for a in assets if a in daily_log_returns.columns]
     if real_assets:
         for asset in real_assets:
-            merged[f"{asset}_real"] = merged["view_date"].map(real_pivot[asset])
-        real_parts = [merged[f"{a}_w_exec"] * merged[f"{a}_real"] for a in real_assets]
+            merged[f"{asset}_real_log"] = merged["view_date"].map(daily_log_returns[asset])
+        real_parts = [
+            merged[f"{a}_w_exec"] * np.expm1(merged[f"{a}_real_log"]) for a in real_assets
+        ]
         merged["ret_real_portfolio"] = np.sum(np.column_stack(real_parts), axis=1)
     else:
         merged["ret_real_portfolio"] = np.nan
@@ -187,9 +197,9 @@ def plot_gain_comparative(series_by_mode: dict[str, pd.DataFrame], output_path: 
 
 
 def main() -> None:
-    mu, weights_by_mode, q_long = load_inputs()
+    mu, weights_by_mode, daily_log_returns = load_inputs()
     series_by_mode = {
-        mode: build_gain_series(mu, w_df, q_long, mode_label=mode)
+        mode: build_gain_series(mu, w_df, daily_log_returns, mode_label=mode)
         for mode, w_df in weights_by_mode.items()
     }
 
