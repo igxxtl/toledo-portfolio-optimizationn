@@ -1,0 +1,31 @@
+{
+  "best_objective": 2.65946600259133,
+  "n_trials": 40,
+  "rebalance_mode": "weekly",
+  "train_start": "202305",
+  "val_start": "2025-01-01",
+  "val_end": "2025-12-31",
+  "best_params": {
+    "alpha_q": 0.8529699414082709,
+    "tau": 0.018380078514260975,
+    "max_weight_per_asset": 0.24738329019707395,
+    "w_model_conf": 0.5221365411393811,
+    "w_news_conf": 0.4778634588606189,
+    "confidence_floor": 0.12530274739501177,
+    "confidence_cap": 0.7495474304397844,
+    "err_window": 8,
+    "err_min_periods": 6,
+    "rolling_min_obs": 110,
+    "use_rolling_prior": true,
+    "long_only": true,
+    "rebalance_mode": "weekly"
+  },
+  "val_metrics": {
+    "sharpe": 2.604554487249603,
+    "total_return_pct": 52.174601883111094,
+    "excess_vs_selic_pct": 15.127323690724914,
+    "max_drawdown": -0.10982303068345378,
+    "final_capital_brl": 166661.38796241838,
+    "n_days": 250.0
+  }
+}

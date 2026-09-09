@@ -35,7 +35,7 @@ for _dir in (
 ):
     _dir.mkdir(parents=True, exist_ok=True)
 
-# Views (Q)
+# Views (Q) — simulação / backtest de comparação (igual ao baseline)
 SENTIMENT_MAP = {"positivo": 1.0, "negativo": -1.0, "neutro": 0.0}
 PERIOD_START = "202501"
 PERIOD_END = "202512"
@@ -66,10 +66,10 @@ W_NEWS_CONF = 0.685489
 LONG_ONLY = True
 MAX_WEIGHT_PER_ASSET = 0.494293
 
-# Otimização de hiperparâmetros (treino / validação out-of-sample)
-OPT_TRAIN_START = "202501"
-OPT_TRAIN_END = "202506"
-OPT_VAL_START = "202507"
+# Otimização: treina com histórico longo; escolhe params pela performance em 2025
+OPT_TRAIN_START = "202305"
+OPT_TRAIN_END = "202412"
+OPT_VAL_START = "202501"
 OPT_VAL_END = "202512"
 OPT_DEFAULT_TRIALS = 40
 OPT_DEFAULT_REBALANCE_MODE = "weekly"
