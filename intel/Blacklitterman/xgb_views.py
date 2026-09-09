@@ -29,6 +29,7 @@ except ImportError:
 
 __all__ = [
     "add_ret_scale",
+    "build_q_from_cached_views",
     "build_q_for_ticker",
     "build_q_for_tickers",
     "combine_model_and_sentiment",
@@ -199,4 +200,22 @@ def build_q_for_tickers(
 
     if not parts:
         raise RuntimeError("Nenhuma view Q foi gerada para os tickers configurados.")
+    return pd.concat(parts, axis=0, ignore_index=True).sort_values(["view_date", "ticker"]).reset_index(drop=True)
+
+
+def build_q_from_cached_views(
+    views_by_ticker: dict[str, pd.DataFrame],
+    sentiment_by_ticker: dict[str, pd.DataFrame],
+    *,
+    alpha: float,
+) -> pd.DataFrame:
+    """Monta Q a partir de views XGB (com ret_scale) e sentimento já carregados."""
+    parts: list[pd.DataFrame] = []
+    for ticker, views in views_by_ticker.items():
+        sentiment = sentiment_by_ticker.get(ticker)
+        if sentiment is None:
+            raise KeyError(f"Sentimento não encontrado para {ticker}")
+        parts.append(combine_model_and_sentiment(views, sentiment, alpha))
+    if not parts:
+        raise RuntimeError("Nenhuma view Q foi montada a partir do cache.")
     return pd.concat(parts, axis=0, ignore_index=True).sort_values(["view_date", "ticker"]).reset_index(drop=True)
