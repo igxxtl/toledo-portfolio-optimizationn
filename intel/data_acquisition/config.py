@@ -20,7 +20,7 @@ EXTRACT_JSON_SORTED = EXTRACT_DIR / "search_extract_ordenado.json"
 
 # Coleta RSS
 TICKERS = ["VALE3", "BBAS3", "ITUB3", "BBDC3", "ABEV3"]
-COLLECTION_START = date(2025, 1, 1)
+COLLECTION_START = date(2023, 1, 1)
 COLLECTION_END = date(2025, 12, 31)
 RSS_LANGUAGE = "pt-BR"
 RSS_COUNTRY = "BR"
@@ -30,9 +30,12 @@ RSS_USER_AGENT = (
 )
 RSS_MAX_RETRIES = 4
 RSS_PAUSE_SECONDS = 2
+RSS_MAX_WORKERS = 8
+RSS_FAIL_COOLDOWN_SECONDS = 15
+RSS_MAX_BACKOFF_ROUNDS = 6
 
-# Sentimento (OpenAI)
-SENTIMENT_MODEL = "gpt-5-mini"
+# Sentimento (OpenAI) — classificação 3 classes em volume → luna (tier nano da família 5.6)
+SENTIMENT_MODEL = "gpt-5.6-luna"
 SENTIMENT_MAX_WORKERS = 8
 
 # Termos para filtrar títulos genéricos (limpa_noticias)

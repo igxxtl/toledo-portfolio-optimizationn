@@ -31,13 +31,12 @@ try:
         ATIVOS,
         OPT_DEFAULT_REBALANCE_MODE,
         OPT_DEFAULT_TRIALS,
+        OPT_TRAIN_START,
         OPT_VAL_END,
         OPT_VAL_START,
         OUT_OPT_BEST_PARAMS,
         OUT_OPT_SUMMARY,
         OUT_OPT_TRIALS,
-        PERIOD_END,
-        PERIOD_START,
         PRIOR_END_DATE,
         PRIOR_START_DATE,
     )
@@ -57,13 +56,12 @@ except ImportError:
         ATIVOS,
         OPT_DEFAULT_REBALANCE_MODE,
         OPT_DEFAULT_TRIALS,
+        OPT_TRAIN_START,
         OPT_VAL_END,
         OPT_VAL_START,
         OUT_OPT_BEST_PARAMS,
         OUT_OPT_SUMMARY,
         OUT_OPT_TRIALS,
-        PERIOD_END,
-        PERIOD_START,
         PRIOR_END_DATE,
         PRIOR_START_DATE,
     )
@@ -99,8 +97,8 @@ def _period_bounds(period_start: str, period_end: str) -> tuple[pd.Timestamp, pd
 
 
 def build_context(
-    period_start: str = PERIOD_START,
-    period_end: str = PERIOD_END,
+    period_start: str = OPT_TRAIN_START,
+    period_end: str = OPT_VAL_END,
     val_start: str = OPT_VAL_START,
     val_end: str = OPT_VAL_END,
     rebalance_mode: str = OPT_DEFAULT_REBALANCE_MODE,
@@ -211,18 +209,22 @@ def run_optimization(
     *,
     n_trials: int = OPT_DEFAULT_TRIALS,
     rebalance_mode: str = OPT_DEFAULT_REBALANCE_MODE,
+    train_start: str = OPT_TRAIN_START,
     val_start: str = OPT_VAL_START,
     val_end: str = OPT_VAL_END,
 ) -> tuple[BLParams, pd.DataFrame, dict[str, float]]:
     print("Carregando cache (XGB, sentimento, retornos, market cap)...")
+    # Pipeline na otimização: histórico longo (train_start→val_end);
+    # objective só olha a janela de validação (ex.: 2025).
     ctx = build_context(
-        period_start=PERIOD_START,
+        period_start=train_start,
         period_end=val_end,
         val_start=val_start,
         val_end=val_end,
         rebalance_mode=rebalance_mode,
     )
 
+    print(f"Histórico na otimização: {train_start} -> {val_end}")
     print(f"Validação out-of-sample: {ctx.val_start.date()} -> {ctx.val_end.date()}")
     print(f"Modo de rebalanceamento: {rebalance_mode}")
     print(f"Trials Optuna: {n_trials}")
@@ -277,6 +279,7 @@ def run_optimization(
         "best_objective": float(best.value),
         "n_trials": n_trials,
         "rebalance_mode": rebalance_mode,
+        "train_start": train_start,
         "val_start": str(ctx.val_start.date()),
         "val_end": str(ctx.val_end.date()),
         "best_params": best_params.to_dict(),
@@ -330,6 +333,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--val-start", default=OPT_VAL_START, help="Início validação YYYYMM")
     parser.add_argument("--val-end", default=OPT_VAL_END, help="Fim validação YYYYMM")
     parser.add_argument(
+        "--train-start",
+        default=OPT_TRAIN_START,
+        help="Início do histórico na otimização YYYYMM (warm-up + notícias longas)",
+    )
+    parser.add_argument(
         "--apply-best",
         action="store_true",
         help="Após otimizar, roda pipeline completo com melhores parâmetros e salva CSVs",
@@ -342,6 +350,7 @@ def main() -> None:
     best_params, _, _ = run_optimization(
         n_trials=args.trials,
         rebalance_mode=args.rebalance,
+        train_start=args.train_start,
         val_start=args.val_start,
         val_end=args.val_end,
     )
