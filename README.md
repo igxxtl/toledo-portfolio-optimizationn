@@ -83,7 +83,7 @@ toledo-portfolio-optimizationn/
     │       ├── figures/           # gráficos PNG
     │       └── standalone/        # Q.py, omega.py, PI_incerteza.py
     │
-    └── data_acquisition/          # Coleta e processamento de notícias
+    ├── data_acquisition/          # Coleta e processamento de notícias
         ├── __init__.py
         ├── config.py              # Paths JSON, tickers RSS, parâmetros OpenAI
         ├── cata_link_rss.py       # Coleta via Google News RSS
@@ -98,6 +98,14 @@ toledo-portfolio-optimizationn/
         ├── noticias_b3_sem_duplicados.json
         ├── noticias_b3_sem_duplicados_com_link_real.json
         └── noticias_b3_sem_duplicados_sentimento.json  # ★ Entrada do BL
+    │
+    └── model_training/            # Treino XGBoost (vetor Q)
+        ├── __init__.py
+        ├── config.py              # Caminhos e parâmetros de download/features
+        ├── download_daily.py      # yfinance → dados_diarios/
+        ├── prepare_features.py    # Features relativas ao IBOV nos CSVs
+        ├── train_xgb.py           # Walk-forward OOF → criacao_modelo_xgb/
+        └── pipeline.py            # Orquestra as 3 etapas acima
 ```
 
 ---
@@ -115,7 +123,7 @@ O pipeline Black-Litterman **não treina** o XGBoost — consome artefatos já g
 
 O módulo `xgb_views.py` localiza automaticamente `TICKER_predicoes.csv` (ou variantes `*_h21d_predicoes.csv`).
 
-> **Nota:** os scripts de treino (`criacao_modelo_xgb.py`, `novo_input_dados.py`, `prepara_dados.py`) **não estão neste repositório**. O diretório `criacao_modelo_xgb/` contém os artefatos já produzidos. Para atualizar as predições, é necessário rodar o pipeline de treino XGB externamente ou restaurar esses scripts.
+Scripts de treino em `intel/model_training/` (ver [Como executar](#como-executar)).
 
 ### 2. Preços diários (`dados_diarios/`)
 
@@ -152,7 +160,20 @@ OPENAI_API_KEY=sk-...
 
 Necessário apenas para `analise_sentimento.py`.
 
-### 2. Atualizar notícias (opcional)
+### 2. Atualizar predições XGBoost (opcional)
+
+```bash
+cd intel/model_training
+python pipeline.py              # download + features + treino
+# ou etapas individuais:
+python download_daily.py
+python prepare_features.py
+python train_xgb.py
+```
+
+Saídas em `criacao_modelo_xgb/*_predicoes.csv` (consumidas pelo Black-Litterman).
+
+### 3. Atualizar notícias (opcional)
 
 ```bash
 cd intel/data_acquisition
@@ -162,7 +183,7 @@ python limpa_noticias.py
 python analise_sentimento.py
 ```
 
-### 3. Pipeline Black-Litterman
+### 4. Pipeline Black-Litterman
 
 ```bash
 cd intel/Blacklitterman

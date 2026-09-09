@@ -87,7 +87,7 @@ flowchart TB
 | Preços diários | `dados_diarios/TICKER.csv` | Covariância, prior de mercado, backtest |
 | Preços horários (opcional) | `tickers_data/` | Usado apenas em `PI_incerteza.py` (prior com VWAP) |
 
-> **Importante:** as predições XGB já estão no repositório (geradas externamente). O pipeline **não treina** o XGBoost — apenas consome os CSVs de predição.
+> **Importante:** o treino XGBoost fica em `intel/model_training/`; o pipeline Black-Litterman **consome** os CSVs em `criacao_modelo_xgb/`.
 
 ---
 

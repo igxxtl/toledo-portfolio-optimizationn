@@ -42,12 +42,24 @@ def _safe_sample_var(values: pd.Series) -> float:
     return var_value
 
 
-def _compute_confidence_per_ticker(group: pd.DataFrame) -> pd.DataFrame:
+def _compute_confidence_per_ticker(
+    group: pd.DataFrame,
+    *,
+    err_window: int = ERR_WINDOW,
+    err_min_periods: int = ERR_MIN_PERIODS,
+    w_model_conf: float = W_MODEL_CONF,
+    w_news_conf: float = W_NEWS_CONF,
+    confidence_floor: float = CONFIDENCE_FLOOR,
+    confidence_cap: float = CONFIDENCE_CAP,
+) -> pd.DataFrame:
+    err_window = max(int(err_window), 2)
+    err_min_periods = min(max(int(err_min_periods), 2), err_window)
+
     out = normalize_return_columns(group).sort_values("view_date").copy()
     out["pred_abs_error"] = (out["ret_pred"] - out["ret_real"]).abs()
 
     out["error_scale"] = (
-        out["pred_abs_error"].rolling(ERR_WINDOW, min_periods=ERR_MIN_PERIODS).median().shift(1)
+        out["pred_abs_error"].rolling(err_window, min_periods=err_min_periods).median().shift(1)
     )
     fallback = float(out["pred_abs_error"].median())
     if not np.isfinite(fallback) or fallback <= 0:
@@ -57,12 +69,22 @@ def _compute_confidence_per_ticker(group: pd.DataFrame) -> pd.DataFrame:
     out["model_confidence"] = np.exp(-out["pred_abs_error"] / out["error_scale"])
     out["news_confidence"] = 1.0 - np.exp(-out["news_count"] / 3.0)
     out["view_confidence"] = (
-        W_MODEL_CONF * out["model_confidence"] + W_NEWS_CONF * out["news_confidence"]
-    ).clip(lower=CONFIDENCE_FLOOR, upper=CONFIDENCE_CAP)
+        w_model_conf * out["model_confidence"] + w_news_conf * out["news_confidence"]
+    ).clip(lower=confidence_floor, upper=confidence_cap)
     return out
 
 
-def calculate_omega(q_long: pd.DataFrame, tau: float = TAU) -> pd.DataFrame:
+def calculate_omega(
+    q_long: pd.DataFrame,
+    tau: float = TAU,
+    *,
+    err_window: int = ERR_WINDOW,
+    err_min_periods: int = ERR_MIN_PERIODS,
+    w_model_conf: float = W_MODEL_CONF,
+    w_news_conf: float = W_NEWS_CONF,
+    confidence_floor: float = CONFIDENCE_FLOOR,
+    confidence_cap: float = CONFIDENCE_CAP,
+) -> pd.DataFrame:
     q_long = normalize_return_columns(q_long)
 
     sigma_by_ticker: dict[str, float] = {}
@@ -74,7 +96,18 @@ def calculate_omega(q_long: pd.DataFrame, tau: float = TAU) -> pd.DataFrame:
             sigma_ii = 2.5e-5
         sigma_by_ticker[ticker] = sigma_ii
 
-    parts = [_compute_confidence_per_ticker(g) for _, g in q_long.groupby("ticker", sort=True)]
+    parts = [
+        _compute_confidence_per_ticker(
+            g,
+            err_window=err_window,
+            err_min_periods=err_min_periods,
+            w_model_conf=w_model_conf,
+            w_news_conf=w_news_conf,
+            confidence_floor=confidence_floor,
+            confidence_cap=confidence_cap,
+        )
+        for _, g in q_long.groupby("ticker", sort=True)
+    ]
     with_conf = pd.concat(parts, axis=0, ignore_index=True)
 
     with_conf["sigma_ii"] = with_conf["ticker"].map(sigma_by_ticker)
