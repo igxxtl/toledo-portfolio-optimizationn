@@ -1,0 +1,19 @@
+{
+  "ticker": "CMIG4",
+  "horizon": 5,
+  "horizon_nome": "1sem",
+  "cv_rmse": 0.05146979650192038,
+  "n_trials": 40,
+  "params": {
+    "learning_rate": 0.056006119992793944,
+    "max_depth": 7,
+    "subsample": 0.9265050958627747,
+    "colsample_bytree": 0.9620848182148747,
+    "min_child_weight": 35,
+    "reg_alpha": 0.28305658121794575,
+    "reg_lambda": 1.374249451886452,
+    "n_estimators": 800,
+    "early_stopping_rounds": 20,
+    "eval_metric": "rmse"
+  }
+}

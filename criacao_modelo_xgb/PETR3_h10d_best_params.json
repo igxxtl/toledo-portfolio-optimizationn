@@ -1,0 +1,19 @@
+{
+  "ticker": "PETR3",
+  "horizon": 10,
+  "horizon_nome": "2sem",
+  "cv_rmse": 0.10765220978162006,
+  "n_trials": 40,
+  "params": {
+    "learning_rate": 0.02387385559286342,
+    "max_depth": 6,
+    "subsample": 0.6816647701962778,
+    "colsample_bytree": 0.9217790539696759,
+    "min_child_weight": 13,
+    "reg_alpha": 1.5892907282241777,
+    "reg_lambda": 2.247218035552685,
+    "n_estimators": 800,
+    "early_stopping_rounds": 20,
+    "eval_metric": "rmse"
+  }
+}

@@ -221,26 +221,29 @@ def build_forecast_metric_tables(q: pd.DataFrame) -> tuple[pd.DataFrame, pd.Data
 
 
 def score_portfolio(gain: pd.DataFrame) -> tuple[float, dict[str, float]]:
+    """Scoreia performance do portfólio **realizado** (preços), não o μ estimado."""
     g = gain.copy()
-    g["ret_est_portfolio"] = pd.to_numeric(g["ret_est_portfolio"], errors="coerce")
-    g["capital_est"] = pd.to_numeric(g["capital_est"], errors="coerce")
-    g = g.dropna(subset=["ret_est_portfolio", "capital_est"])
+    if "ret_real_portfolio" not in g.columns or "capital_real" not in g.columns:
+        return 0.0, {"total_return": np.nan, "sharpe": np.nan, "max_drawdown": np.nan}
+
+    g["ret_real_portfolio"] = pd.to_numeric(g["ret_real_portfolio"], errors="coerce")
+    g["capital_real"] = pd.to_numeric(g["capital_real"], errors="coerce")
+    g = g.dropna(subset=["ret_real_portfolio", "capital_real"])
     if g.empty:
         return 0.0, {"total_return": np.nan, "sharpe": np.nan, "max_drawdown": np.nan}
 
-    ret = g["ret_est_portfolio"]
-    total_return = float(g["capital_est"].iloc[-1] - 1.0)
+    ret = g["ret_real_portfolio"]
+    total_return = float(g["capital_real"].iloc[-1] - 1.0)
 
     mu = float(ret.mean())
     sigma = float(ret.std(ddof=1))
     sharpe = safe_div(mu, sigma, default=0.0) * np.sqrt(TRADING_DAYS_YEAR) if sigma > 0 else 0.0
 
-    running_max = g["capital_est"].cummax()
-    drawdown = (g["capital_est"] / running_max) - 1.0
+    running_max = g["capital_real"].cummax()
+    drawdown = (g["capital_real"] / running_max) - 1.0
     max_drawdown = float(drawdown.min())  # negativo
     mdd_abs = abs(max_drawdown)
 
-    # Normalizacoes simples/robustas
     ret_score = clamp01((total_return + 0.20) / 0.40)  # -20% -> 0 ; +20% -> 1
     sharpe_score = clamp01((sharpe + 1.0) / 2.0)       # -1 -> 0 ; +1 -> 1
     dd_score = clamp01(1.0 - (mdd_abs / 0.30))         # 30% de DD zera score
@@ -325,8 +328,8 @@ def summarize_rebalance_modes(
         s_total = 100.0 * (W_PRED * s_pred + W_PORT * s_port + W_RISK * s_risk)
 
         final_cap_brl = np.nan
-        if "capital_est_brl" in gain_df.columns and not gain_df.empty:
-            final_cap_brl = float(pd.to_numeric(gain_df["capital_est_brl"], errors="coerce").dropna().iloc[-1])
+        if "capital_real_brl" in gain_df.columns and not gain_df.empty:
+            final_cap_brl = float(pd.to_numeric(gain_df["capital_real_brl"], errors="coerce").dropna().iloc[-1])
 
         rows.append(
             {
@@ -335,11 +338,11 @@ def summarize_rebalance_modes(
                 "score_pred": 100.0 * s_pred,
                 "score_port": 100.0 * s_port,
                 "score_risk": 100.0 * s_risk,
-                "total_return_est": d_port.get("total_return"),
-                "vol_annual_est": d_port.get("vol_annual"),
-                "sharpe_est": d_port.get("sharpe"),
-                "max_drawdown_est": d_port.get("max_drawdown"),
-                "final_capital_est_brl": final_cap_brl,
+                "total_return_real": d_port.get("total_return"),
+                "vol_annual_real": d_port.get("vol_annual"),
+                "sharpe_real": d_port.get("sharpe"),
+                "max_drawdown_real": d_port.get("max_drawdown"),
+                "final_capital_real_brl": final_cap_brl,
                 "avg_gross_exposure": d_risk.get("avg_gross_exposure"),
                 "avg_max_weight": d_risk.get("avg_max_weight"),
                 "dias": int(len(gain_df)),
@@ -371,9 +374,9 @@ def main() -> None:
                 "score_risk": 100.0 * s_risk,
                 "hit_ratio": d_pred.get("hit_ratio"),
                 "mae": d_pred.get("mae"),
-                "total_return_est": d_port.get("total_return"),
-                "sharpe_est": d_port.get("sharpe"),
-                "max_drawdown_est": d_port.get("max_drawdown"),
+                "total_return_real": d_port.get("total_return"),
+                "sharpe_real": d_port.get("sharpe"),
+                "max_drawdown_real": d_port.get("max_drawdown"),
                 "avg_gross_exposure": d_risk.get("avg_gross_exposure"),
                 "avg_max_weight": d_risk.get("avg_max_weight"),
             }

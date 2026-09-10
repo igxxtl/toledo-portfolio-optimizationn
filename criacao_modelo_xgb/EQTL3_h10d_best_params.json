@@ -1,0 +1,19 @@
+{
+  "ticker": "EQTL3",
+  "horizon": 10,
+  "horizon_nome": "2sem",
+  "cv_rmse": 0.06027172161673536,
+  "n_trials": 40,
+  "params": {
+    "learning_rate": 0.03373324960614755,
+    "max_depth": 5,
+    "subsample": 0.9133904801439656,
+    "colsample_bytree": 0.7564589420061423,
+    "min_child_weight": 5,
+    "reg_alpha": 0.014744262943872521,
+    "reg_lambda": 1.06314844598803,
+    "n_estimators": 800,
+    "early_stopping_rounds": 20,
+    "eval_metric": "rmse"
+  }
+}

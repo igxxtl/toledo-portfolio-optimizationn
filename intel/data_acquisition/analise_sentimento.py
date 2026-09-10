@@ -51,34 +51,49 @@ def run_sentiment_analysis(
         raise EnvironmentError("OPENAI_API_KEY não definida no ambiente ou .env")
 
     data = json.loads(input_path.read_text(encoding="utf-8"))
+
+    # Reusa classificações já salvas (evita re-pagar API nos 5 tickers antigos)
+    cache: dict[str, str] = {}
+    if output_path.exists():
+        try:
+            for old in json.loads(output_path.read_text(encoding="utf-8")):
+                ticker = (old.get("ticker") or "").strip()
+                title = (old.get("titulo") or "").strip()
+                label = (old.get("sentimento") or "").strip().lower()
+                if ticker and title and label in {"positivo", "negativo", "neutro"}:
+                    cache[f"{ticker}||{title}"] = label
+        except (json.JSONDecodeError, TypeError):
+            pass
+
     unique: dict[str, tuple[str, str]] = {}
     for item in data:
         ticker = (item.get("ticker") or "").strip()
         title = (item.get("titulo") or "").strip()
         key = f"{ticker}||{title}"
-        if key not in unique:
+        if key not in unique and key not in cache:
             unique[key] = (ticker, title)
 
-    cache: dict[str, str] = {}
     client = OpenAI(api_key=api_key)
     total_unique = len(unique)
+    print(f"Cache: {len(cache)} | a classificar: {total_unique}")
 
-    with ThreadPoolExecutor(max_workers=SENTIMENT_MAX_WORKERS) as executor:
-        futures = {
-            executor.submit(classify_headline, client, ticker, title): key
-            for key, (ticker, title) in unique.items()
-        }
-        done = 0
-        for future in as_completed(futures):
-            key = futures[future]
-            try:
-                cache[key] = future.result()
-            except Exception as exc:
-                print(f"Erro ao classificar {key[:50]}...: {exc}")
-                cache[key] = "neutro"
-            done += 1
-            if done % 50 == 0 or done == total_unique:
-                print(f"[{done}/{total_unique}] manchetes únicas classificadas")
+    if total_unique:
+        with ThreadPoolExecutor(max_workers=SENTIMENT_MAX_WORKERS) as executor:
+            futures = {
+                executor.submit(classify_headline, client, ticker, title): key
+                for key, (ticker, title) in unique.items()
+            }
+            done = 0
+            for future in as_completed(futures):
+                key = futures[future]
+                try:
+                    cache[key] = future.result()
+                except Exception as exc:
+                    print(f"Erro ao classificar {key[:50]}...: {exc}")
+                    cache[key] = "neutro"
+                done += 1
+                if done % 50 == 0 or done == total_unique:
+                    print(f"[{done}/{total_unique}] manchetes únicas classificadas")
 
     for item in data:
         ticker = (item.get("ticker") or "").strip()

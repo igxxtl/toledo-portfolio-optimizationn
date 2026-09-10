@@ -39,38 +39,72 @@ for _dir in (
 SENTIMENT_MAP = {"positivo": 1.0, "negativo": -1.0, "neutro": 0.0}
 PERIOD_START = "202501"
 PERIOD_END = "202512"
-ALPHA_Q = 0.343669
+ALPHA_Q = 0.738043
 RET_SCALE_WINDOW = 14
 RET_SCALE_MIN_PERIODS = 5
 RET_SCALE_FALLBACK = 0.005
+# Horizonte padrão das views XGB (dias úteis) quando metricas_vencedores.csv não tem o ticker.
+# Q e Ω são convertidos para escala diária (÷h e ÷h²) para alinhar com π.
+DEFAULT_VIEW_HORIZON = 21
 
 # Prior (PI)
-ATIVOS = ["VALE3.SA", "BBAS3.SA", "ITUB4.SA", "BBDC4.SA", "ABEV3.SA"]
+# Universo = tickers com modelo XGB em criacao_modelo_xgb/ (dados_diarios/)
+ATIVOS = [
+    "ABEV3.SA",
+    "B3SA3.SA",
+    "BBAS3.SA",
+    "BBDC4.SA",
+    "CMIG4.SA",
+    "EQTL3.SA",
+    "GGBR4.SA",
+    "ITUB4.SA",
+    "LREN3.SA",
+    "MGLU3.SA",
+    "PETR3.SA",
+    "PETR4.SA",
+    "PRIO3.SA",
+    "RADL3.SA",
+    "RAIL3.SA",
+    "SANB11.SA",
+    "SBSP3.SA",
+    "SUZB3.SA",
+    "VALE3.SA",
+    "WEGE3.SA",
+]
+# Sensibilidade TCC: universo sem ativos com hit direcional fraco no recorte
+ATIVOS_SENSITIVITY_DROP = ["VALE3.SA"]
 PRIOR_START_DATE = "2023-01-01"
 PRIOR_END_DATE = "2025-12-31"
 RISK_FREE_ANNUAL = 0.15
-TAU = 0.0213796
+TAU = 0.0229086
 USE_ROLLING_PRIOR = True
 ROLLING_MIN_OBS = 60
 
 # Omega dinâmico
-ERR_WINDOW = 27
-ERR_MIN_PERIODS = 4
+ERR_WINDOW = 13
+ERR_MIN_PERIODS = 9
 EPS = 1e-8
-CONFIDENCE_FLOOR = 0.192838
-CONFIDENCE_CAP = 0.917401
-W_MODEL_CONF = 0.314511
-W_NEWS_CONF = 0.685489
+CONFIDENCE_FLOOR = 0.170102
+CONFIDENCE_CAP = 0.90335
+W_MODEL_CONF = 0.582493
+W_NEWS_CONF = 0.417507
+
+# Gate de cobertura de notícias (Q + Ω) — não tunados no Optuna
+NEWS_COUNT_MIN = 2
+NEWS_OMEGA_BOOST = 3.0
+HARD_PRIOR_WHEN_LOW_NEWS = False
 
 # Controles de portfólio
 LONG_ONLY = True
-MAX_WEIGHT_PER_ASSET = 0.494293
+MAX_WEIGHT_PER_ASSET = 0.312771
 
-# Otimização: treina com histórico longo; escolhe params pela performance em 2025
+# Hold-out: Optuna escolhe params na val 2024; relatório/teste é 2025 (congelado)
 OPT_TRAIN_START = "202305"
 OPT_TRAIN_END = "202412"
-OPT_VAL_START = "202501"
-OPT_VAL_END = "202512"
+OPT_VAL_START = "202401"
+OPT_VAL_END = "202412"
+OPT_TEST_START = "202501"
+OPT_TEST_END = "202512"
 OPT_DEFAULT_TRIALS = 40
 OPT_DEFAULT_REBALANCE_MODE = "weekly"
 
@@ -96,6 +130,8 @@ OUT_Q_STANDALONE_MATRIX = STANDALONE_Q_DIR / "q_walkforward_matrix.csv"
 INITIAL_CAPITAL_BRL = 100_000.0
 SELIC_ANNUAL = 0.15
 EXECUTION_LAG_DAYS = 1
+# Custo proporcional ao turnover (fração): 10 bps = 0.001 por unidade de turnover
+TRANSACTION_COST_BPS = 10.0
 TRADING_DAYS_YEAR = 252
 
 # Backtest → outputs/backtest/
@@ -116,10 +152,11 @@ OUT_SCORE_REBALANCE = SCORE_DIR / "bl_hibrido_rebalance_resumo.csv"
 OUT_SCORE_PRED_METRICS = SCORE_DIR / "bl_hibrido_score_previsao_metricas.csv"
 OUT_SCORE_PRED_TICKER = SCORE_DIR / "bl_hibrido_score_previsao_por_ticker.csv"
 OUT_SCORE_PRED_MONTH = SCORE_DIR / "bl_hibrido_score_previsao_por_mes.csv"
-
+OUT_SCORE_SENSITIVITY = SCORE_DIR / "sensibilidade_universo.csv"
 # Markowitz → outputs/markowitz/
 OUT_MKZ_COMP = MARKOWITZ_DIR / "bl_vs_markowitz_comparativo.csv"
 OUT_MKZ_SUMMARY = MARKOWITZ_DIR / "bl_vs_markowitz_resumo.csv"
+OUT_MKZ_COST_COMPARE = MARKOWITZ_DIR / "bl_vs_baselines_custo_0_vs_10bps.csv"
 OUT_MKZ_W_DAILY = MARKOWITZ_DIR / "markowitz_weights_daily.csv"
 OUT_MKZ_W_WEEKLY = MARKOWITZ_DIR / "markowitz_weights_weekly.csv"
 OUT_MKZ_W_MONTHLY = MARKOWITZ_DIR / "markowitz_weights_monthly.csv"

@@ -1,0 +1,19 @@
+{
+  "ticker": "PRIO3",
+  "horizon": 10,
+  "horizon_nome": "2sem",
+  "cv_rmse": 0.14474855799306172,
+  "n_trials": 40,
+  "params": {
+    "learning_rate": 0.07015908616448654,
+    "max_depth": 7,
+    "subsample": 0.6483152434834079,
+    "colsample_bytree": 0.7369521372417088,
+    "min_child_weight": 22,
+    "reg_alpha": 0.6150413095715827,
+    "reg_lambda": 0.8328216373691119,
+    "n_estimators": 800,
+    "early_stopping_rounds": 20,
+    "eval_metric": "rmse"
+  }
+}

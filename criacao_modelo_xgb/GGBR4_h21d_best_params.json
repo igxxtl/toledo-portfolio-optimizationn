@@ -1,0 +1,19 @@
+{
+  "ticker": "GGBR4",
+  "horizon": 21,
+  "horizon_nome": "1mes",
+  "cv_rmse": 0.13846123056904072,
+  "n_trials": 40,
+  "params": {
+    "learning_rate": 0.08775138414553907,
+    "max_depth": 5,
+    "subsample": 0.6298196901829408,
+    "colsample_bytree": 0.5374044795093007,
+    "min_child_weight": 50,
+    "reg_alpha": 1.4736462681173612,
+    "reg_lambda": 4.372754227415745,
+    "n_estimators": 800,
+    "early_stopping_rounds": 20,
+    "eval_metric": "rmse"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "ticker": "PETR4",
+  "horizon": 5,
+  "horizon_nome": "1sem",
+  "cv_rmse": 0.06908881337854143,
+  "n_trials": 40,
+  "params": {
+    "learning_rate": 0.04164241162915435,
+    "max_depth": 7,
+    "subsample": 0.7836471530240019,
+    "colsample_bytree": 0.9463033699059225,
+    "min_child_weight": 32,
+    "reg_alpha": 1.2342570190622653,
+    "reg_lambda": 4.531429003990843,
+    "n_estimators": 800,
+    "early_stopping_rounds": 20,
+    "eval_metric": "rmse"
+  }
+}

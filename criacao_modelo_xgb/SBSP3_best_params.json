@@ -1,0 +1,19 @@
+{
+  "ticker": "SBSP3",
+  "horizon": 21,
+  "horizon_nome": "1mes",
+  "cv_rmse": 0.10857995625628888,
+  "n_trials": 40,
+  "params": {
+    "learning_rate": 0.03853489491266603,
+    "max_depth": 5,
+    "subsample": 0.9984402361062729,
+    "colsample_bytree": 0.5043736834843053,
+    "min_child_weight": 35,
+    "reg_alpha": 0.04702955119519758,
+    "reg_lambda": 3.7520615880276345,
+    "n_estimators": 800,
+    "early_stopping_rounds": 20,
+    "eval_metric": "rmse"
+  }
+}

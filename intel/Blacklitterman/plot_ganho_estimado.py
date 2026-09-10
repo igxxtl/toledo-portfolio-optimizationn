@@ -10,6 +10,7 @@ import pandas as pd
 
 try:
     from .config import (
+        EXECUTION_LAG_DAYS,
         INITIAL_CAPITAL_BRL,
         OUT_GAIN_COMPARATIVE,
         OUT_GAIN_PLOT,
@@ -22,6 +23,7 @@ try:
         OUT_POSTERIOR_W_CTRL_MONTHLY,
         OUT_POSTERIOR_W_CTRL_WEEKLY,
         SELIC_ANNUAL,
+        TRANSACTION_COST_BPS,
     )
     from .backtest import build_gain_series
     from .comparar_bl_vs_markowitz import compute_markowitz_curve, load_returns_matrix
@@ -42,6 +44,7 @@ except ImportError:
         OUT_POSTERIOR_W_CTRL_MONTHLY,
         OUT_POSTERIOR_W_CTRL_WEEKLY,
         SELIC_ANNUAL,
+        TRANSACTION_COST_BPS,
     )
     from backtest import build_gain_series
     from comparar_bl_vs_markowitz import compute_markowitz_curve, load_returns_matrix
@@ -131,12 +134,20 @@ def plot_gain_comparative(
         linestyle="--",
     )
     plt.axhline(INITIAL_CAPITAL_BRL, color="black", linewidth=0.8, alpha=0.5)
-    plt.title("BL Híbrido vs Markowitz (retornos reais)")
+    plt.title("BL Híbrido: μ estimado vs retorno realizado (não é prova de alpha)")
     plt.xlabel("Data")
     plt.ylabel("Capital (R$)")
     plt.grid(True, alpha=0.3)
     plt.legend(ncol=2, fontsize=8)
-    plt.tight_layout()
+    plt.figtext(
+        0.5,
+        0.01,
+        f"lag execução={EXECUTION_LAG_DAYS} dia(s) | custo turnover={TRANSACTION_COST_BPS:.0f} bps",
+        ha="center",
+        fontsize=8,
+        alpha=0.8,
+    )
+    plt.tight_layout(rect=[0, 0.03, 1, 1])
     plt.savefig(output_path, dpi=140)
     plt.close()
 

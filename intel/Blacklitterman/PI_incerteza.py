@@ -14,6 +14,7 @@ import pandas as pd
 
 try:
     from .config import (
+        ATIVOS,
         OUT_PI_STANDALONE,
         OUT_PRIOR_COV_STANDALONE,
         OUT_PRIOR_DIAG_STANDALONE,
@@ -27,6 +28,7 @@ try:
     from .prior import compute_pi_and_prior_uncertainty, get_market_cap_weights
 except ImportError:
     from config import (
+        ATIVOS,
         OUT_PI_STANDALONE,
         OUT_PRIOR_COV_STANDALONE,
         OUT_PRIOR_DIAG_STANDALONE,
@@ -40,7 +42,6 @@ except ImportError:
     from prior import compute_pi_and_prior_uncertainty, get_market_cap_weights
 
 TICKERS_DIR = REPO_ROOT / "tickers_data"
-ATIVOS = ["VALE3.SA", "BBAS3.SA", "ITUB3.SA", "BBDC3.SA", "ABEV3.SA"]
 VWAP_WINDOW = 7
 B3_SESSION_HOURS = set(range(13, 20))
 

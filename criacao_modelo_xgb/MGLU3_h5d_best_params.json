@@ -1,0 +1,19 @@
+{
+  "ticker": "MGLU3",
+  "horizon": 5,
+  "horizon_nome": "1sem",
+  "cv_rmse": 0.0917725447166507,
+  "n_trials": 40,
+  "params": {
+    "learning_rate": 0.18637027447128582,
+    "max_depth": 4,
+    "subsample": 0.668147523279367,
+    "colsample_bytree": 0.6262363560087199,
+    "min_child_weight": 19,
+    "reg_alpha": 1.24088082905695,
+    "reg_lambda": 2.1127562815574388,
+    "n_estimators": 800,
+    "early_stopping_rounds": 20,
+    "eval_metric": "rmse"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "ticker": "SUZB3",
+  "horizon": 5,
+  "horizon_nome": "1sem",
+  "cv_rmse": 0.05610298453375479,
+  "n_trials": 40,
+  "params": {
+    "learning_rate": 0.026831819234173878,
+    "max_depth": 4,
+    "subsample": 0.9585684717814499,
+    "colsample_bytree": 0.7585685315231797,
+    "min_child_weight": 42,
+    "reg_alpha": 1.058534874549114,
+    "reg_lambda": 4.653644105001025,
+    "n_estimators": 800,
+    "early_stopping_rounds": 20,
+    "eval_metric": "rmse"
+  }
+}
