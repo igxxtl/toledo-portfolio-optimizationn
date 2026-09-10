@@ -1,0 +1,19 @@
+{
+  "ticker": "RADL3",
+  "horizon": 21,
+  "horizon_nome": "1mes",
+  "cv_rmse": 0.07796492595219563,
+  "n_trials": 40,
+  "params": {
+    "learning_rate": 0.04932155463513824,
+    "max_depth": 5,
+    "subsample": 0.815554727017284,
+    "colsample_bytree": 0.7020843771180812,
+    "min_child_weight": 38,
+    "reg_alpha": 0.3497540189338908,
+    "reg_lambda": 4.91590889041232,
+    "n_estimators": 800,
+    "early_stopping_rounds": 20,
+    "eval_metric": "rmse"
+  }
+}

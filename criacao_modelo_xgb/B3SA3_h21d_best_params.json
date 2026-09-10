@@ -1,0 +1,19 @@
+{
+  "ticker": "B3SA3",
+  "horizon": 21,
+  "horizon_nome": "1mes",
+  "cv_rmse": 0.11280483932712934,
+  "n_trials": 40,
+  "params": {
+    "learning_rate": 0.01750644847351418,
+    "max_depth": 7,
+    "subsample": 0.984824081801523,
+    "colsample_bytree": 0.8249522291195083,
+    "min_child_weight": 46,
+    "reg_alpha": 0.3133078460613826,
+    "reg_lambda": 0.5324589881177131,
+    "n_estimators": 800,
+    "early_stopping_rounds": 20,
+    "eval_metric": "rmse"
+  }
+}

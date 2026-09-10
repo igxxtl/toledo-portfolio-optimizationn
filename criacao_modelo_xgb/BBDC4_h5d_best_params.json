@@ -1,0 +1,19 @@
+{
+  "ticker": "BBDC4",
+  "horizon": 5,
+  "horizon_nome": "1sem",
+  "cv_rmse": 0.05292348639722495,
+  "n_trials": 40,
+  "params": {
+    "learning_rate": 0.02560361333434902,
+    "max_depth": 4,
+    "subsample": 0.8416206602985655,
+    "colsample_bytree": 0.9988867251956812,
+    "min_child_weight": 45,
+    "reg_alpha": 0.003309276555137325,
+    "reg_lambda": 4.676565926798007,
+    "n_estimators": 800,
+    "early_stopping_rounds": 20,
+    "eval_metric": "rmse"
+  }
+}

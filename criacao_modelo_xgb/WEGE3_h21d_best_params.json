@@ -1,0 +1,19 @@
+{
+  "ticker": "WEGE3",
+  "horizon": 21,
+  "horizon_nome": "1mes",
+  "cv_rmse": 0.11821210552214488,
+  "n_trials": 40,
+  "params": {
+    "learning_rate": 0.12843117072498011,
+    "max_depth": 6,
+    "subsample": 0.8699694846266451,
+    "colsample_bytree": 0.9223581584918735,
+    "min_child_weight": 23,
+    "reg_alpha": 0.5508633357479094,
+    "reg_lambda": 3.202618527162489,
+    "n_estimators": 800,
+    "early_stopping_rounds": 20,
+    "eval_metric": "rmse"
+  }
+}

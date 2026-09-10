@@ -53,7 +53,7 @@ try:
         get_market_cap_weights,
         ticker_from_sa,
     )
-    from .xgb_views import build_q_for_tickers
+    from .xgb_views import align_q_to_daily, build_q_for_tickers
 except ImportError:
     from config import (
         ALPHA_Q,
@@ -93,7 +93,7 @@ except ImportError:
         get_market_cap_weights,
         ticker_from_sa,
     )
-    from xgb_views import build_q_for_tickers
+    from xgb_views import align_q_to_daily, build_q_for_tickers
 
 
 def run_pipeline(
@@ -119,6 +119,7 @@ def run_pipeline(
             alpha=p.alpha_q,
             period_start=period_start,
             period_end=period_end,
+            news_count_min=p.news_count_min,
         )
         if verbose:
             for ticker in view_tickers:
@@ -127,6 +128,8 @@ def run_pipeline(
                     print(f"  - {ticker}: OK ({n} dias)")
     elif verbose:
         print("1) Usando Q pré-calculado...")
+
+    q_long = align_q_to_daily(q_long)
 
     if verbose:
         print("2) Gerando Omega diário...")
@@ -139,10 +142,22 @@ def run_pipeline(
         w_news_conf=p.w_news_conf,
         confidence_floor=p.confidence_floor,
         confidence_cap=p.confidence_cap,
+        news_count_min=p.news_count_min,
+        news_omega_boost=p.news_omega_boost,
+        hard_prior_when_low_news=p.hard_prior_when_low_news,
     )
     q_omega_long = (
         q_long.merge(
-            omega_long[["view_date", "ticker", "omega", "omega_base", "view_confidence"]],
+            omega_long[
+                [
+                    "view_date",
+                    "ticker",
+                    "omega",
+                    "omega_base",
+                    "omega_boost",
+                    "view_confidence",
+                ]
+            ],
             on=["view_date", "ticker"],
             how="inner",
         )

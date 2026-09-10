@@ -5,13 +5,44 @@ import numpy as np
 import pandas as pd
 
 try:
-    from .config import EXECUTION_LAG_DAYS, INITIAL_CAPITAL_BRL, SELIC_ANNUAL, TRADING_DAYS_YEAR
+    from .config import (
+        EXECUTION_LAG_DAYS,
+        INITIAL_CAPITAL_BRL,
+        SELIC_ANNUAL,
+        TRADING_DAYS_YEAR,
+        TRANSACTION_COST_BPS,
+    )
     from .io_utils import asset_columns
 except ImportError:
-    from config import EXECUTION_LAG_DAYS, INITIAL_CAPITAL_BRL, SELIC_ANNUAL, TRADING_DAYS_YEAR
+    from config import (
+        EXECUTION_LAG_DAYS,
+        INITIAL_CAPITAL_BRL,
+        SELIC_ANNUAL,
+        TRADING_DAYS_YEAR,
+        TRANSACTION_COST_BPS,
+    )
     from io_utils import asset_columns
 
-__all__ = ["build_gain_series", "portfolio_metrics"]
+__all__ = ["build_gain_series", "portfolio_metrics", "apply_turnover_cost"]
+
+
+def apply_turnover_cost(
+    weights_exec: np.ndarray,
+    ret_gross: np.ndarray,
+    *,
+    cost_bps: float,
+) -> tuple[np.ndarray, np.ndarray]:
+    """Desconta custo proporcional ao turnover: 0.5 * L1(Δw) * (bps/10000)."""
+    cost_rate = float(cost_bps) / 10_000.0
+    if weights_exec.ndim != 2 or len(ret_gross) != len(weights_exec):
+        raise ValueError("weights_exec e ret_gross devem ter o mesmo número de linhas.")
+    w = np.nan_to_num(weights_exec.astype(float), nan=0.0)
+    turnover = np.zeros(len(w), dtype=float)
+    if len(w) > 1:
+        turnover[1:] = 0.5 * np.abs(w[1:] - w[:-1]).sum(axis=1)
+    cost = turnover * cost_rate
+    ret_net = ret_gross.astype(float) - cost
+    return ret_net, cost
 
 
 def build_gain_series(
@@ -23,13 +54,21 @@ def build_gain_series(
     initial_capital: float = INITIAL_CAPITAL_BRL,
     selic_annual: float = SELIC_ANNUAL,
     execution_lag_days: int = EXECUTION_LAG_DAYS,
+    transaction_cost_bps: float = TRANSACTION_COST_BPS,
 ) -> pd.DataFrame:
     assets = sorted(set(asset_columns(mu)).intersection(asset_columns(w)))
     if not assets:
         raise ValueError("Não encontrei colunas de ativos (.SA) em posterior_mu e posterior_weights.")
 
-    merged = mu[["view_date", *assets]].merge(
-        w[["view_date", *assets]],
+    mu_m = mu[["view_date", *assets]].copy()
+    w_m = w[["view_date", *assets]].copy()
+    mu_m["view_date"] = pd.to_datetime(mu_m["view_date"], errors="coerce")
+    w_m["view_date"] = pd.to_datetime(w_m["view_date"], errors="coerce")
+    mu_m = mu_m.dropna(subset=["view_date"])
+    w_m = w_m.dropna(subset=["view_date"])
+
+    merged = mu_m.merge(
+        w_m,
         on="view_date",
         suffixes=("_mu", "_w"),
         how="inner",
@@ -38,6 +77,8 @@ def build_gain_series(
     for asset in assets:
         merged[f"{asset}_w_exec"] = merged[f"{asset}_w"].shift(execution_lag_days)
     merged = merged.dropna(subset=[f"{a}_w_exec" for a in assets]).reset_index(drop=True)
+
+    w_exec = merged[[f"{a}_w_exec" for a in assets]].to_numpy(dtype=float)
 
     est_parts = [merged[f"{a}_w_exec"] * np.expm1(merged[f"{a}_mu"]) for a in assets]
     merged["ret_est_portfolio"] = np.sum(np.column_stack(est_parts), axis=1)
@@ -49,8 +90,19 @@ def build_gain_series(
         real_parts = [
             merged[f"{a}_w_exec"] * np.expm1(merged[f"{a}_real_log"]) for a in real_assets
         ]
-        merged["ret_real_portfolio"] = np.sum(np.column_stack(real_parts), axis=1)
+        ret_gross = np.sum(np.column_stack(real_parts), axis=1)
+        ret_net, cost = apply_turnover_cost(w_exec, ret_gross, cost_bps=transaction_cost_bps)
+        turnover = np.zeros(len(w_exec), dtype=float)
+        if len(w_exec) > 1:
+            turnover[1:] = 0.5 * np.abs(w_exec[1:] - w_exec[:-1]).sum(axis=1)
+        merged["ret_real_gross"] = ret_gross
+        merged["turnover"] = turnover
+        merged["ret_cost"] = cost
+        merged["ret_real_portfolio"] = ret_net
     else:
+        merged["ret_real_gross"] = np.nan
+        merged["turnover"] = np.nan
+        merged["ret_cost"] = np.nan
         merged["ret_real_portfolio"] = np.nan
 
     merged["capital_est"] = (1.0 + merged["ret_est_portfolio"]).cumprod()
@@ -59,9 +111,12 @@ def build_gain_series(
     if merged["ret_real_portfolio"].notna().any():
         merged["capital_real"] = (1.0 + merged["ret_real_portfolio"].fillna(0.0)).cumprod()
         merged["ganho_real_acum_pct"] = (merged["capital_real"] - 1.0) * 100.0
+        cost_drag = (1.0 + merged["ret_cost"].fillna(0.0)).cumprod() - 1.0
+        merged["cost_drag_acum_pct"] = cost_drag * 100.0
     else:
         merged["capital_real"] = np.nan
         merged["ganho_real_acum_pct"] = np.nan
+        merged["cost_drag_acum_pct"] = np.nan
 
     selic_daily = (1.0 + selic_annual) ** (1.0 / 252.0) - 1.0
     merged["ret_selic_benchmark"] = selic_daily
@@ -71,11 +126,16 @@ def build_gain_series(
     merged["capital_real_brl"] = initial_capital * merged["capital_real"]
     merged["capital_selic_brl"] = initial_capital * merged["capital_selic"]
     merged["mode"] = mode_label
+    merged["execution_lag_days"] = execution_lag_days
+    merged["transaction_cost_bps"] = float(transaction_cost_bps)
 
     keep_cols = [
         "view_date",
         "ret_est_portfolio",
         "ret_real_portfolio",
+        "ret_real_gross",
+        "ret_cost",
+        "turnover",
         "ret_selic_benchmark",
         "capital_est",
         "capital_real",
@@ -86,6 +146,9 @@ def build_gain_series(
         "ganho_est_acum_pct",
         "ganho_real_acum_pct",
         "ganho_selic_acum_pct",
+        "cost_drag_acum_pct",
+        "execution_lag_days",
+        "transaction_cost_bps",
         "mode",
     ]
     return merged[keep_cols].sort_values("view_date").reset_index(drop=True)

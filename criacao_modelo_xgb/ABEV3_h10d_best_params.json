@@ -1,0 +1,19 @@
+{
+  "ticker": "ABEV3",
+  "horizon": 10,
+  "horizon_nome": "2sem",
+  "cv_rmse": 0.059035016394908914,
+  "n_trials": 40,
+  "params": {
+    "learning_rate": 0.15499968881306608,
+    "max_depth": 5,
+    "subsample": 0.7460307578020111,
+    "colsample_bytree": 0.5540944528060068,
+    "min_child_weight": 26,
+    "reg_alpha": 1.4589016633035055,
+    "reg_lambda": 2.4790640538423103,
+    "n_estimators": 800,
+    "early_stopping_rounds": 20,
+    "eval_metric": "rmse"
+  }
+}

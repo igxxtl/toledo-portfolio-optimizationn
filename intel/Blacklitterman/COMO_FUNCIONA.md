@@ -103,13 +103,17 @@ Para cada ativo e cada dia no período configurado (padrão: jan–dez/2025):
 
 1. Lê a previsão XGB (`y_pred` = log-retorno esperado)
 2. Agrega notícias do dia em um sinal de sentimento (−1 a +1)
-3. Combina os dois com peso `ALPHA_Q`:
+3. Combina os dois com peso `ALPHA_Q`, com **gate de cobertura** (`NEWS_COUNT_MIN`):
+   `coverage = min(1, news_count / NEWS_COUNT_MIN)`. Sem notícias → `Q = ret_pred`;
+   cobertura cheia → híbrido clássico. Em Ω, `news_count < NEWS_COUNT_MIN` multiplica
+   a incerteza por `NEWS_OMEGA_BOOST` (flag `HARD_PRIOR_WHEN_LOW_NEWS` anula a view).
 
 ```
-Q = ALPHA_Q × previsão_XGB + (1 − ALPHA_Q) × (sentimento × escala_de_retorno)
+coverage = min(1, news_count / NEWS_COUNT_MIN)
+Q = [α + (1−α)·(1−coverage)] · ret_pred + (1−α)·coverage · (sentimento × escala)
 ```
 
-Com `ALPHA_Q = 0.50` (padrão), cada fonte contribui com 50%.
+Com cobertura cheia e `ALPHA_Q = 0.50`, cada fonte contribui com 50%.
 
 A **escala de retorno** evita que o sentimento (−1, 0, +1) fique em unidade errada — ela é baseada na volatilidade recente do ativo (janela de 14 dias).
 
@@ -126,7 +130,7 @@ Para cada dia e ativo, calcula a **incerteza** da view:
 | Fator | Efeito |
 |-------|--------|
 | **Erro histórico** da previsão XGB | Se o modelo erra muito, Ω sobe → menos confiança |
-| **Quantidade de notícias** | Mais notícias = um pouco mais de confiança |
+| **Quantidade de notícias** | Mais notícias = um pouco mais de confiança; abaixo de `NEWS_COUNT_MIN`, Ω é multiplicado por `NEWS_OMEGA_BOOST` |
 | **Variância do ativo** | Base estatística da incerteza |
 
 Views com Ω **alto** pesam **menos** na fórmula final. Views com Ω **baixo** pesam **mais**.

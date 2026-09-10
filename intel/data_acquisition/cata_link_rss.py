@@ -14,7 +14,9 @@ try:
     from .config import (
         COLLECTION_END,
         COLLECTION_START,
+        NEWS_JOBS_DONE,
         NEWS_RAW,
+        RSS_CHECKPOINT_EVERY,
         RSS_COUNTRY,
         RSS_FAIL_COOLDOWN_SECONDS,
         RSS_LANGUAGE,
@@ -29,7 +31,9 @@ except ImportError:
     from config import (
         COLLECTION_END,
         COLLECTION_START,
+        NEWS_JOBS_DONE,
         NEWS_RAW,
+        RSS_CHECKPOINT_EVERY,
         RSS_COUNTRY,
         RSS_FAIL_COOLDOWN_SECONDS,
         RSS_LANGUAGE,
@@ -43,6 +47,29 @@ except ImportError:
 
 Job = tuple[str, date, date]
 _HARD_FAIL_STATUSES = {403, 408, 429, 500, 502, 503, 504}
+
+
+def _company_key(ticker: str) -> str:
+    """Mesma regra do BL: primeiras 4 letras (ITUB3≈ITUB4, PETR3≈PETR4)."""
+    letters = "".join(c for c in ticker.upper() if c.isalpha())
+    return letters[:4] if len(letters) >= 4 else letters
+
+
+def job_key(ticker: str, start: date, end_ex: date) -> str:
+    return f"{ticker}|{start.isoformat()}|{end_ex.isoformat()}"
+
+
+def tickers_one_per_company(configured: list[str]) -> list[str]:
+    """Um ticker por empresa (PETR3 cobre PETR4 via company key no BL)."""
+    planned: set[str] = set()
+    out: list[str] = []
+    for ticker in configured:
+        key = _company_key(ticker)
+        if key in planned:
+            continue
+        out.append(ticker)
+        planned.add(key)
+    return out
 
 
 class FeedFetchError(RuntimeError):
@@ -77,7 +104,6 @@ def _feed_looks_failed(feed: feedparser.FeedParserDict) -> str | None:
     status = int(getattr(feed, "status", 200) or 200)
     if status in _HARD_FAIL_STATUSES or status >= 500:
         return f"HTTP {status}"
-    # resposta HTML/captcha em vez de RSS
     if getattr(feed, "bozo", False) and not feed.entries:
         return f"bozo ({getattr(feed, 'bozo_exception', 'parse error')})"
     return None
@@ -118,6 +144,72 @@ def _backoff(workers: int, pause: float) -> tuple[int, float]:
     return 1, pause * 2.0
 
 
+def load_json_list(path: Path) -> list[dict[str, object]]:
+    if not path.exists():
+        return []
+    data = json.loads(path.read_text(encoding="utf-8"))
+    return data if isinstance(data, list) else []
+
+
+def load_jobs_done(path: Path = NEWS_JOBS_DONE) -> set[str]:
+    if not path.exists():
+        return set()
+    data = json.loads(path.read_text(encoding="utf-8"))
+    if isinstance(data, list):
+        return {str(x) for x in data}
+    return set()
+
+
+def save_jobs_done(done: set[str], path: Path = NEWS_JOBS_DONE) -> None:
+    path.write_text(
+        json.dumps(sorted(done), ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+
+
+def merge_records(
+    base: list[dict[str, object]],
+    extra: list[dict[str, object]],
+) -> list[dict[str, object]]:
+    seen: set[str] = set()
+    merged: list[dict[str, object]] = []
+    for row in base + extra:
+        link = row.get("link_google")
+        if isinstance(link, str) and link:
+            if link in seen:
+                continue
+            seen.add(link)
+        merged.append(row)
+    merged.sort(
+        key=lambda r: _parse_rss_date(r.get("data") if isinstance(r.get("data"), str) else None),
+        reverse=True,
+    )
+    return merged
+
+
+def save_news(records: list[dict[str, object]], path: Path | None = None) -> Path:
+    output = path or NEWS_RAW
+    output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text(json.dumps(records, ensure_ascii=False, indent=2), encoding="utf-8")
+    return output
+
+
+def seed_jobs_done_from_existing(
+    existing: list[dict[str, object]],
+    tickers: list[str],
+    windows: list[tuple[date, date]],
+) -> set[str]:
+    """Se não há jobs_done, marca empresas já no JSON como 100% coletadas."""
+    present = {_company_key(str(r.get("ticker") or "")) for r in existing}
+    done: set[str] = set()
+    for ticker in tickers:
+        if _company_key(ticker) not in present:
+            continue
+        for start, end_ex in windows:
+            done.add(job_key(ticker, start, end_ex))
+    return done
+
+
 def _fetch_window(ticker: str, start: date, end_exclusive: date, pause: float) -> list[dict[str, object]]:
     feed = fetch_feed_with_retry(build_rss_url(ticker, start, end_exclusive))
     records = [
@@ -140,8 +232,12 @@ def _run_batch(
     jobs: list[Job],
     workers: int,
     pause: float,
+    *,
+    on_success=None,
 ) -> tuple[list[dict[str, object]], list[Job]]:
-    """Executa jobs; devolve (records ok, jobs que falharam)."""
+    """Executa jobs; devolve (records ok, jobs que falharam).
+    on_success(job, batch) é chamado a cada janela ok (para checkpoint).
+    """
     ok_records: list[dict[str, object]] = []
     failed: list[Job] = []
     total = len(jobs)
@@ -157,6 +253,8 @@ def _run_batch(
             try:
                 batch = future.result()
                 ok_records.extend(batch)
+                if on_success is not None:
+                    on_success(job, batch)
             except Exception as exc:
                 print(f"  Falha {ticker} {start}→{end_ex}: {exc}")
                 failed.append(job)
@@ -170,80 +268,151 @@ def _run_batch(
     return ok_records, failed
 
 
-def collect_news() -> list[dict[str, object]]:
+def collect_news(
+    tickers: list[str] | None = None,
+    *,
+    jobs_done: set[str] | None = None,
+    existing: list[dict[str, object]] | None = None,
+) -> tuple[list[dict[str, object]], set[str], list[Job]]:
+    """
+    Coleta janelas pendentes.
+
+    Retorna (records_novos_da_sessão, jobs_done_atualizado, jobs_ainda_falhos).
+    Faz checkpoint em NEWS_RAW a cada RSS_CHECKPOINT_EVERY sucessos.
+    """
+    tickers = tickers if tickers is not None else tickers_one_per_company(list(TICKERS))
+    if not tickers:
+        return [], jobs_done or set(), []
+
     windows = generate_weekly_windows(COLLECTION_START, COLLECTION_END)
-    pending: list[Job] = [(ticker, start, end_ex) for ticker in TICKERS for start, end_ex in windows]
+    done = set(jobs_done or [])
+    stored = list(existing or load_json_list(NEWS_RAW))
+    session_new: list[dict[str, object]] = []
+    pending: list[Job] = [
+        (ticker, start, end_ex)
+        for ticker in tickers
+        for start, end_ex in windows
+        if job_key(ticker, start, end_ex) not in done
+    ]
     total_jobs = len(pending)
     workers = RSS_MAX_WORKERS
     pause = float(RSS_PAUSE_SECONDS)
     print(
+        f"Tickers: {', '.join(tickers)} | "
         f"Janelas: {len(windows)} semanas ({COLLECTION_START} a {COLLECTION_END}) | "
-        f"{total_jobs} requests | começa com {workers} workers\n"
+        f"{total_jobs} pendentes / {len(done)} já ok | "
+        f"começa com {workers} workers\n"
     )
+    if not pending:
+        return [], done, []
 
-    all_records: list[dict[str, object]] = []
-    for round_idx in range(1, RSS_MAX_BACKOFF_ROUNDS + 1):
-        print(f"--- Rodada {round_idx}: {len(pending)} jobs | {workers} workers | pause {pause:.1f}s ---")
-        ok, failed = _run_batch(pending, workers, pause)
-        all_records.extend(ok)
+    since_checkpoint = 0
 
-        if not failed:
-            print("Todas as janelas ok.")
-            break
+    def checkpoint(force: bool = False) -> None:
+        nonlocal since_checkpoint, stored
+        if not force and since_checkpoint < RSS_CHECKPOINT_EVERY:
+            return
+        stored = merge_records(stored, session_new)
+        # session_new já está em stored; limpa para não duplicar no próximo merge lógico
+        session_new.clear()
+        save_news(stored)
+        save_jobs_done(done)
+        since_checkpoint = 0
+        print(f"  checkpoint: {len(stored)} notícias | {len(done)} jobs ok → {NEWS_RAW.name}")
 
-        if round_idx == RSS_MAX_BACKOFF_ROUNDS:
-            raise RuntimeError(
-                f"Ainda falharam {len(failed)}/{total_jobs} jobs após {RSS_MAX_BACKOFF_ROUNDS} "
-                f"rodadas de backoff (último: {workers} workers, pause {pause:.1f}s)."
+    def on_success(job: Job, batch: list[dict[str, object]]) -> None:
+        nonlocal since_checkpoint
+        ticker, start, end_ex = job
+        done.add(job_key(ticker, start, end_ex))
+        for row in batch:
+            value = row.get("data")
+            row["data"] = str(value) if value is not None else None
+        session_new.extend(batch)
+        since_checkpoint += 1
+        checkpoint(force=False)
+
+    final_failed: list[Job] = []
+    try:
+        for round_idx in range(1, RSS_MAX_BACKOFF_ROUNDS + 1):
+            print(
+                f"--- Rodada {round_idx}: {len(pending)} jobs | "
+                f"{workers} workers | pause {pause:.1f}s ---"
             )
+            _ok, failed = _run_batch(pending, workers, pause, on_success=on_success)
+            checkpoint(force=True)
 
-        next_workers, next_pause = _backoff(workers, pause)
-        print(
-            f"Falharam {len(failed)}. Cool-down {RSS_FAIL_COOLDOWN_SECONDS}s, "
-            f"workers {workers}→{next_workers}, pause {pause:.1f}s→{next_pause:.1f}s\n"
-        )
-        time.sleep(RSS_FAIL_COOLDOWN_SECONDS)
-        workers, pause = next_workers, next_pause
-        pending = failed
+            if not failed:
+                print("Todas as janelas ok.")
+                final_failed = []
+                break
 
-    # dedupe por link_google (mantém a 1ª ocorrência)
-    seen: set[str] = set()
-    unique: list[dict[str, object]] = []
-    for row in all_records:
-        link = row.get("link_google")
-        if not isinstance(link, str) or link in seen:
-            continue
-        seen.add(link)
-        unique.append(row)
+            final_failed = failed
+            if round_idx == RSS_MAX_BACKOFF_ROUNDS:
+                print(
+                    f"Parcial: ainda falharam {len(failed)} jobs após "
+                    f"{RSS_MAX_BACKOFF_ROUNDS} rodadas (salvo checkpoint)."
+                )
+                break
 
-    for row in unique:
-        value = row.get("data")
-        row["data"] = str(value) if value is not None else None
+            next_workers, next_pause = _backoff(workers, pause)
+            print(
+                f"Falharam {len(failed)}. Cool-down {RSS_FAIL_COOLDOWN_SECONDS}s, "
+                f"workers {workers}→{next_workers}, pause {pause:.1f}s→{next_pause:.1f}s\n"
+            )
+            time.sleep(RSS_FAIL_COOLDOWN_SECONDS)
+            workers, pause = next_workers, next_pause
+            pending = failed
+    except KeyboardInterrupt:
+        print("\nCtrl+C — salvando checkpoint...")
+        checkpoint(force=True)
+        raise
 
-    unique.sort(
-        key=lambda r: _parse_rss_date(r.get("data") if isinstance(r.get("data"), str) else None),
-        reverse=True,
-    )
-    return unique
-
-
-def save_news(records: list[dict[str, object]], path: Path | None = None) -> Path:
-    output = path or NEWS_RAW
-    output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_text(json.dumps(records, ensure_ascii=False, indent=2), encoding="utf-8")
-    return output
+    checkpoint(force=True)
+    return session_new, done, final_failed
 
 
 def main() -> None:
-    records = collect_news()
-    output = save_news(records)
-    print(f"\nTotal final de notícias: {len(records)}")
-    print(f"Salvo em: {output}")
+    existing = load_json_list(NEWS_RAW)
+    tickers = tickers_one_per_company(list(TICKERS))
+    windows = generate_weekly_windows(COLLECTION_START, COLLECTION_END)
+
+    if NEWS_JOBS_DONE.exists():
+        done = load_jobs_done()
+    else:
+        done = seed_jobs_done_from_existing(existing, tickers, windows)
+        if done:
+            save_jobs_done(done)
+            print(f"Seed jobs_done: {len(done)} janelas (empresas já no JSON).")
+
+    pending_n = sum(
+        1
+        for t in tickers
+        for start, end_ex in windows
+        if job_key(t, start, end_ex) not in done
+    )
+    if pending_n == 0:
+        print(f"Nada a coletar: {NEWS_RAW} + {NEWS_JOBS_DONE.name} cobrem o universo.")
+        return
+
+    print(f"Já no arquivo: {len(existing)} itens | jobs ok: {len(done)} | pendentes: {pending_n}\n")
+    try:
+        _new, done, failed = collect_news(tickers, jobs_done=done, existing=existing)
+    except KeyboardInterrupt:
+        print("Interrompido. Progresso já está em disco.")
+        return
+
+    final = load_json_list(NEWS_RAW)
+    print(f"\nTotal em disco: {len(final)} | jobs ok: {len(done)} | ainda falhos: {len(failed)}")
+    print(f"Salvo em: {NEWS_RAW}")
+    if failed:
+        print("Reexecute o script depois para retomar só as janelas falhas.")
 
 
 if __name__ == "__main__":
-    # ponytail: check mínimo do backoff (workers→1, pause sobe)
+    # ponytail: check mínimo do backoff / chave de job
     assert _backoff(8, 2.0) == (4, 3.0)
     assert _backoff(2, 3.0) == (1, 4.5)
     assert _backoff(1, 4.5) == (1, 9.0)
+    assert job_key("PETR3", date(2023, 1, 1), date(2023, 1, 8)) == "PETR3|2023-01-01|2023-01-08"
+    assert tickers_one_per_company(["PETR3", "PETR4", "VALE3"]) == ["PETR3", "VALE3"]
     main()

@@ -6,25 +6,15 @@ train_xgb.py — Regressor XGBoost para o vetor Q (Black-Litterman)
 Objetivo: prever o log-retorno de cada ativo no período t+h e usar o
 output como vetor Q (opiniões) do modelo de Black-Litterman.
 
-Melhorias implementadas:
-    A. Validação:
-        - WF_INTERNAL_SPLIT = 0.80 (era 0.90): mais amostras na validação interna
-        - early_stopping_rounds = 20 (era 50): menos overfitting no early stopping
-        - HORIZONS = [1, 5, 10, 21]: testa múltiplos horizontes
-        - USE_SAMPLE_WEIGHTS: pesos exponenciais por tempo (obs recentes > antigas)
-    B. Target:
-        - USE_CLASSIFICATION: modo 3 classes (down/neutral/up) paralelo ao regressor;
-          o Q é escolhido pela melhor acurácia direcional OOF
-        - USE_QUANTILE: regressão por quantil (mediana) — mais robusta a outliers
-    C. Features:
-        - MACRO_SETORIAL: macro específica por ativo (brent, iron_ore, etc.)
-        - CS_RANK_JANELAS: rank percentil cross-seccional dos retornos entre tickers
-    D. Ensemble:
-        - USE_LGB_ENSEMBLE: média simples XGBoost + LightGBM (requer lightgbm)
-    E. Análise:
-        - USE_SHAP: valores SHAP por feature salvo em <prefixo>_shap.csv
+Torneio por ticker:
+    - Optuna (OPTUNA_TRIALS) busca hiperparâmetros no treino inicial
+    - HORIZONS = [5, 10, 21]: elege o melhor por dir_acc OOF
+    - USE_CLASSIFICATION: regressor vs classificador 3 classes (vence o maior dir_acc)
+    - USE_IBOV_SPREAD_FEATURES: colunas do prepare_features (spread/dist/z_mercado/…)
+    - USE_QUANTILE / USE_LGB_ENSEMBLE: flags opcionais (desligadas por padrão)
 """
 
+import json
 import shutil
 import sys
 from pathlib import Path
@@ -57,9 +47,9 @@ except ImportError:
     HAS_LGB = False
 
 try:
-    from .config import DATA_DAILY_DIR, XGB_OUTPUT_DIR
+    from .config import DATA_DAILY_DIR, FEATURE_WINDOWS, XGB_OUTPUT_DIR
 except ImportError:
-    from config import DATA_DAILY_DIR, XGB_OUTPUT_DIR
+    from config import DATA_DAILY_DIR, FEATURE_WINDOWS, XGB_OUTPUT_DIR
 
 DATA_DIR = DATA_DAILY_DIR
 OUT_DIR = XGB_OUTPUT_DIR
@@ -118,10 +108,24 @@ CS_RANK_JANELAS = [21, 63, 126]
 AUTO_DOWNLOAD_USDBRL = True
 
 # ── horizontes de previsão ─────────────────────────────────────────────────────
-HORIZONS         = [21]
+HORIZONS         = [5, 10, 21]
 HORIZON_NOMES    = {1: "1d", 5: "1sem", 10: "2sem", 21: "1mes"}
 HORIZON_CRITERIO = "dir_acc_pct"
 HORIZON_MENOR_MELHOR = {"rmse_wf", "mae_wf"}
+
+# Features IBOV-spread gravadas por prepare_features.py (sufixo _{n}d).
+USE_IBOV_SPREAD_FEATURES = True
+IBOV_SPREAD_PREFIXES = (
+    "spread_retorno_",
+    "dist_sma_",
+    "spread_vol_",
+    "beta_",
+    "spread_volratio_",
+    "z_alpha_",
+    "trend_mercado_",
+    "risco_mercado_",
+    "z_mercado_",
+)
 
 # ── penalidade de omega por baixa acurácia direcional ─────────────────────────
 DIR_ACC_PENALIDADE_LIMIAR = 52.0
@@ -147,7 +151,7 @@ SAMPLE_WEIGHT_LAMBDA = 5.0
 # Treina XGBClassifier (down / neutral / up) em walk-forward paralelo ao regressor.
 # Q_clf = P(up)×μ_up + P(neutral)×μ_neutral + P(down)×μ_down (retorno esperado).
 # O modelo com maior dir_acc OOF vence e seus artefatos vão para o Black-Litterman.
-USE_CLASSIFICATION = False
+USE_CLASSIFICATION = True
 
 # ── regressão por quantil (opcional) ──────────────────────────────────────────
 # Usa objective='reg:quantileerror' (mediana, α=0.5) em vez de MSE.
@@ -165,7 +169,7 @@ USE_LGB_ENSEMBLE = False
 USE_SHAP = True
 
 # ── Optuna ─────────────────────────────────────────────────────────────────────
-OPTUNA_TRIALS   = 0
+OPTUNA_TRIALS   = 40
 OPTUNA_CV_FOLDS = 4
 PARAM_SPACE = {
     "learning_rate":    (0.01, 0.20),
@@ -314,6 +318,7 @@ def build_features(df: pd.DataFrame) -> tuple[pd.DataFrame, list[str]]:
       usdbrl_close, di_close         — macro global
       <stem>_close                   — macro setorial (brent, iron_ore, etc.)
       cs_rank_<h>                    — rank cross-seccional pré-calculado
+      spread_retorno_*d, …           — IBOV-spread do prepare_features (flag)
     """
     out = pd.DataFrame(index=df.index)
     out["date"] = df["date"].values
@@ -375,6 +380,18 @@ def build_features(df: pd.DataFrame) -> tuple[pd.DataFrame, list[str]]:
         out[f"risco_mercado_{n}"] = r_ibov.rolling(n, min_periods=n).std(ddof=1)
     for n in TREND_MERCADO_JANELAS:
         out[f"trend_mercado_{n}"] = np.log(ibov_close / ibov_close.shift(n))
+
+    # § 2.5b — IBOV-spread do prepare_features (nomes *_{n}d; não colidem com beta_21 etc.)
+    if USE_IBOV_SPREAD_FEATURES:
+        allowed_sfx = {f"_{n}d" for n in FEATURE_WINDOWS}
+        for col in df.columns:
+            if not any(col.startswith(p) for p in IBOV_SPREAD_PREFIXES):
+                continue
+            if not any(col.endswith(sfx) for sfx in allowed_sfx):
+                continue
+            if col in out.columns:
+                continue
+            out[col] = pd.to_numeric(df[col], errors="coerce").values
 
     # § 2.6 — macro global opcional
     if "usdbrl_close" in df.columns:
@@ -816,6 +833,21 @@ def treinar(
         params, cv_rmse = otimizar_params(X[:train_inicial], y[:train_inicial], OPTUNA_TRIALS)
         print(f"RMSE-CV={cv_rmse:.5f} | lr={params['learning_rate']:.4f} | "
               f"depth={params['max_depth']}", flush=True)
+        best_payload = {
+            "ticker": ticker,
+            "horizon": horizon,
+            "horizon_nome": nome_h,
+            "cv_rmse": float(cv_rmse),
+            "n_trials": OPTUNA_TRIALS,
+            "params": {
+                k: (float(v) if isinstance(v, (np.floating, float)) else
+                    int(v) if isinstance(v, (np.integer, int)) else v)
+                for k, v in params.items()
+                if k not in {"verbosity", "n_jobs", "random_state"}
+            },
+        }
+        with open(OUT_DIR / f"{prefixo}_best_params.json", "w", encoding="utf-8") as fh:
+            json.dump(best_payload, fh, indent=2, ensure_ascii=False)
     else:
         params  = dict(XGB_DEFAULT)
         cv_rmse = float("nan")
@@ -1155,7 +1187,8 @@ def comparar_horizontes(
     vencedor["penalidade_fator"] = round(fator, 4)
 
     for sufixo in ("_predicoes.csv", "_model.pkl", "_importancia.csv",
-                   "_plot.png", "_shap.csv", "_clf.pkl", "_scaler_y.pkl"):
+                   "_plot.png", "_shap.csv", "_clf.pkl", "_scaler_y.pkl",
+                   "_best_params.json"):
         src = OUT_DIR / f"{ticker}_h{h_win}d{sufixo}"
         dst = OUT_DIR / f"{ticker}{sufixo}"
         if src.exists():
@@ -1195,6 +1228,7 @@ def main() -> None:
     if USE_QUANTILE:        flags.append("quantile")
     if USE_LGB_ENSEMBLE and HAS_LGB: flags.append("lgb_ens")
     if USE_SHAP and HAS_SHAP:        flags.append("shap")
+    if USE_IBOV_SPREAD_FEATURES:     flags.append("ibov_spread")
     flags_str = " | ".join(flags) if flags else "—"
 
     print(
@@ -1288,6 +1322,37 @@ def main() -> None:
         .rename(columns={"mse_wf": "omega_base", "horizon_nome": "horizonte_vencedor"})
     )
     omega_df.to_csv(OUT_DIR / "omega_base.csv", index=False)
+
+    # ── best_params consolidados ──────────────────────────────────────────
+    best_rows: list[dict] = []
+    for fp in sorted(OUT_DIR.glob("*_best_params.json")):
+        try:
+            payload = json.loads(fp.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        row = {
+            "ticker": payload.get("ticker"),
+            "horizon": payload.get("horizon"),
+            "horizon_nome": payload.get("horizon_nome"),
+            "cv_rmse": payload.get("cv_rmse"),
+            "n_trials": payload.get("n_trials"),
+        }
+        params_obj = payload.get("params") or {}
+        for key in (
+            "learning_rate", "max_depth", "subsample", "colsample_bytree",
+            "min_child_weight", "reg_alpha", "reg_lambda", "n_estimators",
+        ):
+            if key in params_obj:
+                row[key] = params_obj[key]
+        best_rows.append(row)
+    if best_rows:
+        best_all = (
+            pd.DataFrame(best_rows)
+            .sort_values(["ticker", "horizon"])
+            .reset_index(drop=True)
+        )
+        best_all.to_csv(OUT_DIR / "best_params_all.csv", index=False)
+        print(f"best_params -> {OUT_DIR / 'best_params_all.csv'}")
 
     # ── resumo no terminal ────────────────────────────────────────────────
     print("\n── Vencedores por ticker (para o vetor Q) ─────────────────────")

@@ -10,8 +10,11 @@ try:
         CONFIDENCE_FLOOR,
         ERR_MIN_PERIODS,
         ERR_WINDOW,
+        HARD_PRIOR_WHEN_LOW_NEWS,
         LONG_ONLY,
         MAX_WEIGHT_PER_ASSET,
+        NEWS_COUNT_MIN,
+        NEWS_OMEGA_BOOST,
         ROLLING_MIN_OBS,
         TAU,
         USE_ROLLING_PRIOR,
@@ -25,8 +28,11 @@ except ImportError:
         CONFIDENCE_FLOOR,
         ERR_MIN_PERIODS,
         ERR_WINDOW,
+        HARD_PRIOR_WHEN_LOW_NEWS,
         LONG_ONLY,
         MAX_WEIGHT_PER_ASSET,
+        NEWS_COUNT_MIN,
+        NEWS_OMEGA_BOOST,
         ROLLING_MIN_OBS,
         TAU,
         USE_ROLLING_PRIOR,
@@ -54,6 +60,9 @@ class BLParams:
     use_rolling_prior: bool = USE_ROLLING_PRIOR
     long_only: bool = LONG_ONLY
     rebalance_mode: str = "weekly"
+    news_count_min: int = NEWS_COUNT_MIN
+    news_omega_boost: float = NEWS_OMEGA_BOOST
+    hard_prior_when_low_news: bool = HARD_PRIOR_WHEN_LOW_NEWS
 
     @classmethod
     def from_config(cls, rebalance_mode: str = "weekly") -> BLParams:
@@ -88,6 +97,9 @@ class BLParams:
             use_rolling_prior=self.use_rolling_prior,
             long_only=self.long_only,
             rebalance_mode=self.rebalance_mode,
+            news_count_min=max(int(self.news_count_min), 1),
+            news_omega_boost=max(float(self.news_omega_boost), 1.0),
+            hard_prior_when_low_news=bool(self.hard_prior_when_low_news),
         )
 
     def to_dict(self) -> dict[str, float | int | bool | str]:

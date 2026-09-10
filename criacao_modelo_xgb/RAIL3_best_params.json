@@ -1,0 +1,19 @@
+{
+  "ticker": "RAIL3",
+  "horizon": 21,
+  "horizon_nome": "1mes",
+  "cv_rmse": 0.08860164096283435,
+  "n_trials": 40,
+  "params": {
+    "learning_rate": 0.17109821905377123,
+    "max_depth": 5,
+    "subsample": 0.7272891244661601,
+    "colsample_bytree": 0.5329055079882532,
+    "min_child_weight": 7,
+    "reg_alpha": 1.7332221924411961,
+    "reg_lambda": 2.4961636264174367,
+    "n_estimators": 800,
+    "early_stopping_rounds": 20,
+    "eval_metric": "rmse"
+  }
+}

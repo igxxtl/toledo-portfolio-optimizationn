@@ -1,0 +1,19 @@
+{
+  "ticker": "LREN3",
+  "horizon": 21,
+  "horizon_nome": "1mes",
+  "cv_rmse": 0.1258601815461685,
+  "n_trials": 40,
+  "params": {
+    "learning_rate": 0.08413797808025078,
+    "max_depth": 4,
+    "subsample": 0.9040475185239866,
+    "colsample_bytree": 0.8807756924691954,
+    "min_child_weight": 12,
+    "reg_alpha": 0.016391760410935357,
+    "reg_lambda": 1.767975933364275,
+    "n_estimators": 800,
+    "early_stopping_rounds": 20,
+    "eval_metric": "rmse"
+  }
+}

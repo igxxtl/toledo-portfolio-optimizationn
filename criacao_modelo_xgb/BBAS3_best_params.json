@@ -1,0 +1,19 @@
+{
+  "ticker": "BBAS3",
+  "horizon": 10,
+  "horizon_nome": "2sem",
+  "cv_rmse": 0.07659811403495566,
+  "n_trials": 40,
+  "params": {
+    "learning_rate": 0.09740020319603566,
+    "max_depth": 4,
+    "subsample": 0.8992925357217444,
+    "colsample_bytree": 0.9002917529141345,
+    "min_child_weight": 44,
+    "reg_alpha": 0.21724641029256253,
+    "reg_lambda": 1.957387832399607,
+    "n_estimators": 800,
+    "early_stopping_rounds": 20,
+    "eval_metric": "rmse"
+  }
+}

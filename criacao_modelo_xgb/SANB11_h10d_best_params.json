@@ -1,0 +1,19 @@
+{
+  "ticker": "SANB11",
+  "horizon": 10,
+  "horizon_nome": "2sem",
+  "cv_rmse": 0.07032794466099673,
+  "n_trials": 40,
+  "params": {
+    "learning_rate": 0.021978860803688983,
+    "max_depth": 6,
+    "subsample": 0.9092916914955785,
+    "colsample_bytree": 0.9635352590396749,
+    "min_child_weight": 34,
+    "reg_alpha": 0.6241943637151618,
+    "reg_lambda": 3.1925041005536947,
+    "n_estimators": 800,
+    "early_stopping_rounds": 20,
+    "eval_metric": "rmse"
+  }
+}

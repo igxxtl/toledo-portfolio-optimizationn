@@ -1,0 +1,19 @@
+{
+  "ticker": "ITUB4",
+  "horizon": 5,
+  "horizon_nome": "1sem",
+  "cv_rmse": 0.047830116768540966,
+  "n_trials": 40,
+  "params": {
+    "learning_rate": 0.025577186916389792,
+    "max_depth": 4,
+    "subsample": 0.7607979282525379,
+    "colsample_bytree": 0.6805618256430146,
+    "min_child_weight": 33,
+    "reg_alpha": 0.6557465894699585,
+    "reg_lambda": 3.5381452483476425,
+    "n_estimators": 800,
+    "early_stopping_rounds": 20,
+    "eval_metric": "rmse"
+  }
+}

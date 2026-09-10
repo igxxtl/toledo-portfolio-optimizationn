@@ -1,0 +1,19 @@
+{
+  "ticker": "VALE3",
+  "horizon": 5,
+  "horizon_nome": "1sem",
+  "cv_rmse": 0.05304178401048706,
+  "n_trials": 40,
+  "params": {
+    "learning_rate": 0.08773528057877819,
+    "max_depth": 5,
+    "subsample": 0.8919029257284898,
+    "colsample_bytree": 0.7985223375197199,
+    "min_child_weight": 10,
+    "reg_alpha": 0.010343506659582502,
+    "reg_lambda": 2.549313522568368,
+    "n_estimators": 800,
+    "early_stopping_rounds": 20,
+    "eval_metric": "rmse"
+  }
+}

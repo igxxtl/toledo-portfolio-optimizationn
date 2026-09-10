@@ -31,6 +31,8 @@ try:
         ATIVOS,
         OPT_DEFAULT_REBALANCE_MODE,
         OPT_DEFAULT_TRIALS,
+        OPT_TEST_END,
+        OPT_TEST_START,
         OPT_TRAIN_START,
         OPT_VAL_END,
         OPT_VAL_START,
@@ -56,6 +58,8 @@ except ImportError:
         ATIVOS,
         OPT_DEFAULT_REBALANCE_MODE,
         OPT_DEFAULT_TRIALS,
+        OPT_TEST_END,
+        OPT_TEST_START,
         OPT_TRAIN_START,
         OPT_VAL_END,
         OPT_VAL_START,
@@ -147,6 +151,7 @@ def evaluate_params(params: BLParams, ctx: OptimizationContext) -> dict[str, flo
         ctx.views_by_ticker,
         ctx.sentiment_by_ticker,
         alpha=params.alpha_q,
+        news_count_min=params.news_count_min,
     )
     outputs = run_pipeline(
         params,
@@ -212,10 +217,11 @@ def run_optimization(
     train_start: str = OPT_TRAIN_START,
     val_start: str = OPT_VAL_START,
     val_end: str = OPT_VAL_END,
-) -> tuple[BLParams, pd.DataFrame, dict[str, float]]:
+    test_start: str = OPT_TEST_START,
+    test_end: str = OPT_TEST_END,
+) -> tuple[BLParams, pd.DataFrame, dict[str, float], dict[str, float]]:
     print("Carregando cache (XGB, sentimento, retornos, market cap)...")
-    # Pipeline na otimização: histórico longo (train_start→val_end);
-    # objective só olha a janela de validação (ex.: 2025).
+    # Optuna: histórico até fim da VAL; objective só na VAL (ex.: 2024).
     ctx = build_context(
         period_start=train_start,
         period_end=val_end,
@@ -225,7 +231,8 @@ def run_optimization(
     )
 
     print(f"Histórico na otimização: {train_start} -> {val_end}")
-    print(f"Validação out-of-sample: {ctx.val_start.date()} -> {ctx.val_end.date()}")
+    print(f"Validação (objetivo Optuna): {ctx.val_start.date()} -> {ctx.val_end.date()}")
+    print(f"Teste congelado (após Optuna): {test_start} -> {test_end}")
     print(f"Modo de rebalanceamento: {rebalance_mode}")
     print(f"Trials Optuna: {n_trials}")
 
@@ -270,8 +277,21 @@ def run_optimization(
     OUT_OPT_TRIALS.parent.mkdir(parents=True, exist_ok=True)
     trials_df.to_csv(OUT_OPT_TRIALS, index=False)
 
+    # Teste 2025 com params congelados (sem novo Optuna)
+    print("\nAvaliando params congelados no teste OOS...")
+    test_ctx = build_context(
+        period_start=train_start,
+        period_end=test_end,
+        val_start=test_start,
+        val_end=test_end,
+        rebalance_mode=rebalance_mode,
+    )
+    test_metrics = evaluate_params(best_params, test_ctx)
+    test_clean = {k: v for k, v in test_metrics.items() if not str(k).startswith("full_")}
+
     best_row = best_params.to_dict()
     best_row.update({f"val_{k}": v for k, v in best_metrics.items()})
+    best_row.update({f"test_{k}": v for k, v in test_clean.items()})
     best_row["objective"] = best.value
     pd.DataFrame([best_row]).to_csv(OUT_OPT_BEST_PARAMS, index=False)
 
@@ -282,20 +302,25 @@ def run_optimization(
         "train_start": train_start,
         "val_start": str(ctx.val_start.date()),
         "val_end": str(ctx.val_end.date()),
+        "test_start": str(test_ctx.val_start.date()),
+        "test_end": str(test_ctx.val_end.date()),
         "best_params": best_params.to_dict(),
         "val_metrics": {k: v for k, v in best_metrics.items() if not str(k).startswith("full_")},
+        "test_metrics": test_clean,
     }
     OUT_OPT_SUMMARY.write_text(json.dumps(summary, indent=2, ensure_ascii=False), encoding="utf-8")
 
-    print(f"\nMelhor objective (val): {best.value:.4f}")
+    print(f"\nMelhor objective (val 2024): {best.value:.4f}")
     print(f"Melhores parâmetros: {json.dumps(best_params.to_dict(), ensure_ascii=False)}")
     print(f"Sharpe val: {best_metrics.get('sharpe', float('nan')):.4f}")
     print(f"Retorno val: {best_metrics.get('total_return_pct', float('nan')):.2f}%")
+    print(f"Sharpe test 2025 (congelado): {test_clean.get('sharpe', float('nan')):.4f}")
+    print(f"Retorno test 2025: {test_clean.get('total_return_pct', float('nan')):.2f}%")
     print(f"Trials salvos em: {OUT_OPT_TRIALS}")
     print(f"Melhor config salva em: {OUT_OPT_BEST_PARAMS}")
     print(f"Resumo JSON em: {OUT_OPT_SUMMARY}")
 
-    return best_params, trials_df, best_metrics
+    return best_params, trials_df, best_metrics, test_clean
 
 
 def apply_best_params_to_config(best: BLParams) -> str:
@@ -330,8 +355,10 @@ def parse_args() -> argparse.Namespace:
         default=OPT_DEFAULT_REBALANCE_MODE,
         help="Modo de rebalanceamento avaliado",
     )
-    parser.add_argument("--val-start", default=OPT_VAL_START, help="Início validação YYYYMM")
-    parser.add_argument("--val-end", default=OPT_VAL_END, help="Fim validação YYYYMM")
+    parser.add_argument("--val-start", default=OPT_VAL_START, help="Início validação YYYYMM (Optuna)")
+    parser.add_argument("--val-end", default=OPT_VAL_END, help="Fim validação YYYYMM (Optuna)")
+    parser.add_argument("--test-start", default=OPT_TEST_START, help="Início teste OOS YYYYMM")
+    parser.add_argument("--test-end", default=OPT_TEST_END, help="Fim teste OOS YYYYMM")
     parser.add_argument(
         "--train-start",
         default=OPT_TRAIN_START,
@@ -347,12 +374,14 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> None:
     args = parse_args()
-    best_params, _, _ = run_optimization(
+    best_params, _, _, _ = run_optimization(
         n_trials=args.trials,
         rebalance_mode=args.rebalance,
         train_start=args.train_start,
         val_start=args.val_start,
         val_end=args.val_end,
+        test_start=args.test_start,
+        test_end=args.test_end,
     )
 
     print("\n" + apply_best_params_to_config(best_params))
