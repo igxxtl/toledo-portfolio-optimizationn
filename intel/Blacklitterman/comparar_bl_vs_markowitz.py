@@ -102,10 +102,10 @@ def _mode_period_key(dates: pd.Series, mode: str) -> pd.Series:
     raise ValueError(f"Modo invalido: {mode}")
 
 
-def load_returns_matrix() -> pd.DataFrame:
+def load_returns_matrix(tickers: list[str] | None = None) -> pd.DataFrame:
     start_date, end_date = month_bounds(PERIOD_START, PERIOD_END)
     returns = get_daily_returns_for_prior(
-        tickers=ATIVOS,
+        tickers=list(tickers) if tickers is not None else list(ATIVOS),
         start_date=start_date.strftime("%Y-%m-%d"),
         end_date=end_date.strftime("%Y-%m-%d"),
     )
@@ -155,10 +155,12 @@ def compute_markowitz_curve(
     mode: str,
     *,
     cost_bps: float = TRANSACTION_COST_BPS,
+    max_weight: float | None = None,
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
     dates = returns_mat.index.to_series().reset_index(drop=True)
     assets = list(returns_mat.columns)
     n = len(assets)
+    weight_cap = float(MAX_WEIGHT_PER_ASSET if max_weight is None else max_weight)
 
     reb_key = _mode_period_key(dates, mode)
     rebalance_flag = ~reb_key.duplicated()
@@ -177,7 +179,7 @@ def compute_markowitz_curve(
                 raw_w = np.linalg.pinv(sigma) @ mu
                 if np.isfinite(raw_w).all() and abs(float(raw_w.sum())) > 1e-12:
                     raw_w = raw_w / float(raw_w.sum())
-                current_w = long_only_capped_weights(raw_w, MAX_WEIGHT_PER_ASSET)
+                current_w = long_only_capped_weights(raw_w, weight_cap)
         weights[i] = current_w
 
     out = _curve_from_weights(
@@ -199,6 +201,134 @@ def compute_markowitz_curve(
     weights_df["rebalance_flag"] = rebalance_flag.astype(int).values
     weights_df["gross_target"] = np.abs(weights).sum(axis=1)
     weights_df["gross_exec"] = np.nansum(np.abs(w_exec), axis=1)
+    valid_dates = set(pd.to_datetime(out["view_date"]))
+    weights_df = weights_df[weights_df["view_date"].isin(valid_dates)].reset_index(drop=True)
+    return out, weights_df
+
+
+def _mv_long_only(mu: np.ndarray, sigma: np.ndarray, max_weight: float) -> np.ndarray:
+    n = len(mu)
+    sig = sigma + RIDGE * np.eye(n)
+    raw = np.linalg.pinv(sig) @ mu
+    if not np.isfinite(raw).all() or abs(float(raw.sum())) <= 1e-12:
+        return np.full(n, 1.0 / n, dtype=float)
+    return long_only_capped_weights(raw / float(raw.sum()), max_weight)
+
+
+def compute_walkforward_topk_curve(
+    returns_mat: pd.DataFrame,
+    mode: str,
+    k: int,
+    *,
+    rank_fn,
+    alloc: str = "markowitz",
+    returns_hist: pd.DataFrame | None = None,
+    bl_mu: pd.DataFrame | None = None,
+    max_weight: float | None = None,
+    cost_bps: float = TRANSACTION_COST_BPS,
+    ret_col: str = "ret_mkv",
+    cap_col: str = "capital_mkv_brl",
+    ganho_col: str = "ganho_mkv_pct",
+) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """
+    Top-k walk-forward: em cada rebalance, ranqueia com dados estritamente < asof,
+    aloca só no top-k e zera o restante.
+
+    alloc:
+      - markowitz: μ/Σ históricos no top-k
+      - bl_mu: μ posterior BL no top-k + Σ histórica no top-k
+    """
+    if alloc not in {"markowitz", "bl_mu"}:
+        raise ValueError(f"alloc invalido: {alloc}")
+    if alloc == "bl_mu" and bl_mu is None:
+        raise ValueError("alloc='bl_mu' exige bl_mu")
+
+    dates = returns_mat.index.to_series().reset_index(drop=True)
+    assets = list(returns_mat.columns)
+    n = len(assets)
+    asset_to_i = {a: i for i, a in enumerate(assets)}
+    weight_cap = float(MAX_WEIGHT_PER_ASSET if max_weight is None else max_weight)
+    hist_src = returns_hist if returns_hist is not None else returns_mat
+    hist_src = hist_src.sort_index()
+
+    bl_mu_idx: pd.DataFrame | None = None
+    if bl_mu is not None:
+        bl_mu_idx = bl_mu.copy()
+        bl_mu_idx["view_date"] = pd.to_datetime(bl_mu_idx["view_date"])
+        bl_mu_idx = bl_mu_idx.sort_values("view_date").set_index("view_date")
+
+    reb_key = _mode_period_key(dates, mode)
+    rebalance_flag = ~reb_key.duplicated()
+    weights = np.zeros((len(dates), n), dtype=float)
+    current_w = np.full(n, 1.0 / max(k, 1), dtype=float)
+    # equal-weight seed only on first k slots until first successful rebalance
+    current_w[:] = 0.0
+    current_w[: min(k, n)] = 1.0 / min(k, n)
+    topk_log: list[str] = []
+
+    for i in range(len(dates)):
+        if bool(rebalance_flag.iloc[i]):
+            asof = pd.Timestamp(dates.iloc[i])
+            ranked = [t for t in rank_fn(asof) if t in asset_to_i][:k]
+            if len(ranked) < k:
+                # fallback: complete with remaining assets in config order
+                for a in assets:
+                    if a not in ranked:
+                        ranked.append(a)
+                    if len(ranked) >= k:
+                        break
+            topk_log.append(";".join(ranked))
+
+            hist = hist_src.loc[hist_src.index < asof, ranked].tail(ROLLING_WINDOW).dropna(how="any")
+            new_w = np.zeros(n, dtype=float)
+            if len(hist) >= MIN_OBS:
+                sigma = hist.cov().to_numpy(dtype=float)
+                if alloc == "markowitz":
+                    mu = hist.mean().to_numpy(dtype=float)
+                else:
+                    assert bl_mu_idx is not None
+                    past = bl_mu_idx.loc[bl_mu_idx.index <= asof]
+                    if past.empty:
+                        mu = hist.mean().to_numpy(dtype=float)
+                    else:
+                        mu_row = past.iloc[-1]
+                        mu = np.array(
+                            [float(mu_row[c]) if c in mu_row.index else 0.0 for c in ranked],
+                            dtype=float,
+                        )
+                w_k = _mv_long_only(mu, sigma, weight_cap)
+                for j, a in enumerate(ranked):
+                    new_w[asset_to_i[a]] = float(w_k[j])
+            else:
+                eq = 1.0 / len(ranked)
+                for a in ranked:
+                    new_w[asset_to_i[a]] = eq
+            current_w = new_w
+        weights[i] = current_w
+
+    out = _curve_from_weights(
+        returns_mat,
+        weights,
+        mode,
+        ret_col,
+        cap_col,
+        ganho_col,
+        cost_bps=cost_bps,
+    )
+    w_exec = np.roll(weights, shift=EXECUTION_LAG_DAYS, axis=0)
+    w_exec[:EXECUTION_LAG_DAYS, :] = np.nan
+    weights_df = pd.DataFrame({"view_date": dates.values, "mode": mode})
+    for j, a in enumerate(assets):
+        weights_df[f"{a}_target"] = weights[:, j]
+        weights_df[f"{a}_exec"] = w_exec[:, j]
+    weights_df["rebalance_flag"] = rebalance_flag.astype(int).values
+    weights_df["gross_target"] = np.abs(weights).sum(axis=1)
+    # ponytail: topk_log only on rebalance rows; empty elsewhere
+    weights_df["topk"] = ""
+    reb_idx = np.flatnonzero(rebalance_flag.to_numpy())
+    for j, idx in enumerate(reb_idx):
+        if j < len(topk_log):
+            weights_df.loc[idx, "topk"] = topk_log[j]
     valid_dates = set(pd.to_datetime(out["view_date"]))
     weights_df = weights_df[weights_df["view_date"].isin(valid_dates)].reset_index(drop=True)
     return out, weights_df
