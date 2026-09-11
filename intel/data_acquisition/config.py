@@ -57,6 +57,8 @@ RSS_MAX_WORKERS = 2
 RSS_FAIL_COOLDOWN_SECONDS = 30
 RSS_MAX_BACKOFF_ROUNDS = 6
 RSS_CHECKPOINT_EVERY = 25
+# Circuit breaker: N respostas HTTP 503 seguidas → checkpoint e encerra (retoma depois)
+RSS_MAX_CONSECUTIVE_503 = 12
 
 # Sentimento (OpenAI) — classificação 3 classes em volume → luna (tier nano da família 5.6)
 SENTIMENT_MODEL = "gpt-5.6-luna"

@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import threading
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import date, datetime, timedelta
@@ -21,6 +22,7 @@ try:
         RSS_FAIL_COOLDOWN_SECONDS,
         RSS_LANGUAGE,
         RSS_MAX_BACKOFF_ROUNDS,
+        RSS_MAX_CONSECUTIVE_503,
         RSS_MAX_RETRIES,
         RSS_MAX_WORKERS,
         RSS_PAUSE_SECONDS,
@@ -38,6 +40,7 @@ except ImportError:
         RSS_FAIL_COOLDOWN_SECONDS,
         RSS_LANGUAGE,
         RSS_MAX_BACKOFF_ROUNDS,
+        RSS_MAX_CONSECUTIVE_503,
         RSS_MAX_RETRIES,
         RSS_MAX_WORKERS,
         RSS_PAUSE_SECONDS,
@@ -74,6 +77,38 @@ def tickers_one_per_company(configured: list[str]) -> list[str]:
 
 class FeedFetchError(RuntimeError):
     """Falha recuperável de fetch RSS (rate-limit, HTTP ruim, rede)."""
+
+
+class RateLimitAbort(RuntimeError):
+    """Muitos HTTP 503 seguidos — encerra a coleta após checkpoint."""
+
+
+_consecutive_503 = 0
+_503_lock = threading.Lock()
+
+
+def _reset_503_streak() -> None:
+    global _consecutive_503
+    with _503_lock:
+        _consecutive_503 = 0
+
+
+def _note_fetch_ok() -> None:
+    global _consecutive_503
+    with _503_lock:
+        _consecutive_503 = 0
+
+
+def _note_http_503() -> None:
+    global _consecutive_503
+    with _503_lock:
+        _consecutive_503 += 1
+        n = _consecutive_503
+    if n >= RSS_MAX_CONSECUTIVE_503:
+        raise RateLimitAbort(
+            f"{n} erros HTTP 503 seguidos (limite={RSS_MAX_CONSECUTIVE_503}) - "
+            "salvando e finalizando."
+        )
 
 
 def generate_weekly_windows(start: date, end: date) -> list[tuple[date, date]]:
@@ -116,8 +151,13 @@ def fetch_feed_with_retry(url: str) -> feedparser.FeedParserDict:
             feed = feedparser.parse(url, request_headers={"User-Agent": RSS_USER_AGENT})
             reason = _feed_looks_failed(feed)
             if reason is None:
+                _note_fetch_ok()
                 return feed
+            if reason == "HTTP 503":
+                _note_http_503()
             last_err = FeedFetchError(reason)
+        except RateLimitAbort:
+            raise
         except Exception as exc:
             last_err = exc
         if attempt == RSS_MAX_RETRIES:
@@ -234,15 +274,17 @@ def _run_batch(
     pause: float,
     *,
     on_success=None,
-) -> tuple[list[dict[str, object]], list[Job]]:
-    """Executa jobs; devolve (records ok, jobs que falharam).
+) -> tuple[list[dict[str, object]], list[Job], bool]:
+    """Executa jobs; devolve (records ok, jobs falhos/pendentes, aborted_por_503).
     on_success(job, batch) é chamado a cada janela ok (para checkpoint).
     """
     ok_records: list[dict[str, object]] = []
     failed: list[Job] = []
     total = len(jobs)
-    done = 0
-    with ThreadPoolExecutor(max_workers=workers) as executor:
+    done_n = 0
+    aborted = False
+    executor = ThreadPoolExecutor(max_workers=workers)
+    try:
         futures = {
             executor.submit(_fetch_window, ticker, start, end_ex, pause): (ticker, start, end_ex)
             for ticker, start, end_ex in jobs
@@ -255,17 +297,35 @@ def _run_batch(
                 ok_records.extend(batch)
                 if on_success is not None:
                     on_success(job, batch)
+            except RateLimitAbort as exc:
+                print(f"  {exc}")
+                failed.append(job)
+                aborted = True
+                for pending_f in futures:
+                    pending_f.cancel()
+                break
             except Exception as exc:
-                print(f"  Falha {ticker} {start}→{end_ex}: {exc}")
+                print(f"  Falha {ticker} {start}->{end_ex}: {exc}")
                 failed.append(job)
                 batch = []
-            done += 1
-            if done % 25 == 0 or done == total:
+            done_n += 1
+            if done_n % 25 == 0 or done_n == total:
                 print(
-                    f"  [{done}/{total}] +{len(batch)} | ok acum: {len(ok_records)} | "
+                    f"  [{done_n}/{total}] +{len(batch)} | ok acum: {len(ok_records)} | "
                     f"falhas: {len(failed)}"
                 )
-    return ok_records, failed
+        if aborted:
+            # Janelas ainda não concluídas continuam pendentes para a próxima execução
+            for fut, job in futures.items():
+                if fut.cancelled() or not fut.done():
+                    if job not in failed:
+                        failed.append(job)
+                elif fut.done() and not fut.cancelled():
+                    # pode ter terminado com erro depois do abort — já tratado acima se veio no loop
+                    pass
+    finally:
+        executor.shutdown(wait=False, cancel_futures=True)
+    return ok_records, failed, aborted
 
 
 def collect_news(
@@ -306,6 +366,7 @@ def collect_news(
     if not pending:
         return [], done, []
 
+    _reset_503_streak()
     since_checkpoint = 0
 
     def checkpoint(force: bool = False) -> None:
@@ -318,7 +379,7 @@ def collect_news(
         save_news(stored)
         save_jobs_done(done)
         since_checkpoint = 0
-        print(f"  checkpoint: {len(stored)} notícias | {len(done)} jobs ok → {NEWS_RAW.name}")
+        print(f"  checkpoint: {len(stored)} noticias | {len(done)} jobs ok -> {NEWS_RAW.name}")
 
     def on_success(job: Job, batch: list[dict[str, object]]) -> None:
         nonlocal since_checkpoint
@@ -338,8 +399,16 @@ def collect_news(
                 f"--- Rodada {round_idx}: {len(pending)} jobs | "
                 f"{workers} workers | pause {pause:.1f}s ---"
             )
-            _ok, failed = _run_batch(pending, workers, pause, on_success=on_success)
+            _ok, failed, aborted = _run_batch(pending, workers, pause, on_success=on_success)
             checkpoint(force=True)
+
+            if aborted:
+                final_failed = failed
+                print(
+                    f"Rate-limit: checkpoint salvo. "
+                    f"{len(done)} jobs ok | {len(failed)} pendentes para retomar depois."
+                )
+                break
 
             if not failed:
                 print("Todas as janelas ok.")
@@ -357,13 +426,13 @@ def collect_news(
             next_workers, next_pause = _backoff(workers, pause)
             print(
                 f"Falharam {len(failed)}. Cool-down {RSS_FAIL_COOLDOWN_SECONDS}s, "
-                f"workers {workers}→{next_workers}, pause {pause:.1f}s→{next_pause:.1f}s\n"
+                f"workers {workers}->{next_workers}, pause {pause:.1f}s->{next_pause:.1f}s\n"
             )
             time.sleep(RSS_FAIL_COOLDOWN_SECONDS)
             workers, pause = next_workers, next_pause
             pending = failed
     except KeyboardInterrupt:
-        print("\nCtrl+C — salvando checkpoint...")
+        print("\nCtrl+C - salvando checkpoint...")
         checkpoint(force=True)
         raise
 
@@ -409,10 +478,19 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    # ponytail: check mínimo do backoff / chave de job
+    # ponytail: check mínimo do backoff / chave de job / circuit breaker 503
     assert _backoff(8, 2.0) == (4, 3.0)
     assert _backoff(2, 3.0) == (1, 4.5)
     assert _backoff(1, 4.5) == (1, 9.0)
     assert job_key("PETR3", date(2023, 1, 1), date(2023, 1, 8)) == "PETR3|2023-01-01|2023-01-08"
     assert tickers_one_per_company(["PETR3", "PETR4", "VALE3"]) == ["PETR3", "VALE3"]
+    _reset_503_streak()
+    for _ in range(RSS_MAX_CONSECUTIVE_503 - 1):
+        _note_http_503()
+    try:
+        _note_http_503()
+        raise AssertionError("deveria ter abortado no 503 consecutivo")
+    except RateLimitAbort:
+        pass
+    _reset_503_streak()
     main()
