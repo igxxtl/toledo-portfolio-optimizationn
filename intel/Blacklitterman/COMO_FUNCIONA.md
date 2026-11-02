@@ -2,6 +2,8 @@
 
 Documentação de leitura do pipeline de otimização de portfólio B3: **predições XGBoost** + **sentimento de notícias** → **Black-Litterman** → pesos de portfólio e avaliação.
 
+**Versão vigente:** universo de **20 ações**; parâmetros em [`config.py`](config.py), iguais a `outputs/optimize/melhorias_bl_wf_best.json` (walk-forward, **k\* = 5**, rebalance **monthly**). α ≈ 0,386, τ ≈ 0,0147, teto ≈ 34,2%, gate de **5 notícias** com hard prior ligado. Não usar os defaults antigos (5 ativos, α = 0,50, τ = 0,025, teto 35%).
+
 ---
 
 ## Índice
@@ -22,7 +24,7 @@ Documentação de leitura do pipeline de otimização de portfólio B3: **predi�
 
 ## O problema que resolve
 
-O projeto responde à pergunta: **como dividir capital entre 5 ações da B3** (VALE3, BBAS3, ITUB4, BBDC4, ABEV3) combinando previsões de machine learning, sentimento de notícias e teoria de portfólio.
+O projeto responde à pergunta: **como dividir capital entre 20 ações da B3** (ABEV3, B3SA3, BBAS3, BBDC4, CMIG4, EQTL3, GGBR4, ITUB4, LREN3, MGLU3, PETR3, PETR4, PRIO3, RADL3, RAIL3, SANB11, SBSP3, SUZB3, VALE3, WEGE3) combinando previsões de machine learning, sentimento de notícias e teoria de portfólio.
 
 Não é uma aplicação web — é um conjunto de scripts Python que leem dados, calculam resultados e salvam CSVs e gráficos em `intel/Blacklitterman/outputs/`.
 
@@ -103,17 +105,18 @@ Para cada ativo e cada dia no período configurado (padrão: jan–dez/2025):
 
 1. Lê a previsão XGB (`y_pred` = log-retorno esperado)
 2. Agrega notícias do dia em um sinal de sentimento (−1 a +1)
-3. Combina os dois com peso `ALPHA_Q`, com **gate de cobertura** (`NEWS_COUNT_MIN`):
-   `coverage = min(1, news_count / NEWS_COUNT_MIN)`. Sem notícias → `Q = ret_pred`;
-   cobertura cheia → híbrido clássico. Em Ω, `news_count < NEWS_COUNT_MIN` multiplica
-   a incerteza por `NEWS_OMEGA_BOOST` (flag `HARD_PRIOR_WHEN_LOW_NEWS` anula a view).
+3. Combina os dois com peso `ALPHA_Q` (vigente ≈ **0,386**), com **gate de cobertura** (`NEWS_COUNT_MIN = 5`):
+   `coverage = min(1, news_count / 5)`. Sem notícias → `Q = ret_pred`;
+   cobertura cheia → híbrido clássico. Em Ω, `news_count < 5` multiplica
+   a incerteza por `NEWS_OMEGA_BOOST` ≈ **3,80**. Com `HARD_PRIOR_WHEN_LOW_NEWS = True`
+   (vigente), esses dias têm confiança ≈ 0 e a view é ignorada — o posterior fica no prior.
 
 ```
 coverage = min(1, news_count / NEWS_COUNT_MIN)
 Q = [α + (1−α)·(1−coverage)] · ret_pred + (1−α)·coverage · (sentimento × escala)
 ```
 
-Com cobertura cheia e `ALPHA_Q = 0.50`, cada fonte contribui com 50%.
+Com cobertura cheia e `ALPHA_Q ≈ 0,386`, o XGBoost entra com cerca de 39% e o sentimento com cerca de 61%. No Q de 2025 isso quase não acontece: **73,3%** dos dias-ativo não têm manchete e só **1,5%** têm 5 ou mais, então o hard prior vale na maior parte dos dias.
 
 A **escala de retorno** evita que o sentimento (−1, 0, +1) fique em unidade errada — ela é baseada na volatilidade recente do ativo (janela de 14 dias).
 
@@ -130,7 +133,7 @@ Para cada dia e ativo, calcula a **incerteza** da view:
 | Fator | Efeito |
 |-------|--------|
 | **Erro histórico** da previsão XGB | Se o modelo erra muito, Ω sobe → menos confiança |
-| **Quantidade de notícias** | Mais notícias = um pouco mais de confiança; abaixo de `NEWS_COUNT_MIN`, Ω é multiplicado por `NEWS_OMEGA_BOOST` |
+| **Quantidade de notícias** | Mais notícias = um pouco mais de confiança; abaixo de 5, Ω é multiplicado por ≈ 3,80 e, com hard prior, a view é ignorada |
 | **Variância do ativo** | Base estatística da incerteza |
 
 Views com Ω **alto** pesam **menos** na fórmula final. Views com Ω **baixo** pesam **mais**.
@@ -152,7 +155,7 @@ Sem suas views, o mercado tem uma opinião implícita de equilíbrio:
 3. Estima a **matriz de covariância Σ** entre os ativos
 4. Deriva **π = δ × Σ × w_mercado** — retorno de equilíbrio que justificaria os pesos de mercado atuais
 
-Com `USE_ROLLING_PRIOR = True` (padrão), esse prior é **recalculado dia a dia** com janela móvel (mínimo de 60 observações), em vez de ficar fixo no início do período.
+Com `USE_ROLLING_PRIOR = True` (padrão), esse prior é **recalculado dia a dia** com janela móvel (mínimo de **80** observações), em vez de ficar fixo no início do período.
 
 **Saídas:**
 - `outputs/pipeline/bl_hibrido_pi.csv`
@@ -194,7 +197,7 @@ Os pesos brutos passam por restrições reais de investimento:
 | Regra | Valor padrão | Descrição |
 |-------|--------------|-----------|
 | `LONG_ONLY` | `True` | Sem venda a descoberto |
-| `MAX_WEIGHT_PER_ASSET` | `0.35` | Máximo 35% em uma única ação |
+| `MAX_WEIGHT_PER_ASSET` | `0.341677` | Máximo ≈ 34,2% em uma única ação |
 
 Gera três versões de rebalanceamento a partir dos pesos controlados:
 
@@ -229,7 +232,9 @@ Google News RSS → remove duplicatas → filtra títulos irrelevantes → GPT c
 
 O BL consome o JSON final via `sentiment.py`, que agrega por dia e ticker.
 
-> **Nota:** em `data_acquisition/config.py` os tickers de notícias podem usar ITUB3/BBDC3, enquanto o BL usa ITUB4/BBDC4. O agrupamento por empresa em `sentiment.py` mitiga essa diferença.
+Corpus vigente (`noticias_b3_sem_duplicados_sentimento.json`, modelo `gpt-5.6-luna`, janela 2023–2025): **7.835** manchetes brutas, **4.681** sem duplicata e classificadas (**2.418** positivas, **1.253** negativas, **1.010** neutras). Por ano: 2023 = 826, 2024 = 1.374, 2025 = 2.480. A coleta usa os mesmos 20 tickers do BL.
+
+> **Nota:** o JSON ainda pode guardar tickers legados (ITUB3/BBDC3). O agrupamento por empresa em `sentiment.py` mitiga isso (PETR3/PETR4 compartilham notícias da Petrobras).
 
 ---
 
@@ -285,6 +290,10 @@ intel/Blacklitterman/
 ├── plot_ganho_estimado.py     # Backtest de capital estimado vs realizado
 ├── score_modelo.py            # Score composto 0–100
 ├── comparar_bl_vs_markowitz.py
+├── otimizar_parametros.py     # Optuna (val 2024 / teste 2025)
+├── melhorias_bl_wf.py         # ★ k* + params vigentes
+├── sensibilidade_universo.py
+├── sensibilidade_tamanho_universo.py
 └── outputs/                   # Todas as saídas (CSV/PNG)
     ├── pipeline/              # Saídas do pipeline.py
     ├── backtest/              # Saídas do plot_ganho_estimado.py
@@ -307,7 +316,7 @@ Todos os parâmetros principais estão em `intel/Blacklitterman/config.py`.
 
 | Parâmetro | Valor padrão | Descrição |
 |-----------|--------------|-----------|
-| `ATIVOS` | VALE3, BBAS3, ITUB4, BBDC4, ABEV3 | Universo do portfólio |
+| `ATIVOS` | 20 tickers `.SA` (ABEV3 … WEGE3) | Universo do portfólio |
 | `PERIOD_START` | `"202501"` | Início das views (ano+mês) |
 | `PERIOD_END` | `"202512"` | Fim das views |
 | `PRIOR_START_DATE` | `"2023-01-01"` | Início do histórico para Σ |
@@ -317,7 +326,7 @@ Todos os parâmetros principais estão em `intel/Blacklitterman/config.py`.
 
 | Parâmetro | Valor padrão | Descrição |
 |-----------|--------------|-----------|
-| `ALPHA_Q` | `0.50` | Peso do XGB vs sentimento (50/50) |
+| `ALPHA_Q` | `0.386251` | Peso do XGB com cobertura cheia (resto é sentimento) |
 | `RET_SCALE_WINDOW` | `14` | Janela para escalar sentimento |
 | `RET_SCALE_FALLBACK` | `0.005` | Escala padrão se histórico insuficiente |
 
@@ -325,17 +334,21 @@ Todos os parâmetros principais estão em `intel/Blacklitterman/config.py`.
 
 | Parâmetro | Valor padrão | Descrição |
 |-----------|--------------|-----------|
-| `TAU` | `0.025` | Escala da incerteza do prior |
+| `TAU` | `0.0147235` | Escala da incerteza do prior |
 | `RISK_FREE_ANNUAL` | `0.15` | Taxa livre de risco (Selic) |
 | `USE_ROLLING_PRIOR` | `True` | Prior recalculado dia a dia |
-| `ROLLING_MIN_OBS` | `60` | Mínimo de dias para prior rolling |
+| `ROLLING_MIN_OBS` | `80` | Mínimo de dias para prior rolling |
+| `NEWS_COUNT_MIN` | `5` | Mínimo de manchetes para misturar sentimento |
+| `NEWS_OMEGA_BOOST` | `3.79598` | Multiplica Ω se a cobertura está baixa |
+| `HARD_PRIOR_WHEN_LOW_NEWS` | `True` | Ignora a view se n < 5 |
 
 ### Portfólio
 
 | Parâmetro | Valor padrão | Descrição |
 |-----------|--------------|-----------|
 | `LONG_ONLY` | `True` | Apenas posições compradas |
-| `MAX_WEIGHT_PER_ASSET` | `0.35` | Teto de 35% por ativo |
+| `MAX_WEIGHT_PER_ASSET` | `0.341677` | Teto de ≈ 34,2% por ativo |
+| `OPT_DEFAULT_REBALANCE_MODE` | `monthly` | Modo usado no tuning |
 | `INITIAL_CAPITAL_BRL` | `100_000` | Capital inicial no backtest |
 
 ### Caminhos de dados
@@ -369,6 +382,12 @@ python pipeline.py
 python plot_ganho_estimado.py
 python score_modelo.py
 python comparar_bl_vs_markowitz.py
+
+# Pesquisa (params vigentes vêm de melhorias_bl_wf.py)
+python otimizar_parametros.py
+python melhorias_bl_wf.py
+python sensibilidade_universo.py
+python sensibilidade_tamanho_universo.py
 ```
 
 ### Scripts standalone (debug / um componente isolado)
@@ -419,6 +438,20 @@ python PI_incerteza.py   # Prior π com VWAP intradiário
 | `bl_vs_markowitz_comparativo.csv` | Retornos BL vs Markowitz vs Selic |
 | `bl_vs_markowitz_resumo.csv` | Resumo estatístico |
 | `figures/bl_vs_markowitz_plot.png` | Gráfico comparativo |
+
+---
+
+## Resultado vigente (k\* = 5)
+
+O tuning que gravou o `config.py` escolhe **k = 5** na validação 2024 e congela o teste em 2025. No top-5, com os parâmetros deste documento:
+
+| Estratégia | Sharpe | Retorno | Capital final | Max drawdown |
+|------------|--------|---------|---------------|--------------|
+| BL no top-5 | 0,85 | +15,2% | R$ 114,0 mil | −9,6% |
+| Híbrido (rank XGB + Markowitz) | 0,40 | +7,4% | R$ 106,0 mil | −11,3% |
+| Markowitz clássico no mesmo top-5 | −0,12 | −2,5% | R$ 96,2 mil | −18,4% |
+
+`outputs/optimize/optimization_summary.json` e `bl_vs_markowitz_resumo.csv` são de um Optuna anterior (teto ≈ 42,7%, gate de 2 notícias). Não citar esses números como se fossem desta configuração.
 
 ---
 
