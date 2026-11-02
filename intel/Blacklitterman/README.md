@@ -97,3 +97,43 @@ Q   = Q_h / h
 - Config centralizado em `config.py`
 - Imports `try: from .module` / `except ImportError` para pacote e script
 - Pesos long-only em `weights.py`; CSV em `io_utils.py`
+
+## Comparação de limiares de notícias (n = 0 a 5)
+
+A partir da raiz do repositório:
+
+```bash
+python -m intel.Blacklitterman.simular_cenarios_noticias
+python -m unittest intel.Blacklitterman.test_metricas_cobertura_noticias
+```
+
+Gera duas tabelas em `outputs/score/`: `cenarios_noticias_percentuais.csv`
+(cobertura) e `cenarios_noticias_scores.csv` (scores e backtest).
+O comando **não sobrescreve** os CSVs do pipeline padrão; `NEWS_COUNT_MIN=5`
+continua vigente em `config.py`. Os scores são calculados para rebalanceamento
+`monthly`, salvo se outro `modo` for passado a `simular_cenarios`.
+
+**Interpretação da cobertura:**
+
+- `pct_noticias_dentro_padrao`: soma de `news_count` em pares ticker-dia com
+  `news_count >= n`, dividida pela soma total de `news_count`.
+  Não equivale à porcentagem de manchetes **únicas** do JSON: manchetes
+  compartilhadas pela mesma empresa podem aparecer em mais de um ticker.
+  Sem notícias no período, o percentual é indefinido (NaN).
+- `pct_ativo_dias_ge_n` e `pct_ativo_dias_gt_n`: proporção de pares
+  ticker-dia com pelo menos `n` e com **mais de `n`** notícias, respectivamente.
+  O denominador inclui os pares sem notícias.
+- `pct_dias_com_algum_ativo_ge_n` e `pct_dias_com_algum_ativo_gt_n`:
+  dias em que **algum ativo** atinge ou excede o limiar.
+- `pct_dias_com_total_noticias_ge_n` e `pct_dias_com_total_noticias_gt_n`:
+  dias em que a **soma** das notícias por ativo atinge ou supera o limiar.
+  Essa soma pode contar a mesma manchete em múltiplos ativos.
+- `pct_dias_com_noticias`, `media_noticias_por_dia` e
+  `media_noticias_por_ativo_dia` quantificam frequência e volume.
+- `pct_elegiveis` e `pct_abaixo_limiar` são aliases históricos das
+  estatísticas inclusivas de pares ticker-dia, mantidos por compatibilidade.
+
+Os dias do denominador são somente as datas presentes em Q; não incluem
+fins de semana nem datas sem qualquer registro de view. Para `n=0`,
+todos os pares são elegíveis pelo teste `>= 0`, mesmo sem manchetes.
+O critério `> 0` continua distinguindo pares que tiveram notícia.
