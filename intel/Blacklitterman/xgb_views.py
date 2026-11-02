@@ -212,8 +212,11 @@ def combine_model_and_sentiment(
     merged["sentiment_signal"] = merged["sentiment_signal"].fillna(0.0)
     merged["news_count"] = merged["news_count"].fillna(0).astype(int)
     merged["sentiment_component"] = merged["sentiment_signal"] * merged["ret_scale"]
-    k = max(int(news_count_min), 1)
-    coverage = (merged["news_count"].astype(float) / float(k)).clip(upper=1.0)
+    k = max(int(news_count_min), 0)
+    # n=0: sem exigencia minima; noticias presentes recebem cobertura integral.
+    # Sem noticias, mantem Q puramente quantitativo.
+    coverage = ((merged["news_count"] > 0).astype(float) if k == 0
+                else (merged["news_count"].astype(float) / float(k)).clip(upper=1.0))
     merged["news_coverage"] = coverage
     # Q = [α + (1-α)·(1-c)] · ret_pred + (1-α)·c · sentiment_component
     merged["Q"] = (
