@@ -5,7 +5,7 @@
 **Objetivo deste documento:** descrever, de forma extensiva, a finalidade, a arquitetura, os pipelines, as premissas, as fórmulas, os parâmetros e as saídas do código, para uso em sumário, metodologia e apêndices do TCC.
 
 > **Fonte de verdade:** o código em `intel/*/config.py` e os módulos Python.  
-> O `README.md` raiz e partes de `COMO_FUNCIONA.md` ainda descrevem um universo antigo de **5 ativos**; a configuração vigente usa **20 tickers**.
+> **Versão vigente (set/2026):** 20 tickers; params de `melhorias_bl_wf_best.json` (k\* = 5, rebalance monthly). α ≈ 0,386, τ ≈ 0,0147, teto ≈ 34,2%, `NEWS_COUNT_MIN = 5`, hard prior ligado. READMEs alinhados a esta config. `optimization_summary.json` é um Optuna anterior — não misturar.
 
 ---
 
@@ -56,7 +56,7 @@ O único modelo quantitativo que alimenta o vetor de views \(Q\) é o **XGBoost*
 
 ### Frase-síntese (abstract em uma linha)
 
-O projeto combina previsões out-of-fold de XGBoost e sentimento de notícias (GPT) em views Black-Litterman com incerteza dinâmica, prior de equilíbrio de mercado rolling e restrições long-only, para alocar um portfólio de 20 ações da B3 e avaliá-lo em backtest com custos e comparação a Markowitz e Selic.
+O projeto combina previsões out-of-fold de XGBoost e sentimento de notícias (GPT) em views Black-Litterman com incerteza dinâmica, gate de 5 manchetes (hard prior), prior de equilíbrio rolling e restrições long-only, para alocar ações da B3. A config vigente opera o BL no top-k (k\* = 5, escolhido em 2024) e reporta o teste 2025 contra Markowitz e Selic.
 
 ---
 
@@ -252,7 +252,7 @@ Script: `sensibilidade_universo.py` — compara portfólio full vs sem ativos co
         ↓
 [6] Ω dinâmico (erro do modelo + notícias + τ·σ)
         ↓
-[7] Prior π = δ Σ w_mkt (rolling, ≥60 obs)
+[7] Prior π = δ Σ w_mkt (rolling, ≥80 obs)
         ↓
 [8] Posterior BL μ; w ∝ Σ⁻¹μ; long-only + teto
         ↓
@@ -496,6 +496,8 @@ Filtros de título (`TICKER_TITLE_TERMS`): exige menção ao código ou nome da 
 
 Mais notícias amplificam o sinal, com saturação via \(\tanh\).
 
+Corpus vigente: **7.835** manchetes brutas, **4.681** classificadas (2.418 positivas, 1.253 negativas, 1.010 neutras). Publicação: 2023 = 826, 2024 = 1.374, 2025 = 2.480. Mais volume em VALE3 (826), BBAS3 (707) e PETR3 (432). No Q de 2025, 73,3% dos dias-ativo têm `news_count = 0` e 1,5% têm n ≥ 5.
+
 Scripts auxiliares: `traduz_link_do_rss.py` (Playwright), `extrair_search_xml.py`, `ordenar_noticias_por_data.py`.
 
 ---
@@ -522,7 +524,7 @@ Para cada ativo e dia no período de views (`PERIOD_START`/`PERIOD_END` = **2025
 (fallback: mediana ou `RET_SCALE_FALLBACK = 0.005`).
 
 5. `sentiment_component = sentiment_signal × ret_scale`.
-6. Aplica **gate de cobertura** (`NEWS_COUNT_MIN = 2`):
+6. Aplica **gate de cobertura** (`NEWS_COUNT_MIN = 5`):
 
 \[
 c = \min\bigl(1,\ n_{\mathrm{news}} / \mathrm{NEWS\_COUNT\_MIN}\bigr)
@@ -540,7 +542,7 @@ Q
 | Cobertura cheia (\(c=1\)) | Híbrido clássico \(\alpha r_{\mathrm{pred}} + (1-\alpha)\mathrm{sent}\) |
 | Parcial | Interpolação entre os dois |
 
-\(\alpha = \texttt{ALPHA\_Q} \approx 0.738\) (valor tunado; docs antigos citavam 0.50).
+\(\alpha = \texttt{ALPHA\_Q} = 0{,}386251\) (valor do walk-forward k\*; um Optuna anterior tinha ≈ 0,424 e docs ainda mais antigos citavam 0,50).
 
 7. Alinha à escala diária do prior:
 
@@ -559,17 +561,17 @@ Por ticker/dia:
 | Peça | Regra |
 |------|--------|
 | Erro absoluto | \(\|r_{\mathrm{pred}} - r_{\mathrm{real}}\|\) |
-| Escala de erro | Mediana rolling (`ERR_WINDOW=13`, `ERR_MIN_PERIODS=9`), *shift* 1 |
+| Escala de erro | Mediana rolling (`ERR_WINDOW=18`, `ERR_MIN_PERIODS=9`), *shift* 1 |
 | Confiança do modelo | \(\exp(-\mathrm{erro}/\mathrm{error\_scale})\) |
 | Confiança de notícias | \(1 - \exp(-n/3)\) |
 | Confiança da view | \(w_m C_m + w_n C_n\), clip \([\texttt{FLOOR},\texttt{CAP}]\) |
 | \(\sigma_{ii}\) diário | \(\mathrm{Var}(r_{\mathrm{real}})/h^2\) |
 | Base | \(\omega_{\mathrm{base}} = \tau \cdot \sigma_{ii}\) |
 | Omega | \(\omega = \omega_{\mathrm{base}} \cdot (1-C)/C\) |
-| Boost | Se \(n < 2\), multiplica por `NEWS_OMEGA_BOOST = 3` |
-| Hard prior | `HARD_PRIOR_WHEN_LOW_NEWS=False` (não anula a view) |
+| Boost | Se \(n < 5\), multiplica por `NEWS_OMEGA_BOOST = 3.79598` |
+| Hard prior | `HARD_PRIOR_WHEN_LOW_NEWS=True` (confiança vai a ε; view ignorada) |
 
-Pesos atuais: \(w_m \approx 0.582\), \(w_n \approx 0.418\); floor ≈ 0.17; cap ≈ 0.90.
+Pesos atuais: \(w_m = 0{,}659122\), \(w_n = 0{,}340878\); floor = 0,0575; cap = 0,9372.
 
 **Interpretação:** \(\Omega\) alto → view pesa pouco no posterior; \(\Omega\) baixo → puxa \(\mu\) com força.
 
@@ -599,9 +601,9 @@ r_f^{\mathrm{daily}} = (1 + 0.15)^{1/252} - 1
 \pi = \delta\, \Sigma\, w_m
 \]
 
-7. Incerteza do prior: \(\tau\Sigma\), com \(\tau \approx 0.0229\).
+7. Incerteza do prior: \(\tau\Sigma\), com \(\tau = 0{,}0147235\).
 
-**Prior rolling** (`USE_ROLLING_PRIOR=True`): a cada dia de view, reestima \(\pi\)/\(\Sigma\) com histórico **estritamente anterior** ao dia (`index < view_date`), mínimo `ROLLING_MIN_OBS = 60`. Evita look-ahead no prior.
+**Prior rolling** (`USE_ROLLING_PRIOR=True`): a cada dia de view, reestima \(\pi\)/\(\Sigma\) com histórico **estritamente anterior** ao dia (`index < view_date`), mínimo `ROLLING_MIN_OBS = 80`. Evita look-ahead no prior.
 
 **Saídas:** `bl_hibrido_pi.csv`, `bl_hibrido_sigma.csv`, `bl_hibrido_prior_cov_tau_sigma.csv`
 
@@ -645,7 +647,7 @@ Invariante: precisa `max_w * n_ativos >= 1` (viabilidade do simplex com teto).
 | Controle | Valor atual |
 |----------|-------------|
 | `LONG_ONLY` | `True` |
-| `MAX_WEIGHT_PER_ASSET` | ≈ **0.3128** (~31,3%) |
+| `MAX_WEIGHT_PER_ASSET` | **0,341677** (~34,2%) |
 
 #### Modos de rebalanceamento
 
@@ -744,16 +746,16 @@ Figuras: `bl_vs_markowitz_plot.png`
 - `confidence_floor`, `confidence_cap`
 - `err_window`, `err_min_periods`, `rolling_min_obs`
 
-**Não tunados no Optuna (fixos):** `NEWS_COUNT_MIN`, `NEWS_OMEGA_BOOST`, `HARD_PRIOR_WHEN_LOW_NEWS`.
+No Optuna clássico (`otimizar_parametros.py`) o gate de notícias fica fixo. No pacote vigente (`melhorias_bl_wf.py`) `news_count_min`, `news_omega_boost` e `hard_prior_when_low_news` foram escolhidos junto com o k\* e gravados no `config.py`.
 
-Defaults: `OPT_DEFAULT_TRIALS = 40`, `OPT_DEFAULT_REBALANCE_MODE = "weekly"`.
+Defaults: `OPT_DEFAULT_TRIALS = 40`, `OPT_DEFAULT_REBALANCE_MODE = "monthly"`.
 
 Uso:
 
 ```bash
 cd intel/Blacklitterman
 python otimizar_parametros.py
-python otimizar_parametros.py --trials 60 --rebalance weekly
+python otimizar_parametros.py --trials 60 --rebalance monthly
 python otimizar_parametros.py --apply-best
 ```
 
@@ -803,8 +805,8 @@ Comparativo 0 bps vs 10 bps nos baselines (`OUT_MKZ_COST_COMPARE`).
 ### De implementação / risco
 
 11. Execução com **1 dia de lag** e **10 bps** aproxima fricção real sem modelar impacto de mercado.
-12. Rebalance **weekly** é o modo privilegiado no tuning (pode divergir do melhor modo ex-post).
-13. Gate mínimo de **2 notícias** evita sentimento esparso dominar \(Q\); abaixo disso, \(\Omega\) triplica.
+12. Rebalance **monthly** é o modo privilegiado no tuning vigente (pode divergir do melhor modo ex-post).
+13. Gate mínimo de **5 notícias** e hard prior evitam sentimento esparso dominar \(Q\); abaixo disso a view é ignorada e \(\Omega\) é multiplicado por ≈ 3,80.
 14. Conversão \(Q_h/h\) e \(\Omega/h^2\) alinha escalas multi-horizonte ao prior diário (aproximação de retornos i.i.d. no horizonte).
 15. Hold-out 2024 (val) / 2025 (teste) evita escolher hiperparâmetros no mesmo ano do relatório final.
 16. Decaimento amostral \(\lambda=5\) no treino XGB prioriza observações recentes.
@@ -814,14 +816,14 @@ Comparativo 0 bps vs 10 bps nos baselines (`OUT_MKZ_COST_COMPARE`).
 
 ## 13. Parâmetros oficiais (config atual)
 
-Valores em `intel/Blacklitterman/config.py` (após tuning Optuna refletido no arquivo):
+Valores em `intel/Blacklitterman/config.py`, gravados a partir de `melhorias_bl_wf_best.json` (walk-forward, k\* = 5). Não são os de `optimization_summary.json`.
 
 ### Views (Q)
 
 | Parâmetro | Valor |
 |-----------|-------|
 | `PERIOD_START` / `PERIOD_END` | `202501` / `202512` |
-| `ALPHA_Q` | ≈ **0.738043** |
+| `ALPHA_Q` | **0.386251** |
 | `RET_SCALE_WINDOW` | 14 |
 | `RET_SCALE_MIN_PERIODS` | 5 |
 | `RET_SCALE_FALLBACK` | 0.005 |
@@ -834,23 +836,23 @@ Valores em `intel/Blacklitterman/config.py` (após tuning Optuna refletido no ar
 |-----------|-------|
 | `PRIOR_START_DATE` / `END` | 2023-01-01 / 2025-12-31 |
 | `RISK_FREE_ANNUAL` / `SELIC_ANNUAL` | 0.15 |
-| `TAU` | ≈ **0.0229086** |
+| `TAU` | **0.0147235** |
 | `USE_ROLLING_PRIOR` | True |
-| `ROLLING_MIN_OBS` | 60 |
+| `ROLLING_MIN_OBS` | 80 |
 
 ### Omega
 
 | Parâmetro | Valor |
 |-----------|-------|
-| `ERR_WINDOW` | 13 |
+| `ERR_WINDOW` | 18 |
 | `ERR_MIN_PERIODS` | 9 |
-| `CONFIDENCE_FLOOR` | ≈ 0.1701 |
-| `CONFIDENCE_CAP` | ≈ 0.9033 |
-| `W_MODEL_CONF` | ≈ 0.5825 |
-| `W_NEWS_CONF` | ≈ 0.4175 |
-| `NEWS_COUNT_MIN` | 2 |
-| `NEWS_OMEGA_BOOST` | 3.0 |
-| `HARD_PRIOR_WHEN_LOW_NEWS` | False |
+| `CONFIDENCE_FLOOR` | 0.0575035 |
+| `CONFIDENCE_CAP` | 0.937247 |
+| `W_MODEL_CONF` | 0.659122 |
+| `W_NEWS_CONF` | 0.340878 |
+| `NEWS_COUNT_MIN` | 5 |
+| `NEWS_OMEGA_BOOST` | 3.79598 |
+| `HARD_PRIOR_WHEN_LOW_NEWS` | True |
 | `EPS` | 1e-8 |
 
 ### Portfólio e backtest
@@ -858,7 +860,7 @@ Valores em `intel/Blacklitterman/config.py` (após tuning Optuna refletido no ar
 | Parâmetro | Valor |
 |-----------|-------|
 | `LONG_ONLY` | True |
-| `MAX_WEIGHT_PER_ASSET` | ≈ **0.312771** |
+| `MAX_WEIGHT_PER_ASSET` | **0.341677** |
 | `INITIAL_CAPITAL_BRL` | 100_000 |
 | `EXECUTION_LAG_DAYS` | 1 |
 | `TRANSACTION_COST_BPS` | 10 |
@@ -872,7 +874,7 @@ Valores em `intel/Blacklitterman/config.py` (após tuning Optuna refletido no ar
 | `OPT_VAL_START` / `END` | 202401 / 202412 |
 | `OPT_TEST_START` / `END` | 202501 / 202512 |
 | `OPT_DEFAULT_TRIALS` | 40 |
-| `OPT_DEFAULT_REBALANCE_MODE` | weekly |
+| `OPT_DEFAULT_REBALANCE_MODE` | monthly |
 
 ### Treino XGB (`intel/model_training/config.py` + flags em `train_xgb.py`)
 
@@ -894,52 +896,56 @@ Valores em `intel/Blacklitterman/config.py` (após tuning Optuna refletido no ar
 | `RSS_MAX_WORKERS` | 2 |
 | `RSS_PAUSE_SECONDS` | 4 |
 | Coleta | 2023-01-01 … 2025-12-31 |
+| RSS bruto | 7.835 |
+| Sem duplicata + sentimento | 4.681 |
+| Positivo / negativo / neutro | 2.418 / 1.253 / 1.010 |
+| Por ano (publicação) | 2023 = 826, 2024 = 1.374, 2025 = 2.480 |
+| Dias-ativo em Q 2025 sem notícia | 73,3% |
+| Dias-ativo com n ≥ 5 | 1,5% |
 
 ---
 
 ## 14. Resultados materializados (snapshots)
 
-> Os números abaixo são **snapshots de arquivos no repositório** em datas específicas. Reexecuções podem divergir (dados yfinance, market caps, novas notícias, seeds de Optuna). Use-os como referência de ordem de grandeza e como evidência de que o pipeline foi rodado ponta a ponta.
+> Os números abaixo são **snapshots de arquivos no repositório**. Reexecuções podem divergir (yfinance, market cap, notícias, seed do Optuna). Cite o arquivo junto com o número. **Não misture experimentos.**
 
-### 14.1 Optuna (`outputs/optimize/optimization_summary.json`)
+### 14.1 Resultado vigente — walk-forward k\* (`melhorias_bl_wf_best.json`)
 
-| Campo | Valor |
-|-------|-------|
-| Trials | 40 |
-| Rebalance | weekly |
-| Best \(\alpha_q\) | ≈ 0.738 |
-| Best \(\tau\) | ≈ 0.023 |
-| Best teto | ≈ 0.313 |
-| **Val 2024 Sharpe** | ≈ **−0.44** |
-| Val 2024 retorno | ≈ −6.6% |
-| Val excesso vs Selic | ≈ −9.4 pp |
-| **Teste 2025 Sharpe** | ≈ **2.11** |
-| Teste 2025 retorno | ≈ **+40.8%** |
-| Teste capital final | ≈ **R$ 158.3k** |
-| Teste excesso vs Selic | ≈ **+9.3 pp** |
-| Teste max drawdown | ≈ −16.7% |
+Params iguais ao `config.py`. k escolhido na validação 2024 = **5** (score 1,70). Teste 2025, 249 dias, capital inicial R$ 100 mil, subconjunto top-5:
 
-**Ponto de discussão para o TCC:** o objetivo foi maximizado em 2024 (val fraco) e o teste 2025 ficou forte. Isso exige discussão cuidadosa (mudança de regime, variância da busca, risco de overfit do espaço de hiperparâmetros, sorte amostral).
+| Estratégia | Sharpe | Retorno | Capital final | Max drawdown |
+|------------|--------|---------|---------------|--------------|
+| BL no top-5 | 0,85 | +15,2% | R$ 114,0 mil | −9,6% |
+| Híbrido (rank XGB + Markowitz) | 0,40 | +7,4% | R$ 106,0 mil | −11,3% |
+| Markowitz clássico no mesmo top-5 | −0,12 | −2,5% | R$ 96,2 mil | −18,4% |
 
-### 14.2 Baseline antigo (`outputs/baseline_2026-09-08.json`)
+Fonte: `outputs/score/melhorias_bl_wf_kstar_metricas.csv`. Figura: `outputs/figures/melhorias_bl_wf_kstar_capital.png`.
 
-Label: `baseline_pre_mudancas` (params diferentes dos atuais). Período ~2025-01-03 a 2025-12-30 (249 dias), capital 100k.
+No sweep k = 1…20 (`melhorias_bl_wf_oos_sweep.csv`) outros k ficam melhores fora da amostra (híbrido em k = 17 chega a Sharpe ≈ 2,04). Esse número **não** é o resultado principal: o k foi escolhido antes, e o escolhido é 5.
 
-| Modo | BL final (R$) | Markowitz (R$) | Selic (R$) | Sharpe BL | Sharpe MKV |
-|------|---------------|----------------|------------|-----------|------------|
-| daily | ~140.2k | ~150.9k | ~114.8k | ~1.90 | ~2.51 |
-| weekly | ~131.4k | ~147.0k | ~114.8k | ~1.76 | ~2.37 |
-| monthly | ~148.3k | ~149.3k | ~114.8k | ~2.49 | ~2.53 |
+### 14.2 Optuna anterior (`optimization_summary.json`) — não é a config atual
 
-Score composto (daily, naquele baseline): **~72.3** (pred ~31.1, port ~92.1, risk 100).
+40 trials, rebalance monthly, α ≈ 0,424, τ ≈ 0,011, teto ≈ 0,427, gate de 2 notícias, hard prior desligado.
 
-**Leitura:** em vários modos daquele snapshot, Markowitz ainda vencia BL no capital final. O valor do BL não é “bater Markowitz sempre”, e sim **integrar views com governança de confiança** e produzir alocações interpretáveis; o resultado empírico depende de parâmetros, universo e frequência de rebalance.
+| Split | Sharpe | Retorno | Capital final | Max drawdown |
+|-------|--------|---------|---------------|--------------|
+| Val 2024 | 1,31 | +21,3% | R$ 148,6 mil | −8,4% |
+| Teste 2025 | 1,82 | +30,5% | R$ 208,9 mil | −8,9% |
 
-### 14.3 Figuras disponíveis
+O CSV `markowitz/bl_vs_markowitz_resumo.csv` (10 bps, 249 dias) **não reproduz** os R$ 208,9 mil. Nele, o monthly do BL fecha em R$ 130,8 mil (Sharpe 1,93) contra Markowitz R$ 132,4 mil (Sharpe 1,89), equal-weight R$ 125,9 mil e Selic R$ 114,8 mil. O weekly e o daily desse CSV perdem para Markowitz. Tratar 14.2 como rodada antiga, não como o backtest da config vigente.
 
-- `intel/Blacklitterman/outputs/figures/bl_hibrido_ganho_estimado.png`
-- `intel/Blacklitterman/outputs/figures/bl_vs_markowitz_plot.png`
-- Plots por ticker/horizonte em `criacao_modelo_xgb/*_plot.png`, `*_horizontes_comparacao.png`
+### 14.3 Baseline histórico (`outputs/baseline_2026-09-08.json`)
+
+Label `baseline_pre_mudancas`. Universo e params anteriores a esta versão. Não usar no capítulo de resultados da versão atual.
+
+### 14.4 Figuras
+
+- `figures/melhorias_bl_wf_kstar_capital.png` — resultado vigente
+- `figures/melhorias_bl_wf_oos_sweep.png`
+- `figures/bl_hibrido_ganho_estimado.png`
+- `figures/bl_vs_markowitz_plot.png` — Optuna anterior
+- `figures/sensibilidade_tamanho_universo.png` — gerada com teto ≈ 0,427
+- Plots por ticker em `criacao_modelo_xgb/`
 
 ---
 
@@ -1043,14 +1049,15 @@ intel/Blacklitterman/outputs/
 5. Market cap pontual pode não refletir a evolução temporal dos pesos de mercado.
 6. Aproximação \(Q/h\) e \(\Omega/h^2\) assume escala temporal simples.
 7. Poucos testes automatizados além de `_check_news_gate.py`.
-8. Val 2024 fraco vs teste 2025 forte — risco de interpretação excessivamente otimista do OOS.
+8. Com o gate de 5 notícias, 73,3% dos dias-ativo de 2025 não têm manchete e só 1,5% têm n ≥ 5 — o sentimento quase não altera o portfólio vigente.
+9. O melhor k ex-post (sweep 1…20) não é o k\* escolhido em 2024. Citar o k = 5, não o melhor k do teste.
 
-### Inconsistências a corrigir no texto acadêmico
+### Cuidados ao citar números
 
-1. **README / COMO_FUNCIONA** ainda citam 5 ativos; o código usa **20**.
-2. Valores de \(\alpha\), \(\tau\) e teto no README antigo (0.50 / 0.025 / 0.35) diferem dos atuais (~0.74 / ~0.023 / ~0.31).
-3. Pasta `criacao_modelo_xgb/` contém **artefatos**, não o código de treino (código em `intel/model_training/`).
-4. Tickers de notícias legados (ITUB3/BBDC3) podem coexistir no JSON; o agrupamento por empresa mitiga isso.
+1. Pasta `criacao_modelo_xgb/` contém **artefatos**, não o código de treino (código em `intel/model_training/`).
+2. Tickers legados (ITUB3/BBDC3) podem coexistir no JSON; o agrupamento por empresa mitiga isso.
+3. `optimization_summary.json`, `bl_vs_markowitz_resumo.csv` e a sensibilidade de tamanho usam um Optuna anterior (teto ≈ 0,427). O resultado da config atual é o k\* da seção 14.1.
+4. `score/bl_hibrido_score_summary.csv` e `sensibilidade_universo.csv` (universo de 5) não batem com 14.1. Regenerar depois de `pipeline.py` com a config atual antes de citar score composto.
 
 ---
 
@@ -1063,8 +1070,8 @@ intel/Blacklitterman/outputs/
 5. **Modelo quantitativo** — XGB, horizontes, classificação vs regressão, métricas OOF.
 6. **Camada qualitativa** — coleta, limpeza, GPT, agregação \(\tanh\).
 7. **Otimização BL** — prior rolling, gate de notícias, restrições, custos, Optuna hold-out.
-8. **Resultados** — backtest 2025; vs Markowitz/Selic; score; sensibilidade sem VALE3.
-9. **Discussão** — val 2024 vs teste 2025; qualidade preditiva vs performance de portfólio.
+8. **Resultados** — k\* = 5 em 2025 vs Markowitz no mesmo subconjunto; sweep de k só como robustez; não misturar com o Optuna anterior.
+9. **Discussão** — sinal perto de 50%; sentimento esparso com gate de 5; k escolhido ex-ante vs melhor k ex-post.
 10. **Conclusão e trabalhos futuros** — corpo da notícia, short, liquidez, regimes, paper trading.
 
 ### Possíveis contribuições a destacar
