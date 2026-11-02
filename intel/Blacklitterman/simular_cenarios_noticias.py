@@ -12,6 +12,7 @@ import pandas as pd
 try:
     from .backtest import build_gain_series
     from .config import ATIVOS, OPT_DEFAULT_REBALANCE_MODE, SCORE_DIR
+    from .metricas_cobertura_noticias import calcular_metricas_cobertura
     from .params import BLParams
     from .pipeline import run_pipeline
     from .prior import get_daily_returns_for_prior
@@ -19,6 +20,7 @@ try:
 except ImportError:
     from backtest import build_gain_series
     from config import ATIVOS, OPT_DEFAULT_REBALANCE_MODE, SCORE_DIR
+    from metricas_cobertura_noticias import calcular_metricas_cobertura
     from params import BLParams
     from pipeline import run_pipeline
     from prior import get_daily_returns_for_prior
@@ -34,8 +36,9 @@ def simular_cenarios(
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
     """Retorna (percentuais_de_noticias, scores_finais), indexados pelo limiar n.
 
-    Percentuais usam como denominador todas as observacoes ticker-dia de Q,
-    inclusive dias sem noticias. n=0 inclui todas as observacoes.
+    Cobertura separa ocorrencias de noticias, pares ticker-dia e dias de
+    negociacao presentes em Q. As metricas >= n e > n sao distintas.
+    Para n=0, todos os pares ticker-dia passam no criterio >= n.
     """
     if not (0 <= minimo <= maximo):
         raise ValueError("Intervalo invalido: esperado 0 <= minimo <= maximo.")
@@ -60,21 +63,7 @@ def simular_cenarios(
             verbose=False,
         )
         q = result["q_long"]
-        counts = pd.to_numeric(q["news_count"], errors="coerce").fillna(0)
-        total = len(counts)
-        if not total:
-            raise ValueError(f"Nenhuma observacao de Q no cenario n={n}")
-        eligible = counts >= n
-        with_news = counts > 0
-        pct_rows.append({
-            "n": n,
-            "observacoes_total": total,
-            "observacoes_elegiveis": int(eligible.sum()),
-            "pct_elegiveis": float(eligible.mean() * 100),
-            "pct_abaixo_limiar": float((~eligible).mean() * 100),
-            "pct_com_noticias": float(with_news.mean() * 100),
-            "pct_sem_noticias": float((~with_news).mean() * 100),
-        })
+        pct_rows.append(calcular_metricas_cobertura(q, n))
 
         weights = result["weights_by_mode"][modo]
         mu = result["posterior_mu"]
