@@ -97,7 +97,7 @@ class BLParams:
             use_rolling_prior=self.use_rolling_prior,
             long_only=self.long_only,
             rebalance_mode=self.rebalance_mode,
-            news_count_min=max(int(self.news_count_min), 1),
+            news_count_min=max(int(self.news_count_min), 0),
             news_omega_boost=max(float(self.news_omega_boost), 1.0),
             hard_prior_when_low_news=bool(self.hard_prior_when_low_news),
         )
