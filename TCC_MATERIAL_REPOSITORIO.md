@@ -802,10 +802,6 @@ Para distinguir diferentes conceitos de cobertura, definem-se:
 
 O cenário `n = 0` considera elegíveis todos os 5.000 pares pelo critério inclusivo, inclusive os sem notícias; ele não cria notícias inexistentes. Os limiares `>= n` e `> n` não devem ser tratados como sinônimos.
 
-### 11.3 Custos de transação
-
-Comparativo 0 bps vs 10 bps nos baselines (`OUT_MKZ_COST_COMPARE`).
-
 ---
 
 ## 12. Premissas (lista explícita)
@@ -933,11 +929,11 @@ Valores em `intel/Blacklitterman/config.py`, gravados a partir de `melhorias_bl_
 
 ## 14. Resultados materializados (snapshots)
 
-> Os números abaixo são **snapshots de arquivos no repositório**. Reexecuções podem divergir (yfinance, market cap, notícias, seed do Optuna). Cite o arquivo junto com o número. **Não misture experimentos.**
+> Os números abaixo são **snapshots do repositório e de arquivos fornecidos no pacote local `Blacklitterman.zip`**. Reexecuções podem divergir (yfinance, market cap, notícias, seed do Optuna). Cite o arquivo junto com o número. **Não misture experimentos.**
 
 ### 14.1 Resultado vigente — walk-forward k\* (`melhorias_bl_wf_best.json`)
 
-Params iguais ao `config.py`. k escolhido na validação 2024 = **5** (score 1,70). Teste 2025, 249 dias, capital inicial R$ 100 mil, subconjunto top-5:
+Params do snapshot histórico `melhorias_bl_wf_best.json`, que usava `news_count_min=5` (diferentemente da configuração local atual com `NEWS_COUNT_MIN=1`). k escolhido na validação 2024 = **5** (score 1,70). Teste 2025, 249 dias, capital inicial R$ 100 mil, subconjunto top-5:
 
 | Estratégia | Sharpe | Retorno | Capital final | Max drawdown |
 |------------|--------|---------|---------------|--------------|
