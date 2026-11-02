@@ -7,6 +7,8 @@
 > **Fonte de verdade:** o código em `intel/*/config.py` e os módulos Python.  
 > **Versão vigente (set/2026):** 20 tickers; params de `melhorias_bl_wf_best.json` (k\* = 5, rebalance monthly). α ≈ 0,386, τ ≈ 0,0147, teto ≈ 34,2%, `NEWS_COUNT_MIN = 5`, hard prior ligado. READMEs alinhados a esta config. `optimization_summary.json` é um Optuna anterior — não misturar.
 
+> **Atualização experimental — 02/11/2026:** o arquivo `Blacklitterman.zip` fornecido para esta atualização contém uma **reexecução local** com `NEWS_COUNT_MIN = 1` e uma varredura exploratória de `n = 0, 1, 2, 3, 4, 5` no ano de 2025. Isso **não substitui automaticamente** o parâmetro histórico `n = 5` gravado em `melhorias_bl_wf_best.json`, cuja seleção ocorreu na validação de 2024. As duas experiências e seus resultados são descritos separadamente nas seções 11.4, 13 e 14.5.
+
 ---
 
 ## Índice
@@ -108,6 +110,8 @@ toledo-portfolio-optimizationn/
     ├── model_training/               # download → features → treino XGB
     ├── data_acquisition/             # RSS → limpeza → sentimento GPT
     └── Blacklitterman/               # Q → Ω → π → μ → pesos → avaliação
+
+**Extensão experimental:** `intel/Blacklitterman/simular_cenarios_noticias.py` executa o sweep de `n=0..5` (disponível na branch de simulação, não necessariamente na `main`).
 ```
 
 ### Separação de responsabilidades
@@ -782,6 +786,26 @@ Self-check das regras de cobertura / boost de Ω — útil como verificação de
 
 Comparativo 0 bps vs 10 bps nos baselines (`OUT_MKZ_COST_COMPARE`).
 
+### 11.4 Sensibilidade ao limiar mínimo de notícias (reexecução local em 2025)
+
+Além do limiar histórico de cinco notícias, foi realizada uma comparação exploratória dos cenários `n = 0` a `n = 5`, mantendo os demais hiperparâmetros do modelo e adotando **rebalanceamento mensal**. O experimento foi executado por `simular_cenarios_noticias.py`, conforme os CSVs de saída do pacote de 02/11/2026.
+
+O critério `news_count >= n` é aplicado a cada **par ativo-dia**, e não à soma de notícias do mercado num dia. Há 5.000 observações, correspondentes a 20 ações em 250 datas de views de 2025. Uma mesma notícia pode ser associada a mais de um ticker (ex.: classes de ações da mesma empresa). Por isso, 2.506 é a soma das **ocorrências atribuídas a pares ativo-dia**, não necessariamente o total de notícias únicas.
+
+Para distinguir diferentes conceitos de cobertura, definem-se:
+
+- **Percentual de pares ativo-dia elegíveis:** quantidade de pares com `news_count >= n` dividida por 5.000 (inclui pares sem notícias no denominador);
+- **Percentual de pares com mais de `n` notícias:** quantidade de pares com `news_count > n` dividida por 5.000 (critério estrito);
+- **Percentual de ocorrências de notícias dentro do padrão:** soma de `news_count` apenas nos pares elegíveis dividida por 2.506;
+- **Percentual de dias com algum ativo elegível:** quantidade de datas em que ao menos um ticker atingiu `news_count >= n` dividida por 250;
+- **Percentual de dias com total de ocorrências suficiente:** datas em que a soma de `news_count` em todos os tickers atingiu `n`, divididas por 250. Essa estatística **não** representa o gate efetivo aplicado individualmente a cada ticker.
+
+O cenário `n = 0` considera elegíveis todos os 5.000 pares pelo critério inclusivo, inclusive os sem notícias; ele não cria notícias inexistentes. Os limiares `>= n` e `> n` não devem ser tratados como sinônimos.
+
+### 11.3 Custos de transação
+
+Comparativo 0 bps vs 10 bps nos baselines (`OUT_MKZ_COST_COMPARE`).
+
 ---
 
 ## 12. Premissas (lista explícita)
@@ -817,6 +841,8 @@ Comparativo 0 bps vs 10 bps nos baselines (`OUT_MKZ_COST_COMPARE`).
 ## 13. Parâmetros oficiais (config atual)
 
 Valores em `intel/Blacklitterman/config.py`, gravados a partir de `melhorias_bl_wf_best.json` (walk-forward, k\* = 5). Não são os de `optimization_summary.json`.
+
+**Separação entre versões:** no `config.py` do pacote local enviado em 02/11/2026, `NEWS_COUNT_MIN = 1`, `HARD_PRIOR_WHEN_LOW_NEWS = True`, `NEWS_OMEGA_BOOST = 3.79598`, `ALPHA_Q = 0.386251` e `TAU = 0.0147235`. O arquivo histórico `outputs/optimize/melhorias_bl_wf_best.json` ainda registra `news_count_min = 5`. Assim, a tabela abaixo documenta o **baseline publicado anteriormente**; a alteração local para `n = 1` deve ser registrada como experimento posterior, e não como resultado da seleção walk-forward de 2024.
 
 ### Views (Q)
 
@@ -949,6 +975,46 @@ Label `baseline_pre_mudancas`. Universo e params anteriores a esta versão. Não
 
 ---
 
+### 14.5 Reexecução exploratória do gate de notícias: `n = 0` a `n = 5` (pacote de 02/11/2026)
+
+Este experimento utiliza os **20 ativos** em 2025, com **rebalanceamento mensal**, um dia de defasagem de execução e custo de turnover configurado em 10 bps. São **5.000 pares ativo-dia** (20 tickers × 250 datas de Q), dos quais 1.334 têm ao menos uma notícia atribuída e 3.666 não têm nenhuma (respectivamente, **26,68%** e **73,32%**). O total de ocorrências `news_count` na matriz Q é **2.506**, com possibilidade de duplicação por ativo. Houve notícia atribuída em 249 das 250 datas (99,6% dos dias).
+
+**Cobertura da informação por limiar:**
+
+| n | Pares ativo-dia com ≥ n | % pares elegíveis | % pares com > n | % ocorrências de notícias em pares elegíveis | % dias com algum ativo ≥ n |
+|---:|---:|---:|---:|---:|---:|
+| 0 | 5.000 | 100,00% | 26,68% | 100,00% | 100,0% |
+| 1 | 1.334 | 26,68% | 10,66% | 100,00% | 99,6% |
+| 2 | 533 | 10,66% | 5,24% | 68,04% | 80,8% |
+| 3 | 262 | 5,24% | 2,64% | 46,41% | 57,6% |
+| 4 | 132 | 2,64% | 1,48% | 30,85% | 38,0% |
+| 5 | 74 | 1,48% | 1,08% | 21,59% | 23,6% |
+
+A tabela de pares elegíveis é reproduzida diretamente de `outputs/score/cenarios_noticias_percentuais.csv`. As colunas de **ocorrências** e **dias** foram calculadas a partir do arquivo `outputs/pipeline/bl_hibrido_q_long.csv` presente no mesmo pacote. As porcentagens de notícias não se referem a notícias únicas, mas a ocorrências associadas a tickers e datas.
+
+**Desempenho dos seis cenários, com os demais parâmetros mantidos:**
+
+| n | Score total (0–100) | Score de previsão | Score de portfólio | Retorno realizado | Sharpe realizado | Máx. drawdown |
+|---:|---:|---:|---:|---:|---:|---:|
+| 0 | 73,35 | 33,07 | 92,82 | +31,58% | 1,83 | −10,76% |
+| **1** | **73,92** | **33,07** | **94,11** | **+44,99%** | **2,31** | **−8,83%** |
+| 2 | 73,43 | 33,07 | 93,02 | +36,91% | 1,90 | −10,47% |
+| 3 | 73,44 | 33,07 | 93,04 | +27,40% | 1,56 | −10,44% |
+| 4 | 73,44 | 33,07 | 93,04 | +25,06% | 1,50 | −10,44% |
+| 5 | 73,44 | 33,07 | 93,04 | +22,81% | 1,37 | −10,44% |
+
+Em todos os cenários, o score de risco é **100,00**; o score de previsão é idêntico (**33,072**) porque a base de previsões quantitativas permanece a mesma. O score composto varia relativamente pouco entre os limiares, apesar das diferenças substanciais de retorno e Sharpe, em parte devido às funções de normalização e saturação do `score_modelo.py`.
+
+O cenário `n = 1` apresentou os melhores indicadores desta **comparação retrospectiva de 2025**: score **73,92**, retorno acumulado **44,99%**, Sharpe **2,31** e drawdown máximo **−8,83%**. Na série mensal correspondente do arquivo `outputs/backtest/bl_hibrido_ganho_series_monthly.csv`, o capital final foi **R$ 144.994,98** para capital inicial de R$ 100 mil (249 observações após o lag de execução). Em relação ao cenário `n = 5` no mesmo sweep, houve diferença de aproximadamente **22,18 pontos percentuais de retorno** e **0,93 ponto de Sharpe**.
+
+**Interpretação e cautelas:** a redução do limiar de 5 para 1 aumentou a cobertura de 1,48% para 26,68% dos pares ativo-dia. O melhor desempenho observado para `n = 1` **não prova superioridade preditiva fora da amostra**: a escolha do melhor `n` foi feita olhando os seis resultados de 2025, que também são os resultados reportados. Para considerar `n = 1` como hiperparâmetro oficial, seria necessário escolhê-lo numa janela de validação anterior e testá-lo em período temporal posterior, sem nova seleção ex-post.
+
+**Não misturar universos e rodadas:** este sweep usa os 20 tickers, enquanto o experimento histórico da seção 14.1 utiliza o subconjunto top-5 (`k* = 5` é **quantidade de ativos**, e não quantidade de notícias). Além disso, os arquivos `outputs/markowitz/bl_vs_markowitz_resumo.csv` e `outputs/score/melhorias_bl_wf_kstar_metricas.csv` no pacote têm data anterior à reexecução local e não são comparações atualizadas contra os seis cenários. O `bl_hibrido_score_summary.csv` reporta o modo **daily** (score 61,05; retorno 10,30%; Sharpe 0,58) e não deve ser confundido com o modo **monthly** (score 73,92; retorno 44,99%; Sharpe 2,31) utilizado no sweep.
+
+**Arquivos-fonte:** `outputs/score/cenarios_noticias_percentuais.csv`, `outputs/score/cenarios_noticias_scores.csv`, `outputs/pipeline/bl_hibrido_q_long.csv`, `outputs/score/bl_hibrido_rebalance_resumo.csv`, `outputs/backtest/bl_hibrido_ganho_series_monthly.csv` e `config.py`, conforme arquivo `Blacklitterman.zip` fornecido em 02/11/2026. Os valores foram conferidos nos arquivos gerados; não foi executado um novo backtest nesta atualização textual.
+
+---
+
 ## 15. Ordem de execução e dependências
 
 ### 15.1 Ambiente
@@ -1058,6 +1124,10 @@ intel/Blacklitterman/outputs/
 2. Tickers legados (ITUB3/BBDC3) podem coexistir no JSON; o agrupamento por empresa mitiga isso.
 3. `optimization_summary.json`, `bl_vs_markowitz_resumo.csv` e a sensibilidade de tamanho usam um Optuna anterior (teto ≈ 0,427). O resultado da config atual é o k\* da seção 14.1.
 4. `score/bl_hibrido_score_summary.csv` e `sensibilidade_universo.csv` (universo de 5) não batem com 14.1. Regenerar depois de `pipeline.py` com a config atual antes de citar score composto.
+
+---
+
+**Nota da reexecução de 02/11/2026:** para o experimento local com `NEWS_COUNT_MIN = 1`, o percentual de pares ativo-dia sem notícias continua em **73,32%**; o conjunto elegível sobe para **26,68%**. A comparação de 2025 favorece `n = 1` nesse recorte, mas não constitui uma validação temporal independente do limiar. Os arquivos de Markowitz e do experimento histórico top-5 não foram regenerados nesta mesma rodada e devem ser identificados como históricos. A função de confiança de `omega_calc.py` também merece auditoria temporal: no código consultado, `model_confidence` é calculada a partir do erro `ret_pred - ret_real` da própria observação, o que requer verificar a disponibilidade efetiva de `ret_real` na data de decisão.
 
 ---
 
