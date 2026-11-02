@@ -122,10 +122,11 @@ def calculate_omega(
     q_long["news_count"] = (
         pd.to_numeric(q_long["news_count"], errors="coerce").fillna(0).astype(int)
     )
-    k = max(int(news_count_min), 1)
+    k = max(int(news_count_min), 0)
     boost = max(float(news_omega_boost), 1.0)
     if "news_coverage" not in q_long.columns:
-        q_long["news_coverage"] = (q_long["news_count"].astype(float) / float(k)).clip(upper=1.0)
+        q_long["news_coverage"] = ((q_long["news_count"] > 0).astype(float) if k == 0
+                                   else (q_long["news_count"].astype(float) / float(k)).clip(upper=1.0))
 
     sigma_by_ticker: dict[str, float] = {}
     horizon_by_ticker: dict[str, int] = {}
