@@ -1,0 +1,42 @@
+{
+  "status": "passed",
+  "checks": [
+    "five modules completed",
+    "249 dated observations per mode",
+    "same final capital across backtest, comparison and score",
+    "20 asset weights sum to one and respect long-only cap",
+    "no old top-k, optimization or historical baseline outputs"
+  ],
+  "capital_summary": [
+    {
+      "mode": "daily",
+      "n_days": 249,
+      "first_date": "2025-01-03",
+      "last_date": "2025-12-30",
+      "capital_est_brl": 103998.7118160568,
+      "capital_real_brl": 113480.05446894551,
+      "return_from_initial_pct": 13.480054468945513,
+      "capital_selic_brl": 114808.81833680556
+    },
+    {
+      "mode": "weekly",
+      "n_days": 249,
+      "first_date": "2025-01-03",
+      "last_date": "2025-12-30",
+      "capital_est_brl": 104014.42183712553,
+      "capital_real_brl": 112476.18035846774,
+      "return_from_initial_pct": 12.476180358467737,
+      "capital_selic_brl": 114808.81833680556
+    },
+    {
+      "mode": "monthly",
+      "n_days": 249,
+      "first_date": "2025-01-03",
+      "last_date": "2025-12-30",
+      "capital_est_brl": 103692.16504170858,
+      "capital_real_brl": 122942.1082236176,
+      "return_from_initial_pct": 22.942108223617595,
+      "capital_selic_brl": 114808.81833680556
+    }
+  ]
+}
