@@ -1,43 +1,26 @@
-# Saídas do pipeline Black-Litterman
+# Resultados da execução atual
 
-CSV e PNG ficam em `outputs/`. Caminhos em [`../config.py`](../config.py).
+Execução em 3 de novembro de 2026 do pipeline principal Black-Litterman com 20 ativos. Janela de backtest: 2025. Capital inicial: R$ 100.000; taxa fixa de referência: 15% a.a.; lag: 1 pregão; custo de turnover: 10 bps. Configuração registrada em `run_config.json`.
 
-Parâmetros oficiais do código: `config.py` = `optimize/melhorias_bl_wf_best.json` (k\* = 5).
+## Arquivos para análise
 
-`optimize/optimization_summary.json` e `markowitz/bl_vs_markowitz_resumo.csv` são de um Optuna anterior (teto ≈ 42,7%, gate de 2 notícias). Não misturar com o resultado do k\*.
+- `figures/bl_hibrido_ganho_estimado.png`: gráfico principal indicado pelo autor, regenerado nesta execução.
+- `backtest/bl_hibrido_ganho_comparativo.csv`: capitais estimados, realizados, Markowitz e referência.
+- `backtest/bl_hibrido_ganho_series_*.csv`: séries completas por frequência.
+- `markowitz/bl_vs_markowitz_resumo.csv`: comparação com Markowitz, pesos iguais e prior.
+- `markowitz/bl_vs_baselines_custo_0_vs_10bps.csv`: sensibilidade a custos.
+- `score/bl_hibrido_rebalance_resumo.csv`: métricas diária, semanal e mensal.
+- `score/sensibilidade_universo.csv`: full versus sem VALE3; frequência semanal conforme o padrão implementado em BLParams.
+- `pipeline/`: views, incertezas, prior, posterior e pesos desta rodada.
+- `run_manifest.json`: estado, módulos, versões, hashes dos dados/código e retrato das capitalizações de mercado.
+- `verification.json`: conferências e capitais finais reconciliados.
 
-```
-outputs/
-├── pipeline/       # pipeline.py — Q, Ω, π, Σ, μ, pesos
-├── backtest/       # plot_ganho_estimado.py — séries de capital
-├── score/          # score, sensibilidade de universo/tamanho, k*
-├── markowitz/      # BL vs Markowitz / equal-weight / prior / custos
-├── optimize/       # Optuna e best params do walk-forward
-├── figures/        # PNG
-├── standalone/     # Q.py, omega.py, PI_incerteza.py
-│   ├── q/
-│   ├── omega/
-│   └── prior/
-└── baseline_*.json # snapshot histórico (pré-mudanças)
-```
+## Proveniência
 
-## Arquivos a citar na versão atual
+Foram executados, nesta ordem: pipeline.py, plot_ganho_estimado.py, score_modelo.py, comparar_bl_vs_markowitz.py (incluindo custo zero) e sensibilidade_universo.py. Dados históricos, previsões XGB e notícias classificados já existentes foram reutilizados. Não houve novo treinamento XGB, classificação de notícias, busca Optuna nem seleção top-k.
 
-| Arquivo | O que é |
-|---------|---------|
-| `optimize/melhorias_bl_wf_best.json` | Params vigentes + k\* = 5 |
-| `score/melhorias_bl_wf_kstar_metricas.csv` | OOS 2025: BL top-5 vs híbrido vs Markowitz |
-| `score/melhorias_bl_wf_oos_sweep.csv` | Sweep k = 1…20 (não usar o melhor k ex-post como resultado principal) |
-| `figures/melhorias_bl_wf_kstar_capital.png` | Capital do experimento k\* |
-| `pipeline/bl_hibrido_q_long.csv` | Views diárias (cobertura de notícias) |
-| `score/sensibilidade_tamanho_universo.csv` | Universo crescente; gerado com o Optuna anterior |
+As capitalizações de mercado foram consultadas novamente e compartilhadas por todas as etapas; por isso os resultados podem diferir das figuras antigas. Os pesos consultados estão em `run_manifest.json`. O período de preços permanece 2025.
 
-## Resultado do k\* (teste 2025, params vigentes)
+Os arquivos antigos de otimização, experimentos top-k, baselines históricos e varreduras de universo foram retirados desta pasta. O backup está fora do repositório, não deve ser misturado com esta rodada. Os snapshots numéricos de outros READMEs e de TCC_MATERIAL_REPOSITORIO.md são históricos; para esta execução, use os CSVs desta pasta.
 
-| Estratégia | Sharpe | Retorno | Capital | Drawdown |
-|------------|--------|---------|---------|----------|
-| BL no top-5 | 0,85 | +15,2% | R$ 114,0 mil | −9,6% |
-| Híbrido rank + Markowitz | 0,40 | +7,4% | R$ 106,0 mil | −11,3% |
-| Markowitz clássico no top-5 | −0,12 | −2,5% | R$ 96,2 mil | −18,4% |
-
-Capital inicial R$ 100.000, 249 dias, custo do experimento conforme o script de melhorias.
+As fórmulas do programa foram preservadas: indicadores chamados Sharpe e retorno total podem usar convenções diferentes entre módulos. Consulte backtest.py e score_modelo.py ao interpretar essas colunas. O capital final e o ganho sobre o aporte são reconciliados em verification.json.
