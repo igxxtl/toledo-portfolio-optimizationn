@@ -24,3 +24,14 @@ As capitalizações de mercado foram consultadas novamente e compartilhadas por 
 Os arquivos antigos de otimização, experimentos top-k, baselines históricos e varreduras de universo foram retirados desta pasta. O backup está fora do repositório, não deve ser misturado com esta rodada. Os snapshots numéricos de outros READMEs e de TCC_MATERIAL_REPOSITORIO.md são históricos; para esta execução, use os CSVs desta pasta.
 
 As fórmulas do programa foram preservadas: indicadores chamados Sharpe e retorno total podem usar convenções diferentes entre módulos. Consulte backtest.py e score_modelo.py ao interpretar essas colunas. O capital final e o ganho sobre o aporte são reconciliados em verification.json.
+
+## Sensibilidade ao número de ativos (n = 1 a 19)
+
+A execução walk-forward compara duas formas de seleção/alocação, com rebalanceamento mensal, teste em 2025, capital inicial de R$ 100.000 e custo de transação de 10 bps:
+
+- `score/sensibilidade_tamanho_universo_pred_wf_classical.csv`: seleção independente — BL por previsões médias recentes; Markowitz por Sharpe histórico recente.
+- `score/sensibilidade_tamanho_universo_pred_wf_same_universe.csv`: ambos recebem o mesmo conjunto selecionado pelo BL, isolando a comparação entre alocações.
+- `figures/sensibilidade_tamanho_universo_pred_wf_classical.svg` e `...same_universe.svg`: capital final por número de ativos.
+- `sensibilidade_tamanho_universo_manifest.json`: critérios e parâmetros desta rodada.
+
+Para reproduzir a faixa de 1 a 19 ativos: `python -m intel.Blacklitterman.sensibilidade_tamanho_universo --walk-forward --max-assets 19`.

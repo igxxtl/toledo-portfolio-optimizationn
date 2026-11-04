@@ -387,10 +387,10 @@ def _resolve_bl_rank(rank: str) -> tuple[list[str], str, str]:
     return _ranked_ativos_by_hit(), "", "hit ratio"
 
 
-def _run_walk_forward(mode: str, params: BLParams) -> None:
+def _run_walk_forward(mode: str, params: BLParams, max_assets: int | None = None) -> None:
     """Walk-forward top-k: classical (ordens independentes) + same_universe (ordem BL)."""
     full = list(config.ATIVOS)
-    n = len(full)
+    n = len(full) if max_assets is None else min(len(full), max(1, int(max_assets)))
     print("Walk-forward: rodando BL no universo completo (cache de mu posterior)...")
     outputs = run_pipeline(
         params,
@@ -569,13 +569,19 @@ def main() -> None:
         action="store_true",
         help="Ranking walk-forward mensal + classical e same_universe",
     )
+    parser.add_argument(
+        "--max-assets",
+        type=int,
+        default=None,
+        help="Limite de k na sensibilidade walk-forward (padrão: universo completo)",
+    )
     args = parser.parse_args()
 
     params = BLParams.from_config(rebalance_mode=OPT_DEFAULT_REBALANCE_MODE).normalized()
     mode = params.rebalance_mode or OPT_DEFAULT_REBALANCE_MODE
 
     if args.walk_forward:
-        _run_walk_forward(mode, params)
+        _run_walk_forward(mode, params, max_assets=args.max_assets)
         return
 
     ranked_bl, suffix, rank_label = _resolve_bl_rank(args.rank)

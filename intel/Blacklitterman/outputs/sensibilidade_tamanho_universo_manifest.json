@@ -1,0 +1,55 @@
+{
+  "status": "complete",
+  "experiment": "sensibilidade walk-forward do tamanho da carteira",
+  "date_range": [
+    "2025-01-01",
+    "2025-12-31"
+  ],
+  "validation_period": [
+    "2024-01-01",
+    "2024-12-31"
+  ],
+  "asset_counts": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ],
+  "selection_methods": {
+    "classical": "BL seleciona por média de y_pred dos últimos 252 pregões; Markowitz seleciona por Sharpe histórico dos últimos 252 pregões",
+    "same_universe": "ambos usam a seleção walk-forward do BL, para comparar apenas a alocação"
+  },
+  "allocation_methods": {
+    "BL": "pesos Black-Litterman híbridos",
+    "Markowitz": "média-variância com dados disponíveis até a data de rebalanceamento"
+  },
+  "rebalance_mode": "monthly",
+  "initial_capital_brl": 100000,
+  "transaction_cost_bps": 10,
+  "market_cap_snapshot_captured_at_utc": "2026-11-03T23:42:54.204983+00:00",
+  "outputs": [
+    "sensibilidade_tamanho_universo_pred_wf_classical.csv",
+    "sensibilidade_tamanho_universo_pred_wf_same_universe.csv",
+    "figures/sensibilidade_tamanho_universo_pred_wf_classical.svg",
+    "figures/sensibilidade_tamanho_universo_pred_wf_same_universe.svg"
+  ],
+  "result_rows": {
+    "sensibilidade_tamanho_universo_pred_wf_classical": 19,
+    "sensibilidade_tamanho_universo_pred_wf_same_universe": 19
+  }
+}
