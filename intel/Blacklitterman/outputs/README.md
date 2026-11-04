@@ -25,7 +25,7 @@ Os arquivos antigos de otimização, experimentos top-k, baselines históricos e
 
 As fórmulas do programa foram preservadas: indicadores chamados Sharpe e retorno total podem usar convenções diferentes entre módulos. Consulte backtest.py e score_modelo.py ao interpretar essas colunas. O capital final e o ganho sobre o aporte são reconciliados em verification.json.
 
-## Sensibilidade ao número de ativos (n = 1 a 19)
+## Sensibilidade ao número de ativos (n = 1 a 20)
 
 A execução walk-forward compara duas formas de seleção/alocação, com rebalanceamento mensal, teste em 2025, capital inicial de R$ 100.000 e custo de transação de 10 bps:
 
@@ -34,4 +34,5 @@ A execução walk-forward compara duas formas de seleção/alocação, com rebal
 - `figures/sensibilidade_tamanho_universo_pred_wf_classical.svg` e `...same_universe.svg`: capital final por número de ativos.
 - `sensibilidade_tamanho_universo_manifest.json`: critérios e parâmetros desta rodada.
 
-Para reproduzir a faixa de 1 a 19 ativos: `python -m intel.Blacklitterman.sensibilidade_tamanho_universo --walk-forward --max-assets 19`.
+Para reproduzir a faixa de 1 a 20 ativos: `python -m intel.Blacklitterman.sensibilidade_tamanho_universo --walk-forward --max-assets 20`.
+

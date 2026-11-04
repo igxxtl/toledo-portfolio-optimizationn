@@ -28,7 +28,8 @@
     16,
     17,
     18,
-    19
+    19,
+    20
   ],
   "selection_methods": {
     "classical": "BL seleciona por média de y_pred dos últimos 252 pregões; Markowitz seleciona por Sharpe histórico dos últimos 252 pregões",
@@ -49,7 +50,7 @@
     "figures/sensibilidade_tamanho_universo_pred_wf_same_universe.svg"
   ],
   "result_rows": {
-    "sensibilidade_tamanho_universo_pred_wf_classical": 19,
-    "sensibilidade_tamanho_universo_pred_wf_same_universe": 19
+    "sensibilidade_tamanho_universo_pred_wf_classical": 20,
+    "sensibilidade_tamanho_universo_pred_wf_same_universe": 20
   }
 }
