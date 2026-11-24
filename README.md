@@ -18,6 +18,8 @@ Avaliação (backtest, score, Markowitz, sensibilidade, k*)
 
 Material de metodologia para o TCC: [`TCC_MATERIAL_REPOSITORIO.md`](TCC_MATERIAL_REPOSITORIO.md). Guia narrativo do BL: [`intel/Blacklitterman/COMO_FUNCIONA.md`](intel/Blacklitterman/COMO_FUNCIONA.md).
 
+O [benchmark de modelos de previsão em 2025](benchmarks/modelos_previsao/relatorio_benchmark_modelos.md) compara XGBoost, GRU, Lag-Llama, LightGBM e referências simples nos mesmos 20 ativos. A pasta inclui os scripts, o gráfico e as previsões por ativo, data e horizonte.
+
 ---
 
 ## Universo e janelas
