@@ -56,6 +56,8 @@ O repositório implementa um **pipeline de pesquisa** (não uma aplicação web)
 
 O único modelo quantitativo que alimenta o vetor de views \(Q\) é o **XGBoost**. O módulo Black-Litterman **não treina** o XGB: consome artefatos já gerados em `criacao_modelo_xgb/*_predicoes.csv`.
 
+Em um [benchmark temporal com dados de 2025](benchmarks/modelos_previsao/relatorio_benchmark_modelos.md), o XGBoost reestimado atingiu 57,95% de acurácia direcional em 21 pregões, acima da GRU (48,49%) e do Lag-Llama (46,05%). O ensemble XGBoost–LightGBM atingiu 58,30%, com diferença de 0,35 ponto percentual e intervalo de confiança de 95% entre −1,22 e 2,07 pontos percentuais. A simplicidade de usar um único modelo e a incerteza do ganho direcional sustentam a manutenção do XGBoost na especificação principal. A previsão de retorno zero teve erros de magnitude menores nos quatro horizontes analisados. O benchmark avaliou previsões de retorno. O efeito de substituir o modelo nas carteiras Black–Litterman permanece em aberto.
+
 ### Frase-síntese (abstract em uma linha)
 
 O projeto combina previsões out-of-fold de XGBoost e sentimento de notícias (GPT) em views Black-Litterman com incerteza dinâmica, gate de 5 manchetes (hard prior), prior de equilíbrio rolling e restrições long-only, para alocar ações da B3. A config vigente opera o BL no top-k (k\* = 5, escolhido em 2024) e reporta o teste 2025 contra Markowitz e Selic.
