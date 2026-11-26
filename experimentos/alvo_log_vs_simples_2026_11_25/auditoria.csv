@@ -1,0 +1,13 @@
+alvo,fase,fold,peso,n_train,n_baixas_treino,rounds,max_train_maturity
+log,validation,val_2024H1,1.04,23524,10497,1,2023-12-28
+log,validation,val_2024H2,1.04,25895,11824,66,2024-06-28
+log,test,test_2025Q1,1.04,28355,12962,8,2024-12-30
+log,test,test_2025Q2,1.04,29575,13552,75,2025-03-31
+log,test,test_2025Q3,1.04,30795,14036,69,2025-06-30
+log,test,test_2025Q4,1.04,32115,14675,37,2025-09-30
+simples,validation,val_2024H1,1.04,23524,10497,2,2023-12-28
+simples,validation,val_2024H2,1.04,25895,11824,65,2024-06-28
+simples,test,test_2025Q1,1.04,28355,12962,10,2024-12-30
+simples,test,test_2025Q2,1.04,29575,13552,118,2025-03-31
+simples,test,test_2025Q3,1.04,30795,14036,48,2025-06-30
+simples,test,test_2025Q4,1.04,32115,14675,43,2025-09-30

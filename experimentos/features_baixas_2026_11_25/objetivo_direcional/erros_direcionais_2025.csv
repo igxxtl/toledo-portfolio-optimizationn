@@ -1,0 +1,6 @@
+modelo,n,erros,taxa_erro_pct,baixas_erradas,altas_erradas
+beta_baixas_63,1019,416,40.8243375858685,303,113
+beta_ponderado,1019,412,40.43179587831207,300,112
+referencia,1019,426,41.805691854759566,335,91
+classificador_0_5,1019,429,42.10009813542689,334,95
+classificador_calibrado,1019,432,42.39450441609421,430,2

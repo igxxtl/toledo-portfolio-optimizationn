@@ -1,0 +1,16 @@
+{
+  "peso_escolhido": 1.04,
+  "limiar_escolhido": -0.01752603336444529,
+  "meta_acerto_altas_2024": 97.46153846153847,
+  "escolha_2024": {
+    "peso": 1.04,
+    "regra": "calibrado",
+    "atende_meta": true,
+    "n": 980,
+    "limiar": -0.01752603336444529,
+    "acerto_altas": 97.48296703296703,
+    "acerto_baixas": 3.653846153846154,
+    "acuracia_balanceada": 50.56840659340659
+  },
+  "arquivos_conferidos": 136
+}

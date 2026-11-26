@@ -1,0 +1,30 @@
+{
+  "arquivos_conferidos": 137,
+  "observacoes_pareadas": 9594,
+  "features": {
+    "originais": 104,
+    "simplificadas": 9
+  },
+  "horizontes_congelados": {
+    "ABEV3": 5,
+    "B3SA3": 1,
+    "BBAS3": 21,
+    "BBDC4": 5,
+    "CMIG4": 5,
+    "EQTL3": 1,
+    "GGBR4": 1,
+    "ITUB4": 21,
+    "LREN3": 1,
+    "MGLU3": 1,
+    "PETR3": 1,
+    "PETR4": 21,
+    "PRIO3": 1,
+    "RADL3": 1,
+    "RAIL3": 5,
+    "SANB11": 5,
+    "SBSP3": 21,
+    "SUZB3": 1,
+    "VALE3": 5,
+    "WEGE3": 5
+  }
+}

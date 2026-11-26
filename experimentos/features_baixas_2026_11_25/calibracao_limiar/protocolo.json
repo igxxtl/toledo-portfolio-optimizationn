@@ -1,0 +1,11 @@
+{
+  "horizonte_pregoes": 21,
+  "recorte": "dias_corridos > 1",
+  "calibracao": "2024",
+  "avaliacao": "2025",
+  "meta_acerto_altas": 97.46153846153847,
+  "limiar_log_retorno": -0.00731035992314715,
+  "limiares_avaliados": 145,
+  "arquivos_conferidos": 35,
+  "sha256_previsoes": "b8fce84aa6e4f16ab00ea63063070276be25981cea554e0fe4d51f83450cafcf"
+}

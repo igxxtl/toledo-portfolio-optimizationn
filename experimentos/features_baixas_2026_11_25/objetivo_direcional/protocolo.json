@@ -1,0 +1,7 @@
+{
+  "objetivo": "binary:logistic",
+  "metrica_early_stopping": "logloss",
+  "limiar_calibrado_2024": 0.4413987398147583,
+  "referencia_acerto_altas_2024": 97.46153846153847,
+  "arquivos_conferidos": 136
+}

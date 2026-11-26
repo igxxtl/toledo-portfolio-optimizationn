@@ -1,0 +1,7 @@
+n_ibov_treino,fase,fold,peso,n_train,n_baixas_treino,rounds,max_train_maturity
+1402,validation,val_2024H1,1.0,23524,11595,2,2023-12-28
+1526,validation,val_2024H2,1.0,25895,12816,2,2024-06-28
+1653,test,test_2025Q1,1.0,28355,13980,1,2024-12-30
+1714,test,test_2025Q2,1.0,29575,14620,20,2025-03-31
+1775,test,test_2025Q3,1.0,30795,15202,23,2025-06-30
+1841,test,test_2025Q4,1.0,32115,16010,7,2025-09-30

@@ -1,0 +1,692 @@
+[
+  {
+    "ticker": "BBAS3",
+    "janela_inicio": "2025-11-30",
+    "janela_fim": "2025-12-06",
+    "titulo": "Banco do Brasil (BBAS3) e mais 9 empresas têm \"data com\" nesta semana; veja - Investidor10",
+    "fonte": "Investidor10",
+    "data": "Sun, 30 Nov 2025 19:37:20 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMitgFBVV95cUxNSnBqd0FsUTNZemRSeVo2clNfcTl6emcyeEhfanpINExVWF9sVVFJV0xCU05tVmRXX2dxYy04ODAyTVZuQk0ySGp1VnlPU2VQTkg0UDZINEhtVnV0QjY0dE9udFVlTEUwQW5LaTl6MmRXUWwtejNWaTZ0TEI3cVBQSGd0NE5iU01yV1hQRERmcU5pWXNWUnJMd20zN2R4cnRvRm9teXdoTjhPa1FBQzA0Q0RPMHNnQdIBuwFBVV95cUxPSC1wMV8wNmZYbU82Q2dLOXpmdE44RU9iaENESXFjT1FlV3RFY0NNRlhzanFlakI3WDk0blVtT05Da1g4OVp1WTRsVjVrbEVaWTRSbHB3Y2hvSFJ5NnU1elhMbmljU29IQjJjUDM2aFJ3VklONEpQc0NEYjAwT3JFM1BZRFk4V0ZQSjFyUXh5WGlvVUtuLTFURTJQZHY3QXRMVExiWHkzTnVUcFRDWW9xS0pDWDdYOHlOQ2Rj?oc=5",
+    "sentimento": "positivo"
+  },
+  {
+    "ticker": "BBDC3",
+    "janela_inicio": "2025-11-23",
+    "janela_fim": "2025-11-29",
+    "titulo": "Bradesco (BBDC4), Itaú (ITUB4) e mais 14 empresas pagam dividendos na 1ª semana de dezembro; veja o calendário - moneytimes.com.br",
+    "fonte": "moneytimes.com.br",
+    "data": "Sun, 30 Nov 2025 08:00:00 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMi1gFBVV95cUxNbjJ3eHNzVUlCMkRqdVdHQ3JJeUI4TFcyWUZZLUJ6UFBzR2ctYnl6MDBWOE4xSTU0aFJHWUFqTURnRElrSzV3d05xNmdhVk1ocnVzU19YY1FYSnlzZ0FYYUtBWGdJczhsM0htTF9xc3dyZTItc3ZBN1pKUHk5NUJVYzhGanNSdTVJWmZuRE16MUtVOWJlck1VMGRQQTRieTN5d2wxZmNObDhjanppMEY5WVpSV3hPX0xMd0RNdW9ETmkzSWd0aFQzZFJjZUpGRkVxeEhpai1n?oc=5",
+    "sentimento": "positivo"
+  },
+  {
+    "ticker": "B3SA3",
+    "janela_inicio": "2025-10-26",
+    "janela_fim": "2025-11-01",
+    "titulo": "B3 amplia horário de negociação a partir de 3 de novembro com o fim do horário de verão nos EUA - Money Times",
+    "fonte": "Money Times",
+    "data": "Sun, 02 Nov 2025 07:00:00 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMiywFBVV95cUxQb2JxZzc0ZjhXb0RkNFowVXlGOUNWS3VFNlV6WVVkaTViTmZJRmpFOEs3T2lvZnlONDhXTlVBcU1oTk1tRjdzQXF0UmNXS1ZLa2l6YXdQNVQ4d04xRG9UelBMSWNybG9sZlQ4SEd0N0dUc1BnM0NQLWFUTjVZWnZoM1g5WndkVzlQLXZkcG83djZCeWRUVUN5SmVCSTRCUWg5enNsSXVGVkRDXzk3OUkxRDJsanB4T0ZuM21NdHFGRkF0Q3p0V1Z6VjJJSQ?oc=5",
+    "sentimento": "neutro"
+  },
+  {
+    "ticker": "MGLU3",
+    "janela_inicio": "2025-10-26",
+    "janela_fim": "2025-11-01",
+    "titulo": "Itaú (ITUB4), Petrobras (PETR4), Magazine Luiza (MGLU3) e outras empresas divulgam balanços do 3T25 nesta semana - Money Times",
+    "fonte": "Money Times",
+    "data": "Sun, 02 Nov 2025 07:00:00 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMi1wFBVV95cUxNcWhnMTB2MzVuQUJnT1RkTV8xd19odlM2VTc2R0luYkZudWVBR3pFSGYtVGZ4U1JfZkVYMzA2dFdQZWcwXzR2eGI3UXB2Y0s5dE11UWFtVy1MRFhsU1IxazFlMi1NUHo0QVhkYlRHWk8zc3VKV0VkZ3hwamtra2wtQlZnQU1CN3VnZ2ptQzRDcjVjTHQwdEFGbklDR05Ock9HZmh1ZGpmdXZNeTNKdmFXa0tKckgtQ2FUaXBJRkpldHRJUDJ4TGhkWlJmZHZNQW1fZ2w3aWV4Yw?oc=5",
+    "sentimento": "neutro"
+  },
+  {
+    "ticker": "VALE3",
+    "janela_inicio": "2025-09-28",
+    "janela_fim": "2025-10-04",
+    "titulo": "Veja o retrato de Vale e Petrobras no Ibovespa - valorinveste.globo.com",
+    "fonte": "valorinveste.globo.com",
+    "data": "Tue, 30 Sep 2025 07:00:00 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMi0AFBVV95cUxOb2Q4R0ZTdG9BZTU5VmFwZTZXbG1YWjhadXdET3lzQlJ3QU1qMHp4bzRVamU1TDdicUtiRzFMTjgxVHdJT0ZSOUF4UWJsRjNOTlVkTkhqRHZOVmY1dFhFci1oUGFhWjJWbnk3OWZxQldoZi1FR2ZiWVlrRHZVU1h3a3VrZkg4VndCTkhpMG1pRUlQRC1fRDNHY1p0VUVaQnFVa1pxQmtyV0pqMWUwaFdtRXRNU3pEekM4VFVUZ1JVTG52YkNHQ2dqOVI1dmRxWXBJ0gHfAUFVX3lxTE10bURLcDVsa1loU3RRMGplMlVkTlRWMkNPTEpJdnpqV3VJb1UzLXcxX3k4eWRtcG01X1FGZ2JkWUNVdjRfWGFpa2lWN2VBS2pwT21zcHh0cWR5NU4zOUVDOFZlZmNVQjlGNFE2SUlURDJYczlSTHh1S3lqN0IxVjRxeWxZb0ZYclk2eUtRT2xEOUQ3eW9pbkZONEpIUXlZd0tKeXVUVXZsQVFtSGNIUlZJZFZldWRVUEN5UEhXT2QyVUY4Tk53cUJuYXVqM1I0T2xlZzFtTlhXdTM0SG9FQ0U?oc=5",
+    "sentimento": "neutro"
+  },
+  {
+    "ticker": "BBAS3",
+    "janela_inicio": "2025-09-28",
+    "janela_fim": "2025-10-04",
+    "titulo": "Estilo repaginado: os planos do Banco do Brasil (BBAS3) para conquistar novos clientes endinheirados - seudinheiro.com",
+    "fonte": "seudinheiro.com",
+    "data": "Tue, 30 Sep 2025 07:00:00 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMi3gFBVV95cUxPLTJPaDVmMXVMU1hkbjRFSVZjdDFTSFJVS3otWmxrNkQ4NEZoLWJXSnhwTzlfMkpyeTEtb0FDdnhSUFU0eV80QUg2ZEY4MnFMMDVSWUR1YjhMU1NWWDYtalNZSDRlZ0EyeUVjZ3NsTnktN0ZJWFhuNnZHVEI5VHhmc2lKVWN6YmViU21tWlp6Sm4ySnVSSmFKbmVJSzduZjVWVTB3d1hyVUZBbm5UT0RIa3psU1BJWi1KbU5tRzlMRUhoeWZXelRjMjdqcjM1UFJQVDFxMU1rc1lzV1ctZVE?oc=5",
+    "sentimento": "positivo"
+  },
+  {
+    "ticker": "BBAS3",
+    "janela_inicio": "2025-09-28",
+    "janela_fim": "2025-10-04",
+    "titulo": "Aluguel de ações dispara e Banco do Brasil (BBAS3) lidera apostas em queda - Investidor10",
+    "fonte": "Investidor10",
+    "data": "Tue, 30 Sep 2025 07:00:00 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxNcjYwNUhTOTJjMnlyT2l5ZEU2NmdwaEQyeTdpRFptMGlOLXRJcDNING0zWm9QTzduOTRvTGNYV1dtYjNBcWM0YUN1M3JtLXkyczVqZTRZQ2g3OHhCS1BjNGJYc19BRGNPbG9wbEhlZ2VnM2ZBRkNrZ3R4Y3ZHWUN3TGhNQjItblN2WHk5YUx0R0wyMGoxa0pYejdjdldHZlBDS2c3MEg2dU42aGdKcmlzQWItNFBaM2JU0gG-AUFVX3lxTE5JMWpsaU84NUZST25RbDRLYnJPWWpKUThCMERSaFpkZnF6TmhvdE5rem00Wm9BMjl1U190bDQ3WlczTFVMQzRndFFBLXV2U2gxM0lpUXliQWN6ZXZOQ21yZ01iX1RSUlB5UnNKeWtza1hEcUxVNXJYQnNqcHZsNWxqTkhvaUtnTTdnWUpjaFd5R0dGZWlRQVJXaXlzUFE0bHIyamx3dW8xeVJOWmM2YUR3NEEzUVdrVkQ5RnpUeGc?oc=5",
+    "sentimento": "negativo"
+  },
+  {
+    "ticker": "ABEV3",
+    "janela_inicio": "2025-09-28",
+    "janela_fim": "2025-10-04",
+    "titulo": "A febre fitness e os emagrecedores podem prejudicar a Ambev (ABEV3)? Entenda - InvesTalk",
+    "fonte": "InvesTalk",
+    "data": "Tue, 30 Sep 2025 07:00:00 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMiugFBVV95cUxQVVcwcDJuQ1Y1Zm1fSkJFN21uWE9EMGduYjdPbGNzUjktS2JsNk1uUGt1cDhXcTlkUE1MeVVac1JpS3RsT1MwaDE0YmQ1OUhBOWZMVERLSnhNRWlmT0RtNHZBRDU2Q1o3eTVFellZeDFfdWdmai1YWGttdl9EY3c5eUNpc3d4cjVRZjJob2RVSWZpNFBBbU53RDFMUlhWNHptRWNfT1hoRTBueEF5OTN3TE5vZEZCUWkyZ0E?oc=5",
+    "sentimento": "negativo"
+  },
+  {
+    "ticker": "ABEV3",
+    "janela_inicio": "2025-09-28",
+    "janela_fim": "2025-10-04",
+    "titulo": "XP rebaixa Ambev para venda e alerta para queda no consumo álcool - InfoMoney",
+    "fonte": "InfoMoney",
+    "data": "Tue, 30 Sep 2025 07:00:00 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMipwFBVV95cUxQSkZDZ0QxT2lUSnVtMDRSYXVYbUY0STJVME51RDF6ckV2TlFqajh6NmhqRGs5TXRIdEwtMFdHNXFjczlmZGc3Q1VRQ2RvV21qSnpHdTJJcy1jOXJRRUJIRHpIT3A1ejROSHMyblFqbVJOUjJ0VG5xbVlsR2pqUnpTTzFfR09PbmF6M3JiS2lGaEljblhEekgtUVJXTUNYbjJzdFNmeGR0d9IBrAFBVV95cUxPYk9zbzNVVWRQbGd1Tm9Wak43VUxVbEpKdVNiRnp1VHlETFMybDV5SXlGS3RwTjhqLVJMbGV1Wnhrd1UtcGxSWjR5T0lpTU9qcFB2LTdsVldldWx3WEFVUVdGZEtXOVdGSXNxWC1mdmNlV2l1eFBrUlNxdnNPOTZ0Mm5VaUduODNRWm9pYzl0QkYxNHhMdWpnM25CZVhoZzdVTTJLdFhwTVdBRUFH?oc=5",
+    "sentimento": "negativo"
+  },
+  {
+    "ticker": "ABEV3",
+    "janela_inicio": "2025-09-28",
+    "janela_fim": "2025-10-04",
+    "titulo": "Ambev (ABEV3) afunda: XP alerta que até o clima e o Ozempic estão derrubando a gigante - Guia do Investidor",
+    "fonte": "Guia do Investidor",
+    "data": "Tue, 30 Sep 2025 07:00:00 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMiugFBVV95cUxPWDc2cXlZbzlrdWJqMkh4VFJyRDRobl9QWEdTUnYyY0FCWlhoWG1ZaTNHS0EycHdSRks2VE1HaHVFUlRpXzhxTkt0VENEcTJ5MG1DYzNkZXBaNlY4aE02M21RU3MwWGcxMnVhX1JTZmh0NEtpdnljak5zN3lXclk3ektpbG1XUU96bDdsOWU1TkZUT3l6TnFUcnYweGtkTDI0VVUtZlRvVkdFSmdWS25fY0lvbUhQa3VNWlE?oc=5",
+    "sentimento": "negativo"
+  },
+  {
+    "ticker": "ABEV3",
+    "janela_inicio": "2025-09-28",
+    "janela_fim": "2025-10-04",
+    "titulo": "XP recomenda venda de ações da Ambev e aponta risco de queda no consumo de álcool - businessmoment.com.br",
+    "fonte": "businessmoment.com.br",
+    "data": "Tue, 30 Sep 2025 07:00:00 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMisgFBVV95cUxQR1ItM1R3MmFKVm02bVE5Y1pfcXVYQ1FxOWV6OHVmVkNMdTk5ajhvQlRkaEhsTk5pTS1qQlhWUjJlQWpadTNCbVpCNkdEdkcxM2ZTdVcyZnRDTFUwY2dKN2xZZXpwWWpEd2RoZzlpVHVpMUZIeGNyalZqVlhjemFTLVRyMDFDaFlPQmJBZVA3N2QwTVhfNzVnMkNPVU5UdTY2VWN5YjFHSjNYcjBYRWYtVEJB0gG6AUFVX3lxTFBoXzdab3dodVF5YmxSQ1dJemZ3RDRYOVl6cjZZeENaLVNsTExtemVGQTRUSi1nUTQzMDZ0TG0wQ3FwUDZjLUpfYUVnOEFqZ2piVHJ2NlFWdXhDcFQ2MlZIRjctUTZpY3NVSURhZkR3NXdpZ0VXYVV4RmdOU2daUUVNOF9WN1hfbERJLVk1eEQ3ejAyQkhmWFBZYU1LN2ROU1daQnR3MnF5VVpZVmRwYjliTUFjZTZ2LVRMQQ?oc=5",
+    "sentimento": "negativo"
+  },
+  {
+    "ticker": "MGLU3",
+    "janela_inicio": "2025-09-28",
+    "janela_fim": "2025-10-04",
+    "titulo": "MGLU3: Alta expressiva de Magazine Luiza anima mercado, mas resistência trava avanço - InfoMoney",
+    "fonte": "InfoMoney",
+    "data": "Tue, 30 Sep 2025 07:00:00 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMivgFBVV95cUxNVjlMdFlsMzlaQzB0elI2cFduV2xsQUIzbkZoaUY5dDlUbmtoZ1VoNnVRVFdDcjMxTXpycmFyYnE1bnd5SDVPeGd4cUo1R2R6UE1rRHlNQkI5WmhaVmZyaFFQTEVvaGxuOWtrS1ZIUllrQzBaaUN2S21qVE1vbmxpLTR0YnotN0NNc3hYYkVlbUd5LTY3ZTg0ZGJUdkNWMXVGRmx5NUd4cmxRa05HLURPRWdtam5RQUdKeU4yT01n0gHDAUFVX3lxTE1IRU1SMzR2bU1tNGVLOExuSHBTbjhWNGRCYm10S29FT0xQS0hYcFZMLTNKRE5vX05Uek12SzZEaDE4ZHFJaHFkS1BDMmZwRWxxQmFxZ1BOVVRZdDZ6NzlDQVRqTEpuY0hqLXptRVpMQ0QtVVBWOVI1VmNYNVJfMF9MV0V5SmxGb0gtdmVvbnEtUnpnM1pXbjJkNGpPM0lUUHpXUE5MOFc1X01kT2tCZGI0TXpUWW5mWk9sTFlzZzBEZ2tvSQ?oc=5",
+    "sentimento": "positivo"
+  },
+  {
+    "ticker": "PETR3",
+    "janela_inicio": "2025-09-28",
+    "janela_fim": "2025-10-04",
+    "titulo": "Alerta para quem investe em Petrobras (PETR4): entenda os riscos até 2026 - Nord Investimentos",
+    "fonte": "Nord Investimentos",
+    "data": "Tue, 30 Sep 2025 07:00:00 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMiggFBVV95cUxPZGJmUWtoVi1tckFqVllZd1ZEY2otcWlQem83WnJRc3NabWRoR2JrYXc2b2JXS1pvbFp6cUxJZ09TcXF6R0JVakNqVVNTdUFCVFZBN2hXLVdYeEZCQld3empPTHd6Nzhodk41SmVzSFUyTDlMWmk2UlNNUHJMaG9rcm5R0gGHAUFVX3lxTE0wVE1jRXY5dWRVZFVaMHp4M0xLbnN6bHBvdnZJUzJNRmhzMncxbGlQd1VpeEVHQmNQOGpmWFhqOVl0bnlRb2JiaHhJOFB0NXkyMTFLeWVUZDVuek5zMzNCTWZBeG9RYU9qa2ZrR2VLcl8zOHlsN3paZnlpUzRmZEJnZUlyRjBvOA?oc=5",
+    "sentimento": "negativo"
+  },
+  {
+    "ticker": "PRIO3",
+    "janela_inicio": "2025-09-28",
+    "janela_fim": "2025-10-04",
+    "titulo": "Prio estuda cobrar compensação da Equinor por interrupção em Peregrino, dizem fontes - Bloomberg Línea Brasil",
+    "fonte": "Bloomberg Línea Brasil",
+    "data": "Tue, 30 Sep 2025 07:00:00 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMixgFBVV95cUxNaGc0eFJwMXZGUC1jWjg3ODBlOF8wa2RteF9IMjZ6dXZLTkozdUx5cmVxS2JrYk9iLUkwMkJ0UXhrZFpWVjk4bFd1akhRU182eVNvR0MtWTZSQlJRbEZscFVtc09RNG1aQ01SU0ZoNXJBUFE2bDEzeFFGek12NEU4NlVBWnJBdl9PczZnMFRES3dJYUVnVVk4N0lQX2VUYk1mUDcyeVlpaHg0Nm9fRGYxUHB3M0pYVWpFaWZtakVnSVlCM21oNnfSAdoBQVVfeXFMTTFvWmZKMWhkSWlqcVp3aEJsOUlhSUVRTHVDSEwyNU52aGpkZVcwYm9zR2pzQkVBZ0NsTjZDLUJNQ3p1VzJLWkNsU1V4ZUR0N3pwY0ktNUlTZ21uRkhCaU9SQXhIVXlsNUhKUndpR2VuN1BzYnBOVk5CREZ2X05Xcy1JUF9OZy1LTWFHYnlEWnFwQlowMlo3cDFZTmVkbXEyWEJhQnNselBqRUVVQVlXeWxndk5rbUhzZW15SUhCcWZENGdtOG5IMmVxRUNlcFBoc3R6M0JQOWQ5R2c?oc=5",
+    "sentimento": "positivo"
+  },
+  {
+    "ticker": "RADL3",
+    "janela_inicio": "2025-09-28",
+    "janela_fim": "2025-10-04",
+    "titulo": "RD Saúde (RADL3) anuncia R$ 140,7 milhões em JCP; veja quem tem direito - Exame",
+    "fonte": "Exame",
+    "data": "Tue, 30 Sep 2025 07:00:00 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMiowFBVV95cUxNTENfUlRMVVUyWjVid0hpU0VxenUwc2ppUWJyUzVwY0Ffd0ZwUDJfT2ZMNTRVQVJYNnNGeWhEM0Z3U0lNakUyZlRtYWlHSldXNzFZck9ZWUtEVFVvTzVha0Q1N3U4NTNVcTNqNVFRb1JGbHE3eUNNRGRKXzdLckFnVVJFeFRvYXo3eXBqajk5Rm9CWEh6MUNJdHBMajdSSHJMSEFV?oc=5",
+    "sentimento": "positivo"
+  },
+  {
+    "ticker": "RADL3",
+    "janela_inicio": "2025-09-28",
+    "janela_fim": "2025-10-04",
+    "titulo": "RD Saúde (RADL3) anuncia R$ 140,7 milhões em JCP; saiba mais - BPMoney",
+    "fonte": "BPMoney",
+    "data": "Tue, 30 Sep 2025 07:00:00 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMimAFBVV95cUxNWnJNa1JIVkp3SlU5NTV0UHd4X0dVZXhCV2M2a05SMk5rdjA3dDVkbmlFMDk4N28xT2p6NThwRzNMRVZuS0FPNVpUTmVELVdkUVMxVHZMc21zR05UVTN5UmMzMm5qeG1ESEtDcTRyeEpTbU1jYmRuaVFBcGtMRExJQTRtM0E2X3U3em81QWxHNW1LM1NQRjNUcA?oc=5",
+    "sentimento": "positivo"
+  },
+  {
+    "ticker": "SBSP3",
+    "janela_inicio": "2025-09-28",
+    "janela_fim": "2025-10-04",
+    "titulo": "Sabesp (SBSP3) ajusta provisões de valores destinados ao Fausp; impacto de R$ 107 milhões - financenews.com.br",
+    "fonte": "financenews.com.br",
+    "data": "Tue, 30 Sep 2025 07:00:00 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMivgFBVV95cUxOZVotZDFOUFdidWtNYTBHSXBMMHVtZWZuZDZzZDMzSEdEcjVadG9rS1d4QWJnYURrUHZ5X3oxRlNBejhkc0g2c25BdTVteXQwWWlnY1paVTdWOWU2UEs0UVlvd0plZnI3czJ1NHU2cWZNYjI2aW1YM1YtOEY5WHpvZDY0cWhjWmRZY3EydjhoS1NoWmNtaDBHaFdWNktseE9KbThoV210OE1mWFVObFpqUW1vUjhzNzlvN0YtZ1NR?oc=5",
+    "sentimento": "negativo"
+  },
+  {
+    "ticker": "SBSP3",
+    "janela_inicio": "2025-09-28",
+    "janela_fim": "2025-10-04",
+    "titulo": "Copasa (CSMG3) entra na fila da privatização e pode disparar se seguir exemplo da Sabesp, diz banco - Estadão",
+    "fonte": "Estadão",
+    "data": "Tue, 30 Sep 2025 07:00:00 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMirwFBVV95cUxOSjM0Wmotdng5RE9oNmQxME5KRWJvdVVKU0VQVEtIRnNJalJObkpnTE9HVGhOdW5zcEt6SUttenJKcHBYMUJDWm9KX1lfdENTWVl3U1N6RUp5VURZSjIxSHZLMXMxR1c0czUtdEFDMHVnaHNyRk1vZURmY0lRaXZ6a1J2ODVZcVZCaUJ5S2pqY1J6aUVMcEpscFJVS2ZES045NmVDcVZmTWM5VmxhZmlz0gG0AUFVX3lxTFBlSkoxc1RMM0VLN1RFY1hOWTZxOUZHVkhhVXVkNlRUeEt6OTkwOF8wc09JQWhyZUpPSGZxSF81UmdXUFdVVVNueGtjQXFzalRveTdwSnJSUGxqZkVDMV8wMTcxcWRuLXFTVFdyLURPYXlQN0NadXJFWWd1cWhZeC11WmZEc2tYRGZJNExBdWI0OEczUlBtSGM5MGNDblJURXdoLXhHM3Yzd0RhMDNnMWpnLUFCLQ?oc=5",
+    "sentimento": "positivo"
+  },
+  {
+    "ticker": "SUZB3",
+    "janela_inicio": "2025-09-28",
+    "janela_fim": "2025-10-04",
+    "titulo": "Suzano alcança marca histórica de 35 milhões de toneladas de celulose produzidas em Três Lagoas (MS) - Notícias do Cerrado",
+    "fonte": "Notícias do Cerrado",
+    "data": "Tue, 30 Sep 2025 07:00:00 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMi1AFBVV95cUxOa19FdmxYSXhJQXZURy1oakZiZXpxMldJQXB2emIta3EtUTJwa25uV1hWX2tBWFZyNG9wUS1YODZ4MHYxTlBlOUZXbkF2SHdheW5JX3lKM2c1N2pUY2pjZlM3LW1BTEYtYVBleVhQVXBwbWltWUZVSEpzRXZLSGlpclRHcXRkS2NzamlhU01TeWRSbU5SbUxfWEhuVGRZb1Q3VmMzb2c3bXcyVHkyOTVPOVhqMlRhc3YtUHJOTTdNR3lwTDRHcEVTVzdWVG1SVDJ0YTg3WA?oc=5",
+    "sentimento": "positivo"
+  },
+  {
+    "ticker": "WEGE3",
+    "janela_inicio": "2025-09-28",
+    "janela_fim": "2025-10-04",
+    "titulo": "WEG (WEGE3) anuncia investimentos de R$ 1,1 bi para expansão fabril em Santa Catarina - financenews.com.br",
+    "fonte": "financenews.com.br",
+    "data": "Tue, 30 Sep 2025 07:00:00 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxNZjZROHc4T0tJR0RQdGl3d2pXQ2pyaXVaWEFPNnZxMWhYVk9UTFVCczYxeE5UOHB4eGNrNnVPM2tiWVZESEhSVkp2ejc5Qy05RkxCSG5xaFlZNVQ2N19SQlp5Tk56OFJCam5BNEdjNEhTZ3ZfXy1wc2xINkY1OVYxUlNyUm8zUHZrME01QVFXV3ZWQlpRV2tyTlpnanE5UHR5UVNMZkhYZW5naG44UmF4SERHNzFzVDVH?oc=5",
+    "sentimento": "positivo"
+  },
+  {
+    "ticker": "WEGE3",
+    "janela_inicio": "2025-09-28",
+    "janela_fim": "2025-10-04",
+    "titulo": "WEG anuncia aporte de R$ 1,1 bilhão para ampliar capacidade produtiva em SC - Business Moment",
+    "fonte": "Business Moment",
+    "data": "Tue, 30 Sep 2025 07:00:00 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMipwFBVV95cUxPUGN3WjNaM21wWEVWRzRleHN1NHlLQmhDOUtxVHpvZjg3by1RNUhaMmxLMjNBY0FHYzJGMW56amxoQm5iNEdOakhpYlFQZFhrZ1NtbWwtb3NrTkFGNVUxQ1V2SXprbW1mUUpBaHpBMTRaczFNQUJMYmtraHB2OERLNDFTck94SXZEaW5wVHNKUHVqS3pYX2M2N09sR2dnaUhXSWpLbEFad9IBrwFBVV95cUxPT2FxUjhlNklsSmhPc2VRTVoyWnZSYjlYcmZ3elMwTmR2elc5YTdqcmd6bXloMnNSWEc5anVnVnN6WkhPbkp1QkZPY3VwUnU3NjloVGVCUGRWaWJoWHN5a3VIWDYyUEFIZlIxVDNmcXFjdnBsQms3b1FlUDd2TmtjR04zRzVmcGlQOXdXTDJYV09CbU4wc3llTnhnWWEyV0dZRC1WZWc2NXJkd25DeW5R?oc=5",
+    "sentimento": "positivo"
+  },
+  {
+    "ticker": "ABEV3",
+    "janela_inicio": "2025-07-27",
+    "janela_fim": "2025-08-02",
+    "titulo": "Ambev (ABEV3) no 2T25: crescimento, dividendos e perspectivas - nordinvestimentos.com.br",
+    "fonte": "nordinvestimentos.com.br",
+    "data": "Thu, 31 Jul 2025 15:11:16 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMiekFVX3lxTE9wbkxuY09fNjdDMGp3NC01akdDR3paTjVqczFqREE2M2VoaF9oWVlBTkZtWGZqNVBHMDhoX0RlMkRvLVpTc1ZmbTczTFNEdGNobGlUOHBxNHUtb3J4UEJKbFM0TjR1eHpoNUtNM3JoVHl0YTBUbDdoZ0Z30gF_QVVfeXFMUG4xeEdhNWJhOE9mUHprWkN5UHNZaVd5Q3pWWXJFdEhPbDNFU2pvdTYteVBWZFJBX1N1Qy13MXVnWjg2OG1mdExHc2F2LWlXY2Jic0VLeUoyU2RyT1p6OXpyRW9FWWZrckEybTdCLUNxc0prdlExUTBJUW8ybGFsZw?oc=5",
+    "sentimento": "positivo"
+  },
+  {
+    "ticker": "VALE3",
+    "janela_inicio": "2025-07-27",
+    "janela_fim": "2025-08-02",
+    "titulo": "Vale (VALE3) pagará “bolada” em JCP de R$ 1,89 por ação; veja quem tem direito - Investidor10",
+    "fonte": "Investidor10",
+    "data": "Thu, 31 Jul 2025 07:00:00 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxQSjBLZVZ3TGM4OVlZclBRdkVWTi1tUE8yR0JtT0QwZS1jZTR0d1VFUjRrZklfOXZ0TElocGdnblc0MXo0ai1kUjhpYkZLRS03bm92ZGlqcnE0NWVJZnZXLXZrQXhvUXRmMWtaU0hCRUZVbVA4UFQxTTNWUzZLUGR2REtQeUtnOUJLdnp1N0lIQzFnMzl6ZmhFUUFOT1pJcjNSSkhVcGpBblk4Z0xnWXdqVjdPSTBtZXNp0gG-AUFVX3lxTE44Y1hMYVUzN0FidmF4NDdjODJJTXlJc2kwOFZBMUIyM0dPaW9ZSHR1eDNINDRWR3V5OWUyeXc0aXIyUjRmU2JhbXNBUWRuVl9jbjNtNURSMTJfUURMaHNrQTdzdVFWZ0JuVEJ0ZnBnVzBIdTdQd0lmblVicWlMMFR3Z0ZHMjcxZmJUYUtpd18yem9ZTE43Nml1djlEbXB5OTBZa1pQUW84VEV3YzNWbE1aVVBEUGtPMFVoamlfaXc?oc=5",
+    "sentimento": "positivo"
+  },
+  {
+    "ticker": "VALE3",
+    "janela_inicio": "2025-07-27",
+    "janela_fim": "2025-08-02",
+    "titulo": "Vale (VALE3) tem lucro líquido de US$ 2,12 bi no 2º trimestre, queda anual de 24% - InfoMoney",
+    "fonte": "InfoMoney",
+    "data": "Thu, 31 Jul 2025 07:00:00 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMiiwFBVV95cUxOWG9Ebl9iSjBHbVRFN25xWHVGZ2VTMDRBdFkyUkRyNmdTaHIwQmpBSl9iTWtSZEhld2ZXN25xTWVNZVRTTHBZNWdmM2pxY1pDdmRSUmo5QUVjUHE1cGNXU3Y4QkVaN0V5cElBN1JkejZldE5SVl8tUGViVVA3M0xaZTdxMFVCbDVMV3pj0gGQAUFVX3lxTE00MTU3bUNrSktzeEhaUHczY3JPQmt6cFBwMjk5eVZmeEJXRjdVSmlZYllJSEh0ckd6Rjk2WUpvdk9nRURGV1RiUUNSN1hnbno1YzhQNHV1bG1Tb3JBSTZwUTM5cGVCelF2RUsxVlh4N2xNT3hxWnRFTWhOdjUzN1pITzZ1NkJBYm1BWGxGMjlCTw?oc=5",
+    "sentimento": "negativo"
+  },
+  {
+    "ticker": "VALE3",
+    "janela_inicio": "2025-07-27",
+    "janela_fim": "2025-08-02",
+    "titulo": "Vale (VALE3) tem lucro de R$ 12 bi, no 2º tri, queda de 17%; valor por ação fica abaixo da projeção - valorinveste.globo.com",
+    "fonte": "valorinveste.globo.com",
+    "data": "Thu, 31 Jul 2025 07:00:00 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMi-AFBVV95cUxOM3drM3FsN3c1T1hqUGVZV2pFZms2SG5wOXZmdDBxZUppZHFDb3BIX0MzenU3el9FQWNKaWdWVEZZMW5sRkJzZUZDT212QnVzRzItdXpjZUx1VUxuSXNkSUpiZE1haDhSNUt1dzRIM2FWaHktYjY3cjNrV0JfaUFVRUJfUFFXUHMzRHIxMi11enFNN3BvXzZZZGdzVExPeU81NWtST2RKbFk4S1dLRnJTSmhBc0Zpa0hVbFp0NkhZRXk0UGZIR3dHR25BTXBBeklWSEcwM2E0ampITGNfdmtBLVpkbmt2bGJTUXA5d2t0YjNYM25rU2FaX9IBhwJBVV95cUxNM3lGanByREVwYjAtdVFNNjFoQU11aEZpbzRja0ZRd1RjOVBwdFZIaGk2SjczVzFtLVgtWm8yQXg1cUlTbV9DSDl5WWo0d0x2LWxIbkRpb1pvbWFfN19IZGd2RFNEVlpnUG5mMTk2YTZHbWJ0WjJWSFpBeXN4NDdyWkZuNGdhS19HNHpnZ2dZRktpMElRSUhVcGRweDBvU1ctcnZXdWRHLXlIZnJvUVMtQ3BWeTZQdU0wdmp6d3RveWtyd19IMXhfeFM1WEVZYmFLb0NpMzYwSkd2bHFpUE5OSXNINVZYOWFmYm9oTVpsLTJ1Z2ItNWxRVjhTczNYZ2h4a2x0ZTlRNA?oc=5",
+    "sentimento": "negativo"
+  },
+  {
+    "ticker": "VALE3",
+    "janela_inicio": "2025-07-27",
+    "janela_fim": "2025-08-02",
+    "titulo": "Quanto você teria hoje se tivesse investido na Vale há 5, 10, 15 ou 20 anos? - InfoMoney",
+    "fonte": "InfoMoney",
+    "data": "Thu, 31 Jul 2025 07:00:00 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxORU5DQ3BjcTNnckRtQ2FvVldfSmY5VEZoZVBzU3FVamZBZEp1SnVPVUk4Qm5TNHBmMld6MzFXdEp4SFRsTmhlazdSRWdmMGtuRXB3dEQ4MmUwdkF5bjVGVzI2bHRtcVRuZjdHZ2habVZRdmlKOF9fdjdGOUNuOFBzMVBMUkxocWwxb2dUMUNEVENLenZ5ejRjV0NTZlFUaVlQRVdOc0p0dXVMMnhSZGRKcmpPMlRLZXEt0gG-AUFVX3lxTFBLWEg3cTBhM1VOYnowREhqaHJJSmhpUDE0X0gwX0VvZU03aW9xWDIwTFk5OXZuY2c1Z2RhTVRoM1JjcmlXTlZzVWE1bm5oSHp6cXhWZEp2bHh3Ty01U3hSd2xUeFg3b1dKVVZQUkcwaExLUkhCTUk5SUdYbTFqYXZGdXgtNlVfalZBLUduNVdocTdLa2lVWFpfWjQtR0xjVGh2NnV3QlFUejZoVHE3MXRCZkVXWW1ldlJOcG1DR1E?oc=5",
+    "sentimento": "neutro"
+  },
+  {
+    "ticker": "VALE3",
+    "janela_inicio": "2025-07-27",
+    "janela_fim": "2025-08-02",
+    "titulo": "BHP e Vale são acusadas de “trapacear” escritório de advocacia do Reino Unido - InfoMoney",
+    "fonte": "InfoMoney",
+    "data": "Thu, 31 Jul 2025 07:00:00 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMitAFBVV95cUxQWEdQM1I1WlpsbXQ5ZVl5dHdUUFNELXN5OEZCcWdUbUtCOGZQb0lDOXhVRnJuVUk2RTVQOHNlZWpkM1FQVnliX0hMYzdCQjJQcTFUMGdoV1hlN0kxaEVENkJPMWRpbC00UEttLUJSMDNuN3puRVlZeFJQelBZNThyR0hZVFhVTFB4QnhHc1VkV19mSzVrdDd2Z0pvNEIzdm93XzJkeGZyeU0ySTlwQXJySWlMWkXSAboBQVVfeXFMTzVTWTFBc2tzQW52UlNiSkthbTdRbERJN2doUlJOd1FwOFlKVjNha0g5T01CeTlBMXJyZEZfNkJUQk16UFY2R01yUWxEVExORTZ3SDdDUXhLd2FRUFZyVGNVZUgwMTk1RS05VTRtVURuVjEzVkZUT1Vwc3o3VC05YXJ2QnJaZTZEN3VMbDJTRWRSbDlQWC1WVnA4NVhQeWVFUUFpZU5LWlNsMUYyLUZfS01Pcnd4OUN2aEh3?oc=5",
+    "sentimento": "negativo"
+  },
+  {
+    "ticker": "VALE3",
+    "janela_inicio": "2025-07-27",
+    "janela_fim": "2025-08-02",
+    "titulo": "Lucro da Vale (VALE3) cai 24%, mas vem acima das projeções; mineradora anuncia provento bilionário e ADRs sobem em Nova York - seudinheiro.com",
+    "fonte": "seudinheiro.com",
+    "data": "Thu, 31 Jul 2025 07:00:00 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMi-wFBVV95cUxOVzdEbkE1VFFTbzA2OXB1aXF4WWZDSDFLSnhabjhHaHY5VlYyNlZXUjg5aTNZWVlLOHZ5bzktdXJwT2xBUkZvT0duQ0RPRFMzYXYxUHdYMlZIVHgwclB2NkdfbEdnS0l3UlN5bmRfdXA0TjVyRGxEUWxRT3FsaTZfV3FfWVZaaWNlZUdmTTNfTkk1MExGdWhZN1VQUWJVZnZFWUZxZUlmZ0hCajc0WEFvdkMtNXY0ZmF5MTRHS1hGNThHaFUxbWstTXdUTnM3cDJZaTZqbUYyVjhDbFFabm80UXN5LTlMWFlLMWFtblR4WklMUkRhQVN6WjBYQQ?oc=5",
+    "sentimento": "positivo"
+  },
+  {
+    "ticker": "BBAS3",
+    "janela_inicio": "2025-07-27",
+    "janela_fim": "2025-08-02",
+    "titulo": "Dividendos em dobro ou risco em dobro? A verdade por trás de BBAS3 e BBSE3 - Estadão",
+    "fonte": "Estadão",
+    "data": "Thu, 31 Jul 2025 07:00:00 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxPN3lCSnlEQ1dVY05zOFN6UzZ0ZEUxNlA2RXZwRlBDVmIzUzRUeVpWNFdiSmRiNW5qOV9xVFpFbGZpQWQ4Qnl0RTZJaktsNGJHUmtnbEQyZFFKeHNzajM5aEFpUkJINzZaM0hjMjV4cnRJRWhJU3JLLVo3QjZ2bk5BNXJwOXNFLTAxTDRQdE5rS1lIeDZabDRFX2FEZG1hVl9EQWVZTEN4MzHSAa4BQVVfeXFMT0NXQ2FzWVE0RmV0NVluUEVHeWlrXy1VbXQteHBRejhMYi0wbV9RNUR6b2czcEgtYmJTdjVCNDd6djM0bUFQZm5jVWxIVFpfdHVfNmhQaWVwTTNIa3NIV2ZpcU9TTnY2N01OTWJjRmp0LVpVV2V5aTQ0X1I3T2xuMXlYRUlkcy1CaU4waFlqc3lOOUNzcWZ5QjlqOUtZeDR3NEE3QVh4NnZsUmdaZ3l3?oc=5",
+    "sentimento": "neutro"
+  },
+  {
+    "ticker": "BBAS3",
+    "janela_inicio": "2025-07-27",
+    "janela_fim": "2025-08-02",
+    "titulo": "Na contramão, gestora coloca Banco do Brasil (BBAS3) na carteira e acha que ações podem dobrar de preço - Estadão",
+    "fonte": "Estadão",
+    "data": "Thu, 31 Jul 2025 07:00:00 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMitgFBVV95cUxOa0E4ejFINDAwSjBoRlBhTFNSV2ZSSlBWY3BWUXJwTjF2N2RuaGt1Ymh2N0U3ZnlNWTUxcXdISnZfR053Z2o0MUZZQ0V2Wk92MzR3SmZ1UklpdV9tTzFOVnhtWE1SNm9jckl5ZDd4WU9pRnYtckI5c1hFYXNIY2dhcy04TWdydXhmV3lnS1A5eTBFY2dlMlFhdnItN1lnb0xnUFRiaDJCRG91VVlFY1VqU0JNY3ZGQdIBuwFBVV95cUxNZG4wSlRTUmVITUNRZWdLeHJYUEVkZFBWNnJnTWxjVy03SnRyQ2RaOXhFOTg2MDEzNld0UVNaeXNhNnB1QXFDY2ZWblNGRVZwUDJEVTBTTkU5bV81ZURzSnlXdHNsLWdvcUx6UHBGemJtOHB2V2phU245cVZ4dUtzUlFsMC12VXdGNTJHSkRxT0VqQTc5MTVVWHFINW9JQm9RUHFzZHBOT3kxaXc1QXRWUmxVd0Y3SERKR19B?oc=5",
+    "sentimento": "positivo"
+  },
+  {
+    "ticker": "BBDC3",
+    "janela_inicio": "2025-07-27",
+    "janela_fim": "2025-08-02",
+    "titulo": "Vale a pena investir nas ações do Bradesco (BBDC3)? Veja análises - suno.com.br",
+    "fonte": "suno.com.br",
+    "data": "Thu, 31 Jul 2025 07:00:00 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMihAFBVV95cUxNeWdiS080aUd0clU0bzRlX0pMVGF0WkJJdHdfNkpYanFMelU5Um05VzZHc1B1OVBuRGFYb1hGVjV2TVFEOVFDMnU3Qy1HR1MtQmlNbWdINGlEcnBLRXdScUk2YkJEenlFUzk0OXZoWFpzSVQ4RmhxX2FUNE1TdlB4TkdYNWvSAYoBQVVfeXFMTWhqWTFDTEhNSjBFMURUc0cwMHR4QUJfdnF2bFVPUHN1MVkyZlNwU1dQRklmcVk2U1lEN2FVT2RmcGhnd2JuUEVsZkFGMHJBVC1xS3RoOHNJY2c5UjM0R2gtX3hUNUZrX1dWcDZvNVlJX3ZUeHBFb21MejI1OEpRQjBRZEtwQUNzRnRR?oc=5",
+    "sentimento": "neutro"
+  },
+  {
+    "ticker": "BBDC3",
+    "janela_inicio": "2025-07-27",
+    "janela_fim": "2025-08-02",
+    "titulo": "Dividendos hoje: Bradesco (BBDC3;BBDC4) distribui R$ 3 bilhões em proventos; veja valor por ação - Estadão",
+    "fonte": "Estadão",
+    "data": "Thu, 31 Jul 2025 07:00:00 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMirwFBVV95cUxPRnU3anQ1cDc5c1pNMGNEVkJVVkk2Nm9yMUt4QjVqVmNsdDBYNjFlWjhFQ2l1Uzg4ZXhBdmg5VDF3VmU1eDZjNjFLVHJKYkxLQzhWTy1XYUp2VExjZUNKZUdOV3BFcERRUUdvclg4WGtTeG5ZM2tyQTIwVmM1ZmJMbHdfY1dqVGJET3pYVUFCaWlGeVdqcVVDZS05b1UzRkIwWm5vanJjY2FMT2VvQ01r0gG0AUFVX3lxTE1PbXlOTE1ta3BHVlF0ckxFbWlwWjlSQTRxbVR3aXM5M0tBYlppYXQzQlVaSmF6c3lVVDlQY1RhYnZnLXhQSkZzVWdIY19QRmlheDNoSXBKcG04ZW9TM0pzRkZWVkZlYWxoMUpaUWdHeVZNb3ZidUZ6cVByWEo4VmN0Z2k1TkZGc2lQVmRuSnBvSUpNOGR0U3JpeUM3WFROUWJDblAtbzhVeDQyYmhhcTBFcFpJYg?oc=5",
+    "sentimento": "positivo"
+  },
+  {
+    "ticker": "BBDC3",
+    "janela_inicio": "2025-07-27",
+    "janela_fim": "2025-08-02",
+    "titulo": "Entenda por que as ações do Bradesco (BBDC3) oscilam após lucro bilionário - suno.com.br",
+    "fonte": "suno.com.br",
+    "data": "Thu, 31 Jul 2025 07:00:00 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMihwFBVV95cUxPdTQ5MERLbllDd2tfX0pBSnNuMHAxSXFaR0xRdGFxSHRYdjVHdHg4M3JnLWxTRVIzNk9aU0ppQ2NmT01uVjdWWDRvTkhCRnhteXBGZVluQV9DYUxzYkhWX2tTNzF0SXlKNHl2YWZrcXB5R1BJYUlZUUNWUkhUbmNSZUt4YTR0UUnSAawCQVVfeXFMUHU5S0U1TG95MWRBQnpQQzVoZ0RVanJZbGxtZm5fVmpaeHUzSDFxSlJiVFRCRjY4VTRndXBKTkJBOFowU21aUkxpR1hIQ2hhMmRuR3ZKbWp3RzZUN3ZTWWZWTFMyMnFNTmFIQlcyWXFkVUozTEFfd1hjel9fX0NwQ1lrOUd5a2g5ZE5Eb2xfdDVIMFdRRk1Fc1ZmLTZRM3Z4WWI1ZFhBd0tmSlhtQnBYT3JUdXROZkc3dU8zQlI3SGtMWHFCczhicGpIdEdWU2NKNUNzT3h0MXZjcENPd3ZGUXkwc3hkTFpYT3YxZzBwbndkME84X2x3NHNKN0JOLU1VTWFZc3h4S0lVZ1ZyYkRoc1pPaGw1VXNNOVJDLVZOSERxQmdYeDg5WU13M0E2?oc=5",
+    "sentimento": "neutro"
+  },
+  {
+    "ticker": "ABEV3",
+    "janela_inicio": "2025-07-27",
+    "janela_fim": "2025-08-02",
+    "titulo": "Ambev (ABEV3) registra lucro de R$ 2,79 bilhões no 2T25; veja os pontos fortes do balanço - Estadão",
+    "fonte": "Estadão",
+    "data": "Thu, 31 Jul 2025 07:00:00 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMimwFBVV95cUxQZ1M1a2FyU29NN3hkNTFOQUUzYmY1OEdnSGZhWlROZmRZR2FUWmcxcnZiR3lqZ255dUpBckdLTTN6dFIxU2hlbkJxMk5zcWY4dlhPNlN6T2RLbWpxWThQSzh0NzFNbGdZMWZ2eDJxQ0dnYUhlaWE0RjV6c0k3SkxrU2hwaGhWdlhKLTVzcGdzVHl4cGdnTkJkd0hTSdIBoAFBVV95cUxNTGxWWHBadnJWaENjR0FiX1NxeTNYQ3N5cXlWWXhhRVA2TXFRYUhiLVFPY0cxMTJVVEYxWnp0OXQyRjROVndmVVA3UmNjcmpGaEc3RUlyd2g3SG5Xc1g1ZUJYNk9fdVdXR0E1c1dBSFdlS1FuWFdib3MtUGxsMUFzdHZHTW1QMW94RUVfT0MtNWt3WVdWTGFKTEU0RVNxNC1C?oc=5",
+    "sentimento": "positivo"
+  },
+  {
+    "ticker": "ABEV3",
+    "janela_inicio": "2025-07-27",
+    "janela_fim": "2025-08-02",
+    "titulo": "Ambev (ABEV3) paga dividendos bilionários, mas queda no volume de vendas preocupa BTG e Itaú BBA - seudinheiro.com",
+    "fonte": "seudinheiro.com",
+    "data": "Thu, 31 Jul 2025 07:00:00 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMi2wFBVV95cUxPX2JOcmZ5Qm1IdjhDZ1RnZUg4ZGd1RFUxOVIzLXZCU21jdmEwcjN0UENNOVg1SHNMd1dzQWRqTUNRS0tRYnNQc3hJenlxLUROWWtqWDZTUlFVcmFGeGtRV0hXVXFqd21VdDRWWE1pNE5oY2F5ME45czRJZXo4UzdkM29uaTBSWHFhWHdVNjQ3d2R3NkpLczJFa1lOc0NYUVBkRWctcmNObVVIb0REVmpDaERqRmE2S1owSW00NVBndm53Q2lwSXptSFlmTGc4VElnNDdfdjNIMC1OaVk?oc=5",
+    "sentimento": "negativo"
+  },
+  {
+    "ticker": "ABEV3",
+    "janela_inicio": "2025-07-27",
+    "janela_fim": "2025-08-02",
+    "titulo": "Quanto você teria hoje se tivesse investido na Ambev há 5, 10, 15 ou 20 anos? - InfoMoney",
+    "fonte": "InfoMoney",
+    "data": "Thu, 31 Jul 2025 07:00:00 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMiugFBVV95cUxPU2d5S3oyZE9PNlJfM3BrWFBidDhvWEI1ZFZWSTNtYjVsbkdGTFdGOEhXLVVncmtVU3N1SXE2b19qYnhPTnN0TXRJY3VxcUhfbF80TDlkX1BIdTE2Q1FkdEFtcFRBUkwtQmRVQm1EeUdna0l2NmJCWG1Md2tFVG4wRW5NeUxjOXp2VHc1cU9KT2hIT2h2VTIyUHE2SGg1RldkLXg0TkdaX05kQzNHSUxwNFpwZjRPT2tmUXfSAb8BQVVfeXFMT2szQlNJVHRjNHduX29SM0FsQlgyVG1ZUldSclNCb0JIMHBfTlA4Z3liVFpiN2w2d2pONmgxZmd5NDRpeDVHZ09uRTdXQmhramgtdEhvTm5JNVJZbFhhbjR0emllYmpaaEVydTdWZ2ZkUG9mV2JpVGVXUkFkVVpncjZHVnRrbkNJdFNhVHB0cG1vd0pSV0FjRWpHSS0xVEdBWlhPeTB4MzhaOFFXVHlSc1cyWmtSbU42aWM4amVGbkE?oc=5",
+    "sentimento": "neutro"
+  },
+  {
+    "ticker": "ABEV3",
+    "janela_inicio": "2025-07-27",
+    "janela_fim": "2025-08-02",
+    "titulo": "Ambev (ABEV3) lucra R$ 2,83 bi no 2TRI25, alta de 15% com expansão de margem e receita - EuQueroInvestir",
+    "fonte": "EuQueroInvestir",
+    "data": "Thu, 31 Jul 2025 07:00:00 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMiakFVX3lxTE1KMlN2OS1PdVFYMUx1eWY3LVNqSkFIdk1HU0RQZEZ0c3B5amFGSHZjTGp3aXhmR2EwVTVvUzFvblZRdUNvemJYb0JPbW1ER0ZVNzB5cWV3Zi15T250RVRla2hMSllIUExUQmc?oc=5",
+    "sentimento": "positivo"
+  },
+  {
+    "ticker": "ABEV3",
+    "janela_inicio": "2025-07-27",
+    "janela_fim": "2025-08-02",
+    "titulo": "Ambev aprova distribuição de dividendos no valor de R$ 0,1283 por ação - ADVFN",
+    "fonte": "ADVFN",
+    "data": "Thu, 31 Jul 2025 07:00:00 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxPQy1UcVVCNWcwdFlWVndjOU5wZkFZTk1DTmlnZXFvMDBtY1k1YUFJUkpVV2FFYnFGNXdVRVlfZDJGRzhJbEh4SGoxZ2xDZVVZN2p2TFlUVjB2aFh4Sjd2UVU1bFJkYnRNMW9XM042dlZrNUhNNDZrLVI3X1BJenVlOTFjNDJMU1BhYVotY1Z3c3R2SHh3Z0JaOHoydW1kWDdtU1FEOTlrUVo?oc=5",
+    "sentimento": "positivo"
+  },
+  {
+    "ticker": "EQTL3",
+    "janela_inicio": "2025-07-27",
+    "janela_fim": "2025-08-02",
+    "titulo": "Equatorial (EQTL3) amplia geração renovável no 2º tri, mas enfrenta um problema, diz Citi - Estadão",
+    "fonte": "Estadão",
+    "data": "Thu, 31 Jul 2025 07:00:00 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMinAFBVV95cUxPVWZlWHRSLXdiSno0aGJjSFlQcVdIUW1BX3lpR3cxTU1DZzlqX0pmY0MwTVlXMXktRXV0M3NZT0JoZm11dE1zU3l4aDB3SmRVVlR1Tnh2blFJV0x1NVQ0eVZUdWhuOGhvYTN5TGQyZEZ3WkI3dEtVdU1IRzhXLWVoSjBLUUJxaXNEMmRrWl9xbjVsZTlQUDYxOXgwZXjSAaIBQVVfeXFMTUhzSm1MaUloa2M3MmJ0YXVzQTV0QUxkMUJvVEc1WENSVThuejRNS1Zvd1JOX2RPbVlzbmYtSU1SN1o3Y1JTd1d1ZmdSeGxQWmZqV2R3QVVIajVQMnlVN09VdE9EUzctNklxbTJvQmpyZVdRQXJyTjlPZXpVNE1VbDhCcVEwT2Y0NEs4VFo3UHB5N3BpdGhHeHluQ2FFdHFVWHBB?oc=5",
+    "sentimento": "negativo"
+  },
+  {
+    "ticker": "GGBR4",
+    "janela_inicio": "2025-07-27",
+    "janela_fim": "2025-08-02",
+    "titulo": "Gerdau (GGBR4) aprova pagamento de dividendos no total de R$ 239,5 milhões; veja valor por ação - Estadão",
+    "fonte": "Estadão",
+    "data": "Thu, 31 Jul 2025 07:00:00 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMisAFBVV95cUxQNVdObUFPRW90bmJxNC1tdi1JcDdFT2lpdDJlVGhGaVZodFdhMGt4eHRsOFJCLWJ0RVlJcEZ0OWRqc1JiRGo1RFNuUGI4Q01KalpTRHZMckl1dkZwS2kwMWJCOXFwRzJMVFAxbnZ5MzRGOXRJVHRsdG82OXBoRU9QamFybEZLc3hDMlhDb0N4anZ3b1JRcFdpeE1ScE1ScE8zcnhXSFNtelJESjFQWFFGNNIBtgFBVV95cUxNNjlabVFadE5aRFZlbHJWVDctLXlGMkg2bWc2eVdRbDFuSUZzdXV2WkNjZDYybmNndmlnUkE0Y2lwMEZWU2R5dWZWQ3p6Q29mMjhYdE1iQUh1d2VkYWZBaC14Y09melIxcGo5UUxka3d2WGVBX2hCRkZwX3FMMkJ3V0hmT2lCUlczLVJ6Q1RyYUdhM3c0WWNiWDluWUZYeFozc0FRTXRfZjJUOGYzRHJiQy1BeHM0UQ?oc=5",
+    "sentimento": "positivo"
+  },
+  {
+    "ticker": "GGBR4",
+    "janela_inicio": "2025-07-27",
+    "janela_fim": "2025-08-02",
+    "titulo": "Gerdau (GGBR4) e Metalúrgica Gerdau (GOAU4) vão distribuir mais de R$ 300 milhões em dividendos; confira os prazos - Seu Dinheiro",
+    "fonte": "Seu Dinheiro",
+    "data": "Thu, 31 Jul 2025 07:00:00 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMi7AFBVV95cUxQNzN5bWQ4aFUzd3VjeVIyV1hVdXFKNUVNcDhOV2ZFSUpad0NINTBlQ3I2anAtV3JqQm1yRWVacVV1WHBJNGpTcWdoaXBoZVpJZV9DUW1aeFVxVlJBV2VkMC1hLW9CZG9LenVRbTJmRFVvS3JTVzZsVldfRXN0VW5MMkc5eUlkdjZnc3pneHlMaURKcHN6dFRHMk9EbFNleFU2QTJ2SFE4QTBoa1dvZG4xdHdBa1FtSWQxNFhRUW9ORVI3aVNteFZSamc5VjE0SjkxY3EwVUFoV2h4MW10T1dYVnlabVlJWHRFZi1mUQ?oc=5",
+    "sentimento": "positivo"
+  },
+  {
+    "ticker": "GGBR4",
+    "janela_inicio": "2025-07-27",
+    "janela_fim": "2025-08-02",
+    "titulo": "Metalúrgica Gerdau (GOAU4) registra lucro líquido ajustado de R$ 863 milhões no 2T25, queda de 9,1% na comparação anual - Money Times",
+    "fonte": "Money Times",
+    "data": "Thu, 31 Jul 2025 07:00:00 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMi4wFBVV95cUxNQWlsTGlFTUlCeU93WXl3UTNMUjZ0NDZrUmhRRl9yMWJ5LXQ1R0M1aTZ2QnU3R3dmQVIwb3BmWmtRaVhRTEZISFR6bjk3OGlfUmVsUm1ONXpnYTJPT0l1UTE3Y0RlSUp3blpYT1RFTHB2T1Z0cklYU2JZQ3hyc1pqZjVGcU5MOThIRDRjX1JsMWdodXEybmxZNVFvNG1FdU5ZUEx3a1JRUDZfRzd0REhja0ZHZUNYOVBuWjFCRXN5Tlo4bDRreXAzLW42NTlrZldvT3MxbXhobFg4blB5Zm5IY1Z3dw?oc=5",
+    "sentimento": "negativo"
+  },
+  {
+    "ticker": "LREN3",
+    "janela_inicio": "2025-07-27",
+    "janela_fim": "2025-08-02",
+    "titulo": "Crise climática traz mais oportunidades que riscos para o negócio da Renner, e agora a varejista tem isso na ponta do lápis - Seu Dinheiro",
+    "fonte": "Seu Dinheiro",
+    "data": "Thu, 31 Jul 2025 07:00:00 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMi_wFBVV95cUxOUlZOR3diU1VuYTJpZ043Z3VpU2IzVFY2Mi14bTQ5TUt0UnBJbUxSYjE2cWJKbGVfd3R4RnhMaG5XVmVyTXVlaUpjM0lFZEx0MklTUjlJRGZwdko3MEJRaWcxQUZUejJtU1FSNWtMenJ5cjlhSU8yTjlmYTJZeHE1TWpxS2lpWElTTklpaHM4a29Tel9Ta3d2bXZJNWlTM0ZPQkpUU0RZWGIxOVQtMU5qZDlMbmtlZ1hJZEhOenQ3NW0tUzNPWERmVmp0Z2FqNk5PTEU5ZVNQa0RBaXlXRjVtTFk0VDVkMkxhSWROTXFUOHRBSjEtTEtxSjhIMmdoVnM?oc=5",
+    "sentimento": "positivo"
+  },
+  {
+    "ticker": "SUZB3",
+    "janela_inicio": "2025-07-27",
+    "janela_fim": "2025-08-02",
+    "titulo": "Suzano (SUZB3) se livra do tarifaço e BTG vê espaço para alta de 40% nas ações - Estadão",
+    "fonte": "Estadão",
+    "data": "Thu, 31 Jul 2025 07:00:00 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMirwFBVV95cUxORkNOcmpnTWxfa0VCOVNtcDhpZkU5eVdickplNzNrdGhVaElrT01kaU5jci1OdVpDdHFmNkkzX0JlS0pXanlCTFNUd0VtS1VIZk5JTER0Y1AyZnQ1MjVjSkZtbWV3V0hMaXZiX2loQ3EwWGc3ajRfRzF4YnJEbzZieWotOGdlZW5nSkZEaHE4dDFwQzFqS05INlhHOEt0MGRvaDBreWRQQ0dFSU9kOXFV0gG0AUFVX3lxTFBueUNLWUNBWFQ1bllpcTB6Rm1xQlJGYzQzbzFoVmlUTXYtbWViT3BNZGR5OTJRZW5IMFd1VHptVHpYeFZLeURERGhvU2lSd0JMQnJzWVpoYnpQNWtucjZrVm5rUHBDc2ZTRjhxdGNESkNPWWlfZkVqZWQxXzFxR2djcXU2OEZUUzFJMU05ZDhQSnJxdy1tRmc2ZU1hNWxHemZEM3Z2N292QWQxZklRZlJ4UVNxeA?oc=5",
+    "sentimento": "positivo"
+  },
+  {
+    "ticker": "SUZB3",
+    "janela_inicio": "2025-07-27",
+    "janela_fim": "2025-08-02",
+    "titulo": "Celulose escapa de tarifa nos EUA e alivia Suzano; aço e cobre seguem pressionados - InfoMoney",
+    "fonte": "InfoMoney",
+    "data": "Thu, 31 Jul 2025 07:00:00 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMivAFBVV95cUxQLURPbkRBMjdjQkFJdUJ4aWVWSm9xSXptTXd2MXg4SUpjNW1GMTRfeVhqUkVPS0JodUlacW96YngxU0xCNXdZRnFLLWhBREo5VWJRODZCdG5LYWVoWVhOUElCcjltc3QxdGJZMVFPN2RuWVFrdFQ4NVBwejdKa0d0SjZuaHVxNExGdWUyVy1JNHhmWFRFQWFjUVJheGZMZVd0emt5SXZoQ3hpZ3d0OFlJU3lpc09TRTh3bWktNtIBwgFBVV95cUxNMS1SRjNNNkpSODRNSlY3Q2RzaEc3UjhfT0xlSnFWU2RpSDY5Zm95NU5EWkNKXzNkaFh2bUxGOGV0MGFsYVNSSTRrYTY0TlUxX1c5YkNITlE1UXdRODFMS3JKRVZWVVIwMnZ1cHVaQzFKX0x5Uk1uUmlhY1EzSXZoRHZVZjBLaHdlV3NnT2tNWVdxQkxSYk5BUS1MaHJUQWJyV3l5QXRuT2pOQmxZQ0VsWTZwQmdKRFdQOTI1T3dmRzJFQQ?oc=5",
+    "sentimento": "positivo"
+  },
+  {
+    "ticker": "WEGE3",
+    "janela_inicio": "2025-07-27",
+    "janela_fim": "2025-08-02",
+    "titulo": "WEG (WEGE3) sofre duplo baque com tarifas de Trump: impacto estimado chega a R$ 2,3 bi - Exame",
+    "fonte": "Exame",
+    "data": "Thu, 31 Jul 2025 07:00:00 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMitwFBVV95cUxOTkZGaXBRN2trY2tScUdVX01GVEFQV0poU3hfQTg3WERvdjVDb3hoQmlJTDRIRTRaRzRLRDBzM3g3SXh5Qmktc3hwSzgzWnB1Y0dEc2Q3eVFmT1ZqekhrOHJXSXVfbzVmRTJYZnR2MTlNaGRSc0QyWnlCSk5ZSmlWT1cxVlVXY2RVTUlORjRtRWxhRlJ2NE55RHdjVEVjcHJmakNiUVd1ZVV4X1MzVkl4OEhmVTY3VDA?oc=5",
+    "sentimento": "negativo"
+  },
+  {
+    "ticker": "WEGE3",
+    "janela_inicio": "2025-07-27",
+    "janela_fim": "2025-08-02",
+    "titulo": "Como as tarifas ao Brasil afetam Embraer (EMBR3), WEG (WEGE3), Randon (RAPT4) e mais exportadoras empresas - Estadão",
+    "fonte": "Estadão",
+    "data": "Thu, 31 Jul 2025 07:00:00 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMi-gFBVV95cUxPWE5TdVprMEhnbktCZW1mbmRpMTYwRGxGcXR6VnF1b1dFVHY1UEh0bnFsT250Tl9HUE4wVElwcmtsWEVtcVltUzI0X1pwcHlWRjJxemtVOWhyUHBFNVNpN1ZiVUREUS04ZkRuWDgwaW90c2lGRDk0TnhFUUdDQ3FVMVBCMjlTeDBRQ2tEYTJ4anNOYk1JY1VjWTVfTTJ5ZTlEOW9MV1VPVU8wTkwzeUhmN0doTlNBelh3QmdxaXYxalVnZVo1c0VmSDZlOUwxNllkRzAxSXhnQTRxYS1fN3FCcGFJb3FOWmhpWV9mMmFxYTU2NW9oVVJYOEt30gH_AUFVX3lxTE5OM0tLSGdZclBhREl1cnhKUG5SS2hmanhVOFZRbUp5enpRbFdaRnhZQUk5N1QwMzVIMHpURjdfeUc2aGoxVDllYzd0aDk2RThCVk51ZG45c0ZXRjhOVDJ3MXZWdnVkOEw3MVhpNlNuNnd1bFJNdUtYMmJ1N2JORVFRaUNKOF9DVGpxQndyeXNpNDNzeFdCYmxLWXZlR2FIWi12V2tRMUc3VUs4NElKSVpOSkVxZ25PQkFTWTJQLXNybW5JRzdHVXQ5WWtFNGdKcUhUa2lLUW5NSVYtZkhrSThwQXpUOVVBMGVPT1hsS2E4SmNxRFBvT3NkSjh0OUJmUQ?oc=5",
+    "sentimento": "negativo"
+  },
+  {
+    "ticker": "VALE3",
+    "janela_inicio": "2025-06-29",
+    "janela_fim": "2025-07-05",
+    "titulo": "Vale (VALE3) pretende realizar IPO de subsidiária: Como isso pode impactar a tese e os dividendos? - Empiricus",
+    "fonte": "Empiricus",
+    "data": "Mon, 30 Jun 2025 07:00:00 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMi5gFBVV95cUxQX2Z3a05IZTlOQkhZZllNR1FUalV0TkpnZHF5WU96VERXcVZLWjVKLVFmNXcxZHROQllOSmZSem5MTWRRNWh5WmNiVC1RUmJxaTdkY0d4V2w5bmowTEl0QWxNSTRxalhtczh6REQyUGNxTnE1emNCZWlxMEdFdjhkelZicjR0WXZiMEprZDI5akRfY3o4LTZpZE1YTWM2Z2ZveFFURkdiY2F0bjRwUW5HTnhPUkQxOEZkYUZhWjdTUXk1cV9pM0ZuN1dGMmtJOEtQMGIxM3VDYXpoSjVIa0ZSY0x1RDRTdw?oc=5",
+    "sentimento": "neutro"
+  },
+  {
+    "ticker": "BBAS3",
+    "janela_inicio": "2025-06-29",
+    "janela_fim": "2025-07-05",
+    "titulo": "Banco do Brasil (BBAS3): mesmo barata, ação está fora do Nord Dividendos - nordinvestimentos.com.br",
+    "fonte": "nordinvestimentos.com.br",
+    "data": "Mon, 30 Jun 2025 07:00:00 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMifEFVX3lxTE1vTzZpdERwWklsVkpId2FRSzRwbWItUmNaakhHTEQ2RFN4TzJrZkRWQzk1djlsekVWQ2RQMlV2cEpxbV9rUThkclZMSnZjVjBPU1VDdktKQzJGd2RBOEdsVzhHYzA3VDcxbGhrenFwcmlPd0dzQzQxcW1QbS3SAYIBQVVfeXFMUFlMY25qNjkwRlY4Y19uTEFoUG9maHpKQkFjMGdRTnkwdkU0OWR6Z0VqZEVCVVNOc2IweVZRSWF1bTU1b1V1elNoRS1xVWlxc2NMQzlxZ2pVVzhCRmtiWmFYNmQ4WFhfeWlJdHhtTWRvOElJdHMwM084ZzBlX3k0NGRPdw?oc=5",
+    "sentimento": "negativo"
+  },
+  {
+    "ticker": "BBAS3",
+    "janela_inicio": "2025-06-29",
+    "janela_fim": "2025-07-05",
+    "titulo": "Citi sugere cautela com Banco do Brasil (BBAS3) e corta preço-alvo das ações - Estadão",
+    "fonte": "Estadão",
+    "data": "Mon, 30 Jun 2025 07:00:00 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMipAFBVV95cUxPTmp6ZmlfSHZQaDFXMWpuR0FPTnZLdFpYYm1qRk81ZTFfaTNHTU5MeG10SnA3c00wY2Jia2pOQVFYUExsXzVJc1o4YVI5QzBBUm5TbWg2X3pxZ1U5RGNaSmlMdUFWVkpJVW9mc0NIUzljWjBZbk9JYVd3dkV4elhmRmlvdmI3YnVrNlBvbVFzamJFMElsNXFhRXRHeU14a0VjeG5XN9IBqgFBVV95cUxNWlJFYUxtNk5lUFFSSHc4QTJBd3h6N1Q5Y1J6cFoxaEdObWZfWUFlbEY2Q1dXMEUxSkhNNWZrTnppOEhfSjRXWVB6N2lrRmRHWHhOWEluVnNSdElzcVRRNnBBYTJYeHhpallKdGJpejM1LTk4aTJXZlMtTzdIN3pPQXZIa081Zm9zWjNpdDNnR3Z2aDJIMHFSVlVkYkZlNnVHQTM0bUpaT1haZw?oc=5",
+    "sentimento": "negativo"
+  },
+  {
+    "ticker": "ITUB3",
+    "janela_inicio": "2025-06-29",
+    "janela_fim": "2025-07-05",
+    "titulo": "Agenda de dividendos de julho: Itaú, Bradesco e TIM pagam proventos - InfoMoney",
+    "fonte": "InfoMoney",
+    "data": "Mon, 30 Jun 2025 07:00:00 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMirgFBVV95cUxNck5vM2JNakxhbnRFcnVHd3lWRk9SaWc0NWxLS3l3bGtsWnhBMklNeVk4akFGQjNtZnRHY3RzZFlUbHBob0pSZXkzNHVMcXJ3WHpZM1JaNHBuSldWT0w1N3NXTkFoenZWUmtxenhtTVluaWpBdWNuVVNCMXhKNmdoR0ROcmYyNDJtTUFzdE41blYtdFVxV1ZhR3ZjbFI2TGxCa2V5VlpZbU80RWdOeWfSAbMBQVVfeXFMTm1Fek1SUDVlWUNlb3I3U25vTEZ0dnZORFM1LXBBdWc0ajZUWjlmSG51ZnRiaDRuZmFQWE1SQXBPcHRxS3gtOW5WOERFYU15WmgtSFUxd0E4czVSR1VTb3hZR3gtNHNmSV9hUDkyc0U1d0VRbEFEZ1dVVmEwa0l6cl9kNld2OWI5M1ljbVlNcURWSXdlVlBoaUZKV1hfN05HcEFiX3ZORm1fdGlJS2FZVHVpdUE?oc=5",
+    "sentimento": "positivo"
+  },
+  {
+    "ticker": "ITUB3",
+    "janela_inicio": "2025-06-29",
+    "janela_fim": "2025-07-05",
+    "titulo": "Agenda de dividendos de julho: Itaúsa (ITSA4), Bradesco (BBDC4), Itaú (ITUB4), B3 (B3SA3) e JHSF (JHSF3) são alguns dos destaques - Empiricus",
+    "fonte": "Empiricus",
+    "data": "Mon, 30 Jun 2025 07:00:00 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMiggJBVV95cUxQMTJLTlR3bExrQ1hTWFA3WXFEVFZ5bVdyLWYtdUhqT0x2STdkTXlkb1llMFhlZmYxSDB6ZmtPbkNndjJDSVFBS213eGZ2SHBjNHdkRU82NVhfMWNsRld0akp3c3Y0MXBXLUQ1VExvdUdVallfeWQ3TmczNWJRaTNGZGtjUkc4NGd1UEtGRXlWVTlqNU10N25LbDNrcDN2VUlZYTNzUHRDYUk3RHEzNHhuUktNTXktQjhaeVloMERNdXY2YjhIeUJTdlB2TXA5dEt6MWhDSURaNDFoaTFXaTFId2I2UnBfbVU5bjlfTWM5NlNWSXN0aElVWUxVOVZJMktPNEE?oc=5",
+    "sentimento": "positivo"
+  },
+  {
+    "ticker": "CMIG4",
+    "janela_inicio": "2025-06-29",
+    "janela_fim": "2025-07-05",
+    "titulo": "Dividendos hoje: Cemig (CMIG4) paga R$ 1,8 bilhão em proventos nesta segunda-feira (30) - Estadão",
+    "fonte": "Estadão",
+    "data": "Mon, 30 Jun 2025 07:00:00 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxQNWdLU3NjT082c0swczE2UzB6a00yNEdhN2djakRJN3NmR0lKbDl6bllsNWRjNVN3TkRTeFdxSmV6OGtxNHlXMUJVSi1zNlhFcW5KVDdOYlNiLWcxVmd4ZzBlN0JxSjB1QU9OU25Rd3cxOFVPYklPRFg2STJ2RTBlRUJ4bEpBbWVm0gGOAUFVX3lxTE9WQjg4RU15TlJCUi1nbTZJY2ZmaE43bkdNQjdLdU83VU9TZjJOU3RFaDNUNF94UlRkU0NndFdUMG1yZzRmR2tlWG43ZXVXSk9FSlIwQW1WZm5NOGFlWXMwbFpuQUdOV1JYYmllXzNucWd6am53VU5iS0J5RENuYzJaR0pxRXdWSlRoWDdSTWc?oc=5",
+    "sentimento": "positivo"
+  },
+  {
+    "ticker": "LREN3",
+    "janela_inicio": "2025-06-29",
+    "janela_fim": "2025-07-05",
+    "titulo": "Dividendos e JCP: Localiza, Renner, CSN Mineração e mais empresas informam proventos - InfoMoney",
+    "fonte": "InfoMoney",
+    "data": "Mon, 30 Jun 2025 07:00:00 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMivAFBVV95cUxOR2NLQnRkTlUxSTIyc243QlNKZmRGeDVUT2lubmkxTmFZSUJ1LUdGNUx1dHhTMWQ5YVJURVRkWWdsU2ZueVdwTU9wcFVLWUJzU2Z6R3Q0Wi05TlphTFRzZ09IbU52eS13SmVjNkJKNXlLVnVrYXZjajgyM25CSUhCTFFXNlI4S3VtMDk4MjlQOWl6VFZ4T0VNb0hhV0N6M2k0TjJUS0t2VTN4SVFPQUEzTjBtdFRyUnFYLTFMU9IBwgFBVV95cUxNZDBnQlkxNXFVak5jWnJtT3h5dG1IN2ljVGxOM1U5MGZ0dUhCajQ1MFlpTXVMdUxnMXh6LTgwVkJjQjNLWG1WbFdYeHlHbV8xanBORXZaRF9BOHpzVXNYNlRhYUF1cVB2aFNHdFRuRjI0UlNPc0VGME5mRVg3N1Y0QlNFVV9POV9na2RwU2lHUVhjOW5nRHYwRGR6dHJ6T2VkUVFkbVdKZjhXc21DVE9pdHh4c0o1Zk9ab0hQYXpLUVJZdw?oc=5",
+    "sentimento": "positivo"
+  },
+  {
+    "ticker": "PRIO3",
+    "janela_inicio": "2025-06-29",
+    "janela_fim": "2025-07-05",
+    "titulo": "PRIO (PRIO3) publica relatório de sustentabilidade e reforça agenda ESG - Visno Invest",
+    "fonte": "Visno Invest",
+    "data": "Mon, 30 Jun 2025 07:00:00 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxQd0VNYlVYbDFjYkRmdGdxalBLQ19EZmJSMEJlUURjWUR4bzN0cUVBaXZLUHR0UjM0YkJLQ2tiNGpFb0NmQUM0WTZUdjV1S2V1dkZZRV9wTVVmZkR1WHoyV1VPNGFVNjZfZFM2cDFHY0pCeXpWd0tFLVNxSUZ0WmxqSzg3V3lERGI0VUdNQUlzaHNoVWpXNVRJWHBKaFdad3ZXX3ZfeE9sM1BFdw?oc=5",
+    "sentimento": "positivo"
+  },
+  {
+    "ticker": "BBAS3",
+    "janela_inicio": "2025-06-01",
+    "janela_fim": "2025-06-07",
+    "titulo": "Agenda de dividendos e JCP de junho tem Petrobras, Banco do Brasil e mais; veja quem paga - valorinveste.globo.com",
+    "fonte": "valorinveste.globo.com",
+    "data": "Sun, 01 Jun 2025 07:00:00 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMi-wFBVV95cUxOSUVGdTZlWTZqTEF3dG93QVpVcm82SDBYcnk4bFhnQVRud0RZRVdQdVJUVG5fczZfNHd4aTdkTGxReWpnSV84TE9ZTU1oZ041Wlg2S29hWFBLXzhsVm9ONUFWNVBROXhaMV9nekxjNFhOSUZ4dUNuR1ZVN3hSTmpINTBYc1JrMmdWcUpQVGtTa0pCYWFQVE5KeUg2V09DRFkzQ2FZMVM2N2pfR1FHZ21wRlIwbmJ4UzROdlFKMnlrVUpmd2JCU3Q1amNZMVBzQUU4RkF1c1ZCejdST2d6ME1PelgtNEdwWThfUVNpck1kZlRpcHhpT3UzYUNRNNIBigJBVV95cUxObm5vaUtnNVFRemlPWWtLay1sMldXenNIX3RXc2NXdTJ2SFRnTmo2ZDZUeTJoQzNmaXM4eElPVVdabWpUbVFUXzFHVUpuczU3bmtBQzVzc2VoNGFlZVppT0VXbGphUzlvejN6OXhrbGVWT2REU081ejZJanhZVnhDOGhNemZNYXcwUnZraEtHQjAwU2FPTm5uS0Rsb04wbTU5VHJpZldaNmpiYmRMMVNQd25GRlhRTXZtb0gwbW1NZ2VEdVFzZF9vOEtQem9YYWVjUVFrOXQ0UWw2LV9RZ0JPQkRVUmtEQkxDSDc3dDNTSkRjVUE5UVI2N0VGUzZIeVhNMmRXekRiQXhOQQ?oc=5",
+    "sentimento": "positivo"
+  },
+  {
+    "ticker": "WEGE3",
+    "janela_inicio": "2025-04-27",
+    "janela_fim": "2025-05-03",
+    "titulo": "WEG (WEGE3) tem leve alta nos lucros em balanço do 1T25; margem EBITDA cai - suno.com.br",
+    "fonte": "suno.com.br",
+    "data": "Thu, 01 May 2025 07:00:00 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMicEFVX3lxTE9XejVZZkpOQmdJdzZ5al9hanUxWmVSRmtZTzZFd1BzcHUtM1VBWV9DZ1M4WFFGLVFvUHVSZUR6MHliMGRnT0tTaDEwaTlsWHpQX0pldVNhckEyRWhubElacEFMaHN4T3VFemM4YUFIdXbSAXZBVV95cUxONlVKVlA0VFdxS2tlQUhPNHlLdEhWVDFGZzlmQjVKVVBndHA4TElQQVB6bDdOU09WY19GUVV2SlEyLUMxSUg4QnVDbGo0bkZPd3BKbjRFRS1RYnRDalpYN0dBQzN4Y3RzY1Noc0hKemI5aVJpcnZn?oc=5",
+    "sentimento": "neutro"
+  },
+  {
+    "ticker": "WEGE3",
+    "janela_inicio": "2025-04-27",
+    "janela_fim": "2025-05-03",
+    "titulo": "WEG (WEGE3) compra empresa de revestimentos industriais nos EUA por US$ 9,5 milhões - Money Times",
+    "fonte": "Money Times",
+    "data": "Thu, 01 May 2025 07:00:00 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMingFBVV95cUxNQ2ladjhMS2RtbnV2Z1RHd1ZIVms5TWFFMXl6NnlhbjY2WXBvMXo4NmI2RzdWaXJTV1R3MXZzbFRmVWNXZmUxX0ZwUlctS3BKNE5tbkNya2FjaWpta3gzMzRsYi05Y1N4TEx0QW1FTFlwTjFfcThRVW5MYWp0czc1aWxYaGZOWWtfZEN2dUhheUh6Y2dKREhlclNqU01aQQ?oc=5",
+    "sentimento": "positivo"
+  },
+  {
+    "ticker": "WEGE3",
+    "janela_inicio": "2025-04-27",
+    "janela_fim": "2025-05-03",
+    "titulo": "WEG (WEGE3) compra empresa de revestimentos nos EUA por US$ 9,5 milhões - InfoMoney",
+    "fonte": "InfoMoney",
+    "data": "Thu, 01 May 2025 07:00:00 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxPcHpsSzhEcFdMb3E4SWRnY2hoTXJVS3Vkd2ZqTENZS0ZsTUl6YjUzSFF1V0Z4UDJHMkUtQTRCdERCUHJ3U0VHdGVBcFJtMzc2NlFBQVdlS1d4R1pURFRlVmlBOExCdkg0emJWb1RqY0NXRElQUEo3VkM2SE1SSEIwbEgwa0p6UjNEaElqbmpJMnRFelRRTGJnWWkxNi1XS0haeGtpYk9ZWGlmZ9IBrwFBVV95cUxPRW1kUlhLWlFRQVU1SmltTlVjalRMX0xVV1ZIbGtFY3htVmNVUUg2QWp3ZGM3WFBLX0NDQm51VjcycXVPTXd5MWtrNWljdXIzamZLZUNfdXFleWxLb0hubEZVR0NqYkl1Zk9QZF9rWHZRWFlMbG1vLXF6WDNkUDJneW1XbERObVBWZ2dwSkF1eDlWdTROTWttYmU3V21Ed1R5Ukp1ZklMeExmT3Bid25R?oc=5",
+    "sentimento": "positivo"
+  },
+  {
+    "ticker": "ABEV3",
+    "janela_inicio": "2025-03-30",
+    "janela_fim": "2025-04-05",
+    "titulo": "FII GGRC11 renova aluguel com inquilina Ambev (ABEV3) até 2030; veja dividendos - Investidor10",
+    "fonte": "Investidor10",
+    "data": "Mon, 31 Mar 2025 19:07:41 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMivgFBVV95cUxPODhhdklvY3AwVDV4TFBCWV96WXZpOFRIeElDOXJXVE5JaklXOHdaMVZxTjRmWlV0bnZDSWVUSzVfUDZqWDVMcEk0bkVEYTM0S1hVa25NODdQUUo0N3ZSMkhhU3lBV0I0S3hscUNGSGZYa3NVb19YRC1MM3ZhQ0Yyb0xvZ21BcUpfZlZ1RVVRVG1MOGkzUG1yaG8ySHlMaW5waUJOd0dWeXZwaFZJWkNXM2pKNWc2VF9xeTVGTC1R0gHDAUFVX3lxTE5lVEw2bDlNN2E2d2E2NWhLZnByOEdLMk9XRlBJVDVGZUlicmU0cFJJTzhnSWZteXppTktsd2NpN29HR1JMZ3hlSU1OVVJmT2RRU0F1aUNBVVkxT1NjNm0xY3JzSkQxZTVjR0gzc0VCS1BTNTRpNUpVYkN3QzRiM2xSNm1OeGRSQVZrVEZGbVhxalR5QTRhZWMwLTlaQ2c0eFFFZlBFNkVMR21yX0tCRTBJT2VSOGVlLWhDRlRMOXBRWXlDWQ?oc=5",
+    "sentimento": "positivo"
+  },
+  {
+    "ticker": "BBAS3",
+    "janela_inicio": "2025-03-30",
+    "janela_fim": "2025-04-05",
+    "titulo": "Ainda dá para ganhar com as ações do Banco do Brasil (BBAS3) e BTG Pactual (BPAC11)? Não o suficiente para animar o JP Morgan - seudinheiro.com",
+    "fonte": "seudinheiro.com",
+    "data": "Mon, 31 Mar 2025 17:50:20 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMigAJBVV95cUxOWEF6ZzJlMjlzN19LSjB0NGVma0hieW5uZFZCZGFNalJPQV9jbGppeXRvOXdUSzlPcHdPYzZuV3Z1QVVpYjBBVlVzZTlaWkhjNGs5NnZRRC1HRWJGT1ZYZHl1Y05kX3NoWm5xb3BVUmlGQzE0ZllJNU9ndkRiTjdrY0h1eE5sSmM2M2p6U0dpbjdOd0JENWlqUExwVFJNRzBKY3AxVjF4a1lHeTRyRjVJZ0wwV0FRaVhrQU5GX2xwN2RrbnJxUjBSNnNldXFJNk5nNUJnOHVSSVlnY3JldFJWRC1qZDIzODFiVmxvRG43VHBqYkhxUUZ2Q3B4aVIzUUFz?oc=5",
+    "sentimento": "negativo"
+  },
+  {
+    "ticker": "VALE3",
+    "janela_inicio": "2025-03-30",
+    "janela_fim": "2025-04-05",
+    "titulo": "Melhor que VALE3? Uma ação de ‘mineradora esquecida’ e que ainda pode saltar mais de 50% é um dos 5 destaques da semana; confira - moneytimes.com.br",
+    "fonte": "moneytimes.com.br",
+    "data": "Mon, 31 Mar 2025 07:00:00 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMijwJBVV95cUxQUUxRWC14eG1rSFBxeExzOXhkeWpMUDBpNjhmVmViRS1ETlZLZDJNZVBrVHQ5M2Nobi0wdVRQRDJpUnJIaDM5N252M1JreDlqQnZ4N21uSGlHdWkydkk4T1hhM2hSdUhCdWRkSnBLdmJRSjBlX3JXbXpVdUpiUGZfVGVEcmZMdWY2d1NDUXZZQlJVRkhVWEk3ZXRUY2ZrNWpwV2VwT1lsQm1US2R4MmpDcVVCX2JOQnJmajg0NG1sMUxCVnZmMUVmMDFCSWxqckc1SkIwUGRCNWUwYm5KTHVtWXFxUTU3SHFhazZZVjBuc0dpa0tYd2RYcmRvMDRwckNVbHhjYThFQnB3TnduVGY4?oc=5",
+    "sentimento": "negativo"
+  },
+  {
+    "ticker": "VALE3",
+    "janela_inicio": "2025-03-30",
+    "janela_fim": "2025-04-05",
+    "titulo": "Vale (VALE3) vai distribuir dividendos e JCP; veja valor por ação - BPMoney",
+    "fonte": "BPMoney",
+    "data": "Mon, 31 Mar 2025 07:00:00 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMic0FVX3lxTE50QXdEeFRyT2IxcWNDN1RyMFhocTYtODdxMTRUQlA2UTAwSDF1RXl1Zi1lV2JxQ3ppU1ItYWNlT0VDU2t6cEdBa0ZtOF9DTDZmTW5oUm9zeEdEaUtDMm5vSVd3VDRkN2l1Y1JGUENLczVjWGc?oc=5",
+    "sentimento": "positivo"
+  },
+  {
+    "ticker": "BBAS3",
+    "janela_inicio": "2025-03-30",
+    "janela_fim": "2025-04-05",
+    "titulo": "JPMorgan rebaixa ações de Banco do Brasil e BTG e projeta um ano “ainda desafiador” - InfoMoney",
+    "fonte": "InfoMoney",
+    "data": "Mon, 31 Mar 2025 07:00:00 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMivAFBVV95cUxQYWxlRFdLdnFORktESmhVNWVzOC1kTzU2RG5kMjVUWFBBYzh0UDFlZW52X1hTSk5lX2s0dXh4NktRV29CY21QRjJxMldhazBZd0dKbWxrVG1RU0hmSUZ5RXBiWHVYbFduR2EybldpS2hzM2RXenREb0N6WlRCcV92aTZnNjUxVnk2VGY1dGtIQXJTWDZHOEw4SVcwc3JjYXRxUWQ5a0RuRlBHRE9nUFd6aUVnOTdZaVAxS0VwTdIBwgFBVV95cUxOaF9vdHpwZG1MSG9CS2w5U1FKUTB3VjhjQ0M3bHVjdV9NcjBNUkdfcmVxQTlVcFhfeTBQNFlQUnhLcjM5NC1ObjNoVUpiNDFVN0pJWVllMU1pWVVYaXo1LURHWUttdlZPOGw3TnlpeUxsdzBPSjRWN0lKckhfdGxJYlFUbTlueHhSbmkydnJ6TzRqRFIxNTN2MDQ1ZE5PVlduTEtlUGRQR3RDVDRKVThFUmF6ME9sMUxpWXdjWGV4eFJuZw?oc=5",
+    "sentimento": "negativo"
+  },
+  {
+    "ticker": "PETR3",
+    "janela_inicio": "2025-03-30",
+    "janela_fim": "2025-04-05",
+    "titulo": "Como garantir em abril parte dos R$ 9,1 bilhões em dividendos da Petrobras? - InfoMoney",
+    "fonte": "InfoMoney",
+    "data": "Mon, 31 Mar 2025 07:00:00 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMitwFBVV95cUxObDg3azNQanFpT2N6RXFibXFaMFZsQl8yWENjcV9XUTVmeGVlSVdsNUxOUzhuV3Ryb2l6dEdvYmxrN1p4MzBLTVZRcnFHMzF3X0J0OVo2clI3c3RZdmZzdmhybmxxSjFKS1hoejc4eHQ0UG1oSWw3bklaQktzYm9kM0xfX2tjVmRQVFROOHRkXzFQQVdIcncydmxkUlEyeDBTamxVSDdmWmU0SVpaZHRLRTFjbk1GNjTSAbwBQVVfeXFMT09ZQzNIWm5yRjdMbzUwbTBOYkQwTTFhNmZsVjgxTnVqaWJyVkFHTk1xTGtleTgwOGFadzN6UjdERjZVaTExOXd5Z1FnRWdla19KZC13ZmlzWGloUjNmU0Z0SVJDbnlYdlNFbnhwbVlsNnFja1hzRWdjVDk4ejk4YlNMZERrLXVSY3JqMXc2VDJVWGJ6U0Rac1c1a1FramladDRtUDBuQUVQLVNRM2tJMnVQQXlBR0k1ZXc5WTI?oc=5",
+    "sentimento": "positivo"
+  },
+  {
+    "ticker": "PETR3",
+    "janela_inicio": "2025-03-30",
+    "janela_fim": "2025-04-05",
+    "titulo": "Petrobras lança concorrência de plataforma para revitalizar campo de Albacora - InfoMoney",
+    "fonte": "InfoMoney",
+    "data": "Mon, 31 Mar 2025 07:00:00 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMitwFBVV95cUxNQkRZVGV1bzJ3bHRYVWt3elA1QXgzaF9jOHM2YVZ4T3REM1JqcTN1SFlKQy1CZGE5YUhNdG03LWFTSVU5SllzNXZGQTFoSGZoc2p2d3k3VTJDbFhVWjZ6VUlIcUMxYTR1VFJjOXB3cW1RdkRnMDN3anRDQUUtQjR2N1hFM3BHZW13NFJxbVN5bk4wcjNWX2tUUmFQWUVZMGlYWG9fc21EQnJvT2xHSHVVeTZkZkthT2PSAbwBQVVfeXFMTmZDQi1kZG1oYUtyZzcwRGlfUnZjcGhzN0taRUFzdXNZTm41Mi13T3NfRy1OVlhxOVJWTDFYa082RTJEVHRqS1BNRHZDV18zVnZWMjNQRVNtVEZ2aHNrRnlpMUlUd016S3dxY1NtbEk1TUExb2t4Q3g3R05TYUZEbkVWbG5panp4WG1lMW1KRjE3ODl2NERQUWZTV2VBVTdPQ1VHOVVDcklUdlI0S3VMN19HMkI4S2lNV0ZsN2o?oc=5",
+    "sentimento": "positivo"
+  },
+  {
+    "ticker": "PRIO3",
+    "janela_inicio": "2025-03-02",
+    "janela_fim": "2025-03-08",
+    "titulo": "PRIO (PRIO3) | Finalmente, licença ambiental do campo Wahoo emitida! - Genial Analisa",
+    "fonte": "Genial Analisa",
+    "data": "Tue, 04 Mar 2025 08:00:00 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMivAFBVV95cUxPVmdHemltSzRueV81WG1OSmpXZTJ3Y1ZpNnREVTNNdUtYU2laNzgwaDBvcUI0TWNEeGp0T1ZGNUx5Q1h5Yl9YbTJFTmtSTGNPalQ0M0tFN3M3MTlqNUI5YjlLSE5mRWpiejl5eHljSlhyM1hmQkxmeXVmNTMxdkMzRWh5Z0NodE9EVU8tSTJaSEVvN2VUN0FuQWlfcWNhLXdOM1ZURVVmZmh0WVV3ak54RGdtSkQxd2xQWEp0cQ?oc=5",
+    "sentimento": "positivo"
+  },
+  {
+    "ticker": "WEGE3",
+    "janela_inicio": "2025-03-02",
+    "janela_fim": "2025-03-08",
+    "titulo": "WEG (WEGE3) segue com um dos melhores perfis de fluxo de caixa do setor, diz BTG - Money Times",
+    "fonte": "Money Times",
+    "data": "Tue, 04 Mar 2025 08:00:00 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMirAFBVV95cUxNZm5aSnRYa2h4a3lJYUFnVUpuTjZfUElQVjlmbDFzOEU1cU0yMXV1T0JYaUJycTV3bU5OY0YyeS1zUFhnWmtYcVN0UFlYWHVrVXF1SUc3WDZqVE9tcWQ1NHNmNzQ3OUlxXzhDWVZFamtBTjdWUWF2SURKRnFpbmlCRmtOQ1M2eDVaNUJWS0dnLXhRMVhpUDN1M29ZVzNFSm1Xemtxc0FZYTRpZnRl?oc=5",
+    "sentimento": "positivo"
+  },
+  {
+    "ticker": "ABEV3",
+    "janela_inicio": "2024-12-29",
+    "janela_fim": "2025-01-04",
+    "titulo": "Ambev (ABEV3) troca de comando após 5 anos; veja quem assume os negócios - Estadão",
+    "fonte": "Estadão",
+    "data": "Wed, 01 Jan 2025 08:00:00 GMT",
+    "link_google": "https://news.google.com/rss/articles/CBMisAFBVV95cUxPLW5xeWsyYXlOSEtvVVpHQXIyalFCSjYzam1UT1NMa2NqaHVIT09qTTJEUjdzTUNJWnFvdDFRcEk2VzJXRktEZHBzQ3lIS1cyazk5OE91bzAzNEdST0pBZU1nMS1YQ3dPc1RZOGhpNFhtTVpIUDFzbTZ2YndYNnNoUzh0UzJSQ0hGdUJ3ck9TalVnVktPSWYteVVjZ1d1bFFPVXRudFU5cGpRUVRIQ081YdIBtgFBVV95cUxObFpIODJRLVlJQUVrcmdFQzB0VER1NF9SbzdMXzZPX1lyWG5iQmV3LUg3RXpEZ0Utd3NTdXVuN294UWhGRlFaNkkyT3p2cUtkOGZ2QUNsLU03RHRQTkJLRkxkcjZwazNja0hEM3RhNzJrQk5jTUdSRzA4T3JmMl9ZVWVfdkdrc2M4MkFmWk1yU2NMZWk2NVo4STdESUVFaVU1QXNBOERRN3k0Q01VajN6T0R1d3Y2Zw?oc=5",
+    "sentimento": "neutro"
+  }
+]

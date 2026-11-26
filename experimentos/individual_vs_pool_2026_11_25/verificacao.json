@@ -1,0 +1,15 @@
+{
+  "arquivos_conferidos": 135,
+  "pares": 28980,
+  "xgboost": "3.2.0",
+  "horizontes": [
+    1,
+    5,
+    21
+  ],
+  "escolhas_2024": {
+    "1": 9,
+    "5": 7,
+    "21": 4
+  }
+}

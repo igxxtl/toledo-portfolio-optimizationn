@@ -1,0 +1,50 @@
+TESTE DE REMOCAO DO HARD PRIOR — 2025
+XGBoost conjunto (pool), previsoes ja existentes; sem treinamento ou recalibracao.
+Gate=3; rebalanceamento mensal; custos=0,1% por turnover; horizonte por ativo preservado.
+Mesmo motor, noticias, datas, covariancias, restricoes e conjuntos de ativos.
+Configuracao atual preservada em disco. Saidas historicas nao alteradas.
+
+CARTEIRA COM AS 20 ACOES
+         model  return_pct    sharpe  max_drawdown_pct   cost_brl  turnover_total
+         atual   27.786542  0.701317         -8.463567 507.764650        4.584537
+sem_hard_prior  -11.568109 -1.490458        -25.187169 649.659517        7.272211
+  somente_gate  -14.205412 -1.631577        -25.814639 692.643970        7.755593
+     Markowitz   19.098152  0.285441        -12.781943 644.247286        6.301160
+         Prior   28.205322  0.735224         -8.463583 135.071123        1.310584
+
+COMPARACOES PAREADAS COM OS MESMOS ATIVOS
+{"model": "sem_hard_prior", "pairs": 551, "wins": 10, "ties": 51, "losses": 490, "median_gain_pp": -26.496350479282118}
+{"model": "somente_gate", "pairs": 551, "wins": 10, "ties": 50, "losses": 491, "median_gain_pp": -28.28470902832217}
+
+MEDIANA DOS RETORNOS POR QUANTIDADE DE ATIVOS
+model      atual  sem_hard_prior  somente_gate
+n                                             
+1      21.261686       21.261686     21.261686
+2      21.806785       21.806785     21.806785
+3      32.820544       32.776812     32.776812
+4      29.138119       23.852970     21.435153
+5      30.416575       19.874286     19.362614
+6      31.217199       11.206223     10.843643
+7      32.872715       12.450932     11.702139
+8      32.966880       10.413365     10.344691
+9      32.640156        8.543357      6.879773
+10     33.083525        5.132346      3.696814
+11     29.648858       -1.714484     -2.953458
+12     34.470535        1.394886      0.284908
+13     31.805248       -1.932084     -2.987666
+14     30.771364       -3.308533     -4.893069
+15     30.999546       -5.945342     -7.773167
+16     30.346210       -6.953370     -9.264400
+17     30.138715       -6.826380     -9.400838
+18     28.402276       -7.566558     -9.698519
+19     28.097942      -11.534842    -14.132471
+20     27.786542      -11.568109    -14.205412
+
+AUDITORIA E LIMITACOES
+Baseline reproduzido em 571 carteiras. Q igual entre as alternativas.
+Nos 6 pares ativo-data com pelo menos 3 noticias, Omega permanece igual.
+Nos outros 234 pares, a retirada do hard prior aumenta a participacao das opinioes.
+A retirada ativa tambem as previsoes quantitativas; eventual ganho nao demonstra valor isolado das noticias.
+Sensibilidade retrospectiva em 2025; nao representa confirmacao em periodo novo.
+Sharpe considera a referencia livre de risco de 15% ao ano; retorno ja desconta custos.
+Verificados pesos positivos, soma=1, limites de concentracao e execucao apos o sinal.

@@ -1,0 +1,15 @@
+{
+  "quantis": [
+    0.1,
+    0.5,
+    0.9
+  ],
+  "cobertura_nominal": 0.8,
+  "offsets_referencia_residuos_2024": [
+    -0.10093862011600557,
+    0.09496845490596267
+  ],
+  "observacoes_referencia_2024": 980,
+  "cruzamentos_ordenados_2025": 0,
+  "arquivos_conferidos": 135
+}

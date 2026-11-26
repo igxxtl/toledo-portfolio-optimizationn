@@ -1,0 +1,4 @@
+cenario,registros_totais,manchetes_dias_elegiveis,pares_com_noticia,pares_gate_ativo,pares_novos_gate,pares_total
+com_filtro,4681,69,40,6,0,240
+so_deduplicacao,7822,92,49,12,6,240
+sem_limpeza,7835,92,49,12,6,240

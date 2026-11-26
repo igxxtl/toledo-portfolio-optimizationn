@@ -1,0 +1,11 @@
+{
+  "escolha_2024": {
+    "proporcao": 0.0,
+    "mae": 6.265473269155747,
+    "rmse": 7.7062237207254105,
+    "r2": -0.11770111125896861
+  },
+  "observacoes_2024": 980,
+  "observacoes_2025": 1020,
+  "arquivos_conferidos": 135
+}

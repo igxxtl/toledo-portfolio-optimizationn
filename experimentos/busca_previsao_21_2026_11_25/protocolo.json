@@ -1,0 +1,9 @@
+{
+  "modelos_busca": 20,
+  "arquivos_conferidos": 137,
+  "janela_calibracao": 2024,
+  "janela_teste": 2025,
+  "horizonte": 21,
+  "recorte": "dias_corridos > 1",
+  "referencia_reproduzida": true
+}
