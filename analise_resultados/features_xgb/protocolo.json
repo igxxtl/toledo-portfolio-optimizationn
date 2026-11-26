@@ -1,0 +1,118 @@
+{
+  "groups": [
+    "completo",
+    "enxuto",
+    "enxuto_novo",
+    "mercado_ampliado"
+  ],
+  "parameters": {
+    "name": "sq_regular_w0",
+    "objective": "reg:squarederror",
+    "profile": "regular",
+    "weight": 0
+  },
+  "max_rounds": 400,
+  "threads_per_model": 2,
+  "versions": {
+    "xgboost": "3.4.1",
+    "sklearn": "1.9.1",
+    "numpy": "2.3.5",
+    "pandas": "3.0.1"
+  },
+  "tickers": [
+    "ABEV3",
+    "B3SA3",
+    "BBAS3",
+    "BBDC4",
+    "CMIG4",
+    "EQTL3",
+    "GGBR4",
+    "ITUB4",
+    "LREN3",
+    "MGLU3",
+    "PETR3",
+    "PETR4",
+    "PRIO3",
+    "RADL3",
+    "RAIL3",
+    "SANB11",
+    "SBSP3",
+    "SUZB3",
+    "VALE3",
+    "WEGE3"
+  ],
+  "horizons": [
+    5,
+    10,
+    21
+  ],
+  "folds": [
+    [
+      "val_2024H1",
+      "2024-01-01",
+      "2024-07-01",
+      "validation"
+    ],
+    [
+      "val_2024H2",
+      "2024-07-01",
+      "2025-01-01",
+      "validation"
+    ],
+    [
+      "test_2025Q1",
+      "2025-01-01",
+      "2025-04-01",
+      "test"
+    ],
+    [
+      "test_2025Q2",
+      "2025-04-01",
+      "2025-07-01",
+      "test"
+    ],
+    [
+      "test_2025Q3",
+      "2025-07-01",
+      "2025-10-01",
+      "test"
+    ],
+    [
+      "test_2025Q4",
+      "2025-10-01",
+      "2026-01-01",
+      "test"
+    ]
+  ],
+  "selection": "Menor RMSE 2024 por ativo/horizonte; todos os grupos com os mesmos parametros.",
+  "pruning": "Sem y; variaveis constantes, mais de 10% ausentes, ou Spearman absoluto acima de 0.98; somente fit purgado.",
+  "heldout_status": "2025 e diagnostico retrospectivo. 2026 ate marco ja entrou em analises OOF anteriores; nenhum bloco inteiramente intocado no acervo.",
+  "confirmation": "Congelar candidata antes de obter/avaliar dados de periodo ainda nao inspecionado; sem alegacao de teste independente nesta rodada.",
+  "source_hashes": {
+    "dados_diarios\\ABEV3.csv": "e12435b2e10e3bf26e078b8c2a4c5dc3111e63e42d6ab77b1c7c64aaaae67235",
+    "dados_diarios\\B3SA3.csv": "056d24b05730cf47a4917c24febb52f1491e758dea91947d31b485e955298f5e",
+    "dados_diarios\\BBAS3.csv": "4c910bd11a498799e5e281dfbd4d87f58df6bfca9c2473ea620843def04a2428",
+    "dados_diarios\\BBDC4.csv": "6d73d6801dbb615820c4aa0a9587a536c866d9f6c95cc538c190d4018c53a6b5",
+    "dados_diarios\\CMIG4.csv": "e3935df99e8dd2f3cf1dcd396848187fda04e6357cadd9a987e3b570fec547c5",
+    "dados_diarios\\EQTL3.csv": "a334392e8a5186c4fa3d681326b6e93fc0d926deec8339947fc14ee76542036f",
+    "dados_diarios\\GGBR4.csv": "3a93016f127d43231010150b5de724c3abcbf61d469c6d7983a32106b2d091f3",
+    "dados_diarios\\ITUB4.csv": "ab0bcd8e7188791272900324db0f81bca1245046385e2dd13591d77415475200",
+    "dados_diarios\\LREN3.csv": "15f39a682a90f070f7bf59dea73f89310045f8d2a7015a99c911210e88cad8c2",
+    "dados_diarios\\MGLU3.csv": "a3424c0973000a233f9f6ba77d0a4058140494d2bde57d560d5b537c3efbcfc2",
+    "dados_diarios\\PETR3.csv": "74e5159d2f9c6a6ee11eee22ac13847df74bf7641c60dc63d6257091038ebe6d",
+    "dados_diarios\\PETR4.csv": "b8530f59e91080ec9947bbc2ad0b5b235479a1f54e142a47ea82cf5edf8518b7",
+    "dados_diarios\\PRIO3.csv": "09517743e328582bcf8bf7e3d04dc6d414c3366139bcd2b88ed9a7e5ec82a2cb",
+    "dados_diarios\\RADL3.csv": "978e3bf5c5de85ccf912b2bcf78e8ad162adcca4dd62026fda657114cb71e6ea",
+    "dados_diarios\\RAIL3.csv": "ce3251e2707a612898c0672244bf3604cdfdf03af40cee35215cb8c89cc81092",
+    "dados_diarios\\SANB11.csv": "2c17f210882ecdcb7cb21d37d1bb331a3e5b0872d0c7cb946b0037c3a9cb7aaa",
+    "dados_diarios\\SBSP3.csv": "79beee01d3fc629921c25ba81c6a9786da9e18d752443e3afd7afcc91f327c3f",
+    "dados_diarios\\SUZB3.csv": "b8f5fdac349f7f13b47411ae4439eee16435b02a526ad1d6aafa84a9204e669a",
+    "dados_diarios\\VALE3.csv": "721a056a3b1ca60933857cd09e267b719d249437bb6ce821466fac96befcfd3f",
+    "dados_diarios\\WEGE3.csv": "343d9f3834ff435897e398a30fa25f18ec2d27b73664d855efbf70f2a80be82c",
+    "dados_diarios\\IBOV.csv": "35dcdea14ed113c29978a326383ecb53edbca7073bf316c9eefe7ae539f88d35",
+    "dados_diarios\\USDBRL.csv": "8b9f46a1dcc5aea978c2e596f96515167909d919657150b9754f52b7a3bcc47f",
+    "intel\\model_training\\experimento_features.py": "88900edcdc1a926d352aefea47cad0e28f1df3b35e3a41278ef9e4c6685f0271",
+    "intel\\model_training\\features_experimento.py": "57c3abb11fdd333e4f78157b5ebfc0e73262514ccadd9a5e6ada38a94d8a7541",
+    "analise_resultados\\melhoria_xgb\\protocolo.json": "cb3b3616e3a7c35add24c2109a87e68f3976be2ecccf67d7123cc9b8073b542c"
+  }
+}

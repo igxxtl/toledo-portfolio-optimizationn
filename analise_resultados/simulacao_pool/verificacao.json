@@ -1,0 +1,14 @@
+{
+  "status": "passed",
+  "runs": 3997,
+  "original_runs_reproduced": 1142,
+  "max_errors": {
+    "return_pct": 7.105427357601002e-15,
+    "final_capital_brl": 2.9103830456733704e-11,
+    "sharpe": 2.220446049250313e-16,
+    "max_drawdown_pct": 7.105427357601002e-15,
+    "turnover_total": 8.881784197001252e-16,
+    "cost_brl": 1.1368683772161603e-13
+  },
+  "reference_unchanged": true
+}

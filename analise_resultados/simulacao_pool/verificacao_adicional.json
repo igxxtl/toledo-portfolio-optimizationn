@@ -1,0 +1,13 @@
+{
+  "status": "passed",
+  "runs": 3997,
+  "checked_rebalances": 1680,
+  "finite_metrics": true,
+  "unique_cases": true,
+  "same_universe_n20": true,
+  "fixed_weights_small_subsets": true,
+  "weights_within_constraints": true,
+  "execution_after_signal": true,
+  "purged_training": true,
+  "original_reference_unchanged": true
+}

@@ -1,0 +1,40 @@
+SIMULAÇÃO FINANCEIRA DA NOVA CONFIGURAÇÃO XGBOOST CONJUNTA
+
+PROTOCOLO
+Pool fixo das vinte ações, não a receita mista escolhida por método em 2024. A arquitetura, os grupos de features e os parâmetros são os mesmos da rodada preditiva anterior. Não foi realizada otimização para estes retornos.
+Período: 02/01/2025 a 30/12/2025; capital inicial R$ 100 mil; 250 pregões; custos de 10 bps; sinal no fechamento e execução no fechamento seguinte; mesmos limites, piso, covariância, aversão ao risco e frequência mensal.
+Mantidos os horizontes escolhidos em 2024 para cada ativo. São 551 subconjuntos comuns (semente 2025), mais vinte trajetórias com seleção própria, por configuração. Sete configurações, totalizando 3997 simulações.
+BL atual: pipeline original. BL pool: nova previsão e confiança recalculada pelos próprios erros já maturados. BL pool/Omega atual: nova previsão e a matriz de incerteza original, para distinguir mudança da opinião e da confiança. XGB direto e pool direto: expectativa quantitativa entra no mesmo otimizador de média-variância, sem atualização BL. Prior sem views e Markowitz são referências.
+Os 1.142 resultados de BL e Markowitz da rodada original foram reproduzidos numericamente. Arquivos originais e parâmetros foram preservados.
+Foram exportadas novamente todas as previsões necessárias, inclusive aquelas de dezembro cujo desfecho é posterior ao fim do teste. O treino não usa esses desfechos; a confiança só consulta erros com maturidade conhecida no instante de cada sinal. Todas as previsões já avaliadas anteriormente foram reproduzidas, sem preenchimento arbitrário.
+
+RESULTADOS COM TODO O UNIVERSO (n=20)
+Configuração | Retorno líquido | Sharpe | MDD | Capital final
+BL atual | 28,21% | 0,73 | -8,46% | R$ 128208,52
+BL com pool | 27,79% | 0,70 | -8,46% | R$ 127786,54
+BL pool / Ω atual | 27,78% | 0,70 | -8,46% | R$ 127783,76
+XGB atual direto | -1,81% | -0,75 | -16,34% | R$ 98192,00
+Pool direto | 3,27% | -0,58 | -20,13% | R$ 103267,30
+Prior sem views | 28,21% | 0,74 | -8,46% | R$ 128205,32
+Markowitz | 19,10% | 0,29 | -12,78% | R$ 119098,15
+
+Diferença BL pool menos BL atual: -0,42 pontos percentuais.
+Com vinte ativos, a elegibilidade é a mesma e o contraste se concentra na distribuição de pesos. Nos demais tamanhos com seleção própria, as mudanças incluem seleção e alocação.
+
+SELEÇÃO PRÓPRIA — ILUSTRAÇÕES EM n=5 E n=10
+n=5: BL atual 58,40%; BL pool 58,02%; controle Omega atual 58,01%; XGB direto -2,68%; pool direto 2,56%.
+n=10: BL atual 40,14%; BL pool 43,72%; controle Omega atual 43,72%; XGB direto -2,35%; pool direto 16,94%.
+
+MESMOS SUBCONJUNTOS — COMPARAÇÃO PAREADA
+n=5: diferença mediana BL pool − atual 0,34 p.p.; pool vence em 56,67% e empata em 0,00% dos subconjuntos avaliados.
+n=10: diferença mediana BL pool − atual 0,72 p.p.; pool vence em 63,33% e empata em 0,00% dos subconjuntos avaliados.
+n=20: diferença mediana BL pool − atual -0,42 p.p.; pool vence em 0,00% e empata em 0,00% dos subconjuntos avaliados.
+
+INTERPRETAÇÃO E LIMITES
+O resultado financeiro do BL é misto: com seleção própria, melhora em alguns tamanhos e piora em outros. O ganho em dez ativos não autoriza concluir que a configuração nova seja superior para qualquer carteira.
+Com vinte ativos, o Sharpe do BL passa de 0,73 para 0,70. No XGB direto, o retorno melhora, mas a perda máxima passa de -16,34% para -20,13%; o pool direto permanece abaixo da referência Selic de 14,87% nesse tamanho.
+O controle que mantém Omega praticamente reproduz o BL pool nos três tamanhos ilustrativos; a mudança da confiança tem efeito financeiro pequeno nessa comparação.
+A redução de erro preditivo da rodada anterior não garante aumento de retorno financeiro. O gate de três manchetes habilita apenas seis de 240 pares ativo-data. Nos demais, o posterior fica próximo do prior, embora a covariância possa transmitir a influência de views de outros ativos. Essa regra pode limitar a influência da nova previsão.
+O controle com Omega fixo não é o novo sistema completo: ele isola a mudança das opiniões mantendo a confiança anterior. O BL pool principal atualiza a confiança com os próprios erros históricos conhecidos, sem usar o resultado da previsão em curso.
+A escolha de destacar o pool foi feita após examinar seus resultados preditivos em 2025. Esta simulação é retrospectiva e não é confirmação independente. Não houve novos dados nem seleção de melhor cardinalidade para promover o modelo. Não interpretar 3.997 simulações como amostras independentes, nem percentis entre subconjuntos como intervalos de confiança.
+Resultados e figuras foram guardados separadamente; o modelo atual e o TCC não foram substituídos automaticamente.

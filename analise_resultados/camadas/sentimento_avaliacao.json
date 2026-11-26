@@ -1,0 +1,14 @@
+{
+  "n_evaluated": 300,
+  "n_sample": 300,
+  "partial": false,
+  "accuracy": 0.55,
+  "matches": 165,
+  "disagreements": 135,
+  "macro_f1": 0.5569498506847904,
+  "cohen_kappa": 0.3553419075512544,
+  "majority_human_baseline": 0.48333333333333334,
+  "human_raters": 1,
+  "reference": "Single human annotation; not an adjudicated multi-rater gold standard.",
+  "source_sha256": "e240640d4796c7833f3caf4cd1f23f7a9cac8c3c42d2b674b08a3879687fe2bb"
+}

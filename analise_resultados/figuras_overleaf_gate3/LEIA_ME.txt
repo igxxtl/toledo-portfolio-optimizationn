@@ -1,0 +1,25 @@
+FIGURAS PARA OVERLEAF - GATE DE 3 NOTICIAS
+
+Estas sao as duas figuras do capitulo de resultados atualizado:
+1. ativos_comuns: retorno liquido por numero de ativos, mediana e percentis P10/P90.
+2. trajetorias_capital: capital realizado na escolha livre, para n=5 e n=20.
+
+Os PDF sao vetoriais, com fontes incorporadas, e sao a opcao recomendada para
+Overleaf. Os PNG sao exportacoes em 300 dpi para uso alternativo.
+
+COMO USAR
+1. Descompacte o ZIP no computador.
+2. Envie a pasta 05_Resultados/figuras ao projeto do Overleaf, preservando a
+   estrutura relativa a raiz do projeto. Caso a pasta ja exista, envie os arquivos
+   para dentro dela, sem criar outra pasta 05_Resultados aninhada.
+3. O resultados.tex ja entregue referencia exatamente esses dois PDF.
+4. Para montar as figuras manualmente, use o exemplo incluir_figuras.tex e
+   carregue graphicx no preambulo. Nao inclua os exemplos uma segunda vez se
+   as figuras ja estiverem presentes no capitulo.
+
+Se preferir PNG, substitua a extensao .pdf por .png nos comandos includegraphics.
+A numeracao das figuras sera atribuida automaticamente pelo seu template.
+
+CONTEXTO DOS DADOS
+Ano: 2025. Selic hipotetica constante: 15% a.a. Gate: tres noticias.
+Sao resultados exploratorios: o gate foi escolhido depois da sensibilidade de 2025.

@@ -1,0 +1,28 @@
+{
+  "cases": 60,
+  "forecast_pairs_test": 14280,
+  "chosen_counts": {
+    "sq_conservador_w0": 11,
+    "sq_regular_w0": 10,
+    "abs_conservador_w0": 9,
+    "sq_regular_w1": 7,
+    "sq_conservador_w5": 7,
+    "sq_regular_w5": 7,
+    "sq_conservador_w1": 6,
+    "abs_conservador_w1": 3
+  },
+  "wins_vs_current": 36,
+  "wins_vs_zero": 17,
+  "wins_vs_historical": 22,
+  "current_horizon": {
+    "assets": 20,
+    "rmse_current": 0.0750241601036313,
+    "rmse_new": 0.07491489602320485,
+    "mae_current": 0.05932566708639255,
+    "mae_new": 0.059183105179691886,
+    "hr_current": 52.436540118230695,
+    "hr_new": 50.91693402251731,
+    "wins_rmse": 10
+  },
+  "caution": "2025 ja foi examinado na pesquisa: resultado retrospectivo; nao e novo teste independente."
+}

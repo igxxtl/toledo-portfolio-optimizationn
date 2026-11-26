@@ -1,0 +1,28 @@
+REVISÃO DAS 300 MANCHETES
+
+Objetivo: obter uma segunda anotação assistida por IA da mesma amostra, para discutir divergências. Não constitui segunda avaliação humana nem consenso adjudicado.
+
+Unidade: manchete e ticker associado; sem leitura do artigo, consulta a retornos posteriores ou pesquisa externa. Considerar a empresa associada ao ticker, inclusive quando a manchete também menciona outras empresas ou outra classe de ações da mesma companhia.
+
+Critérios aplicados antes da comparação individual:
+- Positivo: conteúdo favorável explícito para a empresa/ação, como crescimento, recordes, recomendação de compra, valorização, contratos ou recompras. Expansões, benefícios estratégicos e anúncios de remuneração sem referência comparativa foram classificados com revisão recomendada quando a direção depende de interpretação.
+- Negativo: queda, deterioração de resultados, venda/rebaixamento, interrupção operacional ou risco desfavorável identificável. Casos com contrapesos ou inferência indireta recebem revisão recomendada.
+- Neutro: pergunta sem resposta, agenda, cotação, título genérico, ausência de direção para a empresa, operação societária sem efeito econômico definido ou sinais contrapostos sem predominância clara.
+- Distinguir anúncio de proventos de mera data de pagamento: anúncio pode receber positivo provisório; calendário/pagamento já programado recebe neutro. Esta é uma convenção editorial discutível e não uma afirmação de valorização futura ou criação de valor por dividendos.
+- Sem alegação de que sentimento favorável antecipe retorno. Texto favorável e surpresa econômica para o mercado não são equivalentes.
+- Revisão recomendada: sinaliza ambiguidade de interpretação, não probabilidade calibrada.
+
+Procedimento: as 300 anotações e justificativas foram registradas antes de expor rótulos individuais anteriores. O histórico da conversa já revelava estatísticas agregadas e a preocupação do usuário; portanto, não foi um experimento completamente cego. Os critérios detalhados diferem do prompt original, que solicitava apenas impacto sobre a ação. Diferenças podem refletir essa mudança de critérios.
+
+Resultados: 198 acordos e 102 divergências entre usuário e IA; concordância 66%; kappa 0,4809. A concordância entre usuário e modelo original permanece 55%; não foi substituída por uma nova acurácia.
+
+Arquivos:
+avaliacao_ia_independente.csv: rótulos e justificativas, sem os rótulos anteriores.
+revisao_consenso.csv: comparação completa, campo de consenso confirmado vazio e acordos apenas provisórios.
+divergencias_humano_ia.csv: 102 casos para discussão.
+comparacao.json: frequências, concordâncias, matrizes e hashes de rastreabilidade.
+anotacao_ia_cega.txt: registro compacto anterior à comparação individual; interpretação do cegamento limitada conforme descrito acima.
+
+Consenso: confirmar cada divergência com o usuário; acordos também podem ser revisados. Não preencher consenso por maioria de votos entre dois modelos e um humano, nem ajustar critérios para aumentar a concordância. Depois da adjudicação, documentar as regras finais e usar uma amostra separada para avaliar mudanças de prompt.
+
+As métricas e o texto da tese, os rótulos humanos e o gabarito original foram preservados. A nova anotação deve ser apresentada como avaliação por IA e discussão humano–IA, não como consenso entre dois humanos ou verdade definitiva.

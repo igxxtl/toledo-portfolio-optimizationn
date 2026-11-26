@@ -1,0 +1,11 @@
+{
+  "cases_per_stage": 60,
+  "feature_audits": 1080,
+  "method_audits": 1116,
+  "selection_validation_only": true,
+  "baseline_files_unchanged": 83,
+  "tests_passed": 7,
+  "source_hashes_verified": true,
+  "new_data_status": "unavailable_dns_timeout",
+  "production_models_unchanged": true
+}

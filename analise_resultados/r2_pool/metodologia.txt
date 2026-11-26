@@ -1,0 +1,7 @@
+R2 = 1 - soma((realizado-previsao)^2) / soma((realizado-media_realizada)^2).
+Mesmas observacoes de teste de 2025, mesmos retornos logaritmicos e pool fixo usado na simulacao.
+Resumo principal: media simples dos R2 calculados por ativo, comparavel a agregacao anterior de MAE/RMSE.
+r2_global.csv: R2 depois de reunir observacoes de todas as acoes, calculo distinto da media por ativo.
+r2_within_assets: 1 - soma SSE / soma SST por ativo; pondera os R2 pelas SST.
+R2 negativo indica erro quadratico maior que o da media realizada da respectiva amostra. Essa media e uma referencia retrospectiva de avaliacao, nao uma previsao disponivel na origem.
+R2 nao mede acerto de direcao. Nenhum modelo foi retreinado e a avaliacao continua retrospectiva.

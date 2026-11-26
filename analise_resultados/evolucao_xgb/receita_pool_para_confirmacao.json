@@ -1,0 +1,17 @@
+{
+  "status": "candidata exploratoria congelada para avaliacao futura; nao promovida",
+  "method": "pool",
+  "objective": "reg:squarederror",
+  "groups": {
+    "5": "enxuto",
+    "10": "enxuto_novo",
+    "21": "mercado_ampliado"
+  },
+  "selection_note": "Modelo fixo destacou-se em 2025; a receita principal escolhida em 2024 nao foi alterada.",
+  "confirmation_window": [
+    "2026-04-09",
+    "2026-11-08"
+  ],
+  "new_data_obtained": false,
+  "protocol_sha256": "db11d62937edb25e425d90e2848252ebc32b611896d0a6ee8f440fc339f30c38"
+}

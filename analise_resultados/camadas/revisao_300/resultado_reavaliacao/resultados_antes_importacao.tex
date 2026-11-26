@@ -1,0 +1,461 @@
+\chapter{ANÁLISE E DISCUSSÃO DE RESULTADOS}
+\label{cap:resultados}
+\renewcommand{\thetable}{\thechapter.\arabic{table}}
+\renewcommand{\thefigure}{\thechapter.\arabic{figure}}
+\setcounter{table}{0}\setcounter{figure}{0}
+Este capítulo examina o desempenho das carteiras de Black-Litterman (BL) híbrido e de Markowitz em função do número de ativos, separando o efeito da alocação do efeito da seleção. A evidência principal corresponde ao experimento com cardinalidade n de 1 a 20, executado de 2 de janeiro a 30 de dezembro de 2025. A referência livre de risco é uma capitalização hipotética de 15\% ao ano, e 2024 é a janela anterior utilizada para escolher os horizontes quantitativos. O componente quantitativo utiliza regressão XGBoost conjunta das vinte ações por horizonte, denominada \emph{pool}. A avaliação segue o fluxo do sistema: previsão quantitativa, classificação de sentimento, formação das views, atualização das expectativas e alocação, chegando ao desempenho financeiro das carteiras. Cada etapa é confrontada com referências compatíveis com sua função.
+
+\section{Delimitação do experimento e critérios de comparação}
+No cenário de ativos comuns, cada subconjunto permanece fixo no ano e é recebido pelos dois modelos, que atualizam os pesos mensalmente. No cenário de seleção própria, cada estratégia escolhe suas n ações a cada rebalanceamento. O primeiro desenho compara métodos de alocação sob as mesmas oportunidades; o segundo compara processos completos de seleção e alocação.
+
+\begin{table}[H]
+\centering
+\caption{Condições da rodada consolidada.}
+{\footnotesize
+\begin{tabular}{p{0.40\linewidth}p{0.52\linewidth}}
+\hline
+Elemento & Condição \\ \hline
+Capital inicial e período & R\$ 100.000; 250 observações em 2025 \\
+Universo e cardinalidade & 20 ações; n = 1, 2, ..., 20 \\
+Cenário comum & 551 subconjuntos; até 30 por n; semente fixa \\
+Seleção própria & 20 trajetórias por modelo; seleção mensal \\
+Comparação principal & 1.142 trajetórias: BL e Markowitz \\
+Controles de etapas & 1.142 trajetórias: prior sem views e XGB direto \\
+Estimação e risco & Janela de 126 pregões; aversão ao risco = 3 \\
+Posições e limites & Compra; piso 0,1\%; teto max(34,1677\%; 1/n) \\
+Execução e custos & Fechamento seguinte ao sinal; 10 bps de turnover \\
+Prior e notícias & Equilíbrio equiponderado; gate de 3 manchetes \\
+\hline
+\end{tabular}}
+\par\smallskip{\footnotesize Fonte: elaboração própria, a partir do manifesto da simulação.}
+\end{table}
+São utilizadas todas as 20 combinações possíveis em n = 1 e n = 19 e o único conjunto em n = 20. Entre n = 2 e n = 18, avaliam-se 30 subconjuntos distintos por tamanho, sem enumeração exaustiva. As medianas e os percentis descrevem a dispersão entre conjuntos; não são intervalos de confiança nem a trajetória de uma carteira específica.
+
+\section{Desempenho quantitativo e escolha dos horizontes}
+As previsões foram produzidas pelo procedimento walk-forward, com regressão conjunta das vinte ações em cada horizonte e identificação do ativo entre as entradas. Os horizontes por ativo seguem a seleção direcional em 2024 previamente fixada no protocolo, aceitando apenas alvos integralmente conhecidos antes de 2025; não foram reeleitos com base no desempenho do pool em 2025. A Tabela~\ref{tab:previsoes_pool_2025} apresenta o diagnóstico do modelo conjunto nos horizontes utilizados na carteira. A coluna de validação descreve o pool em 2024, sem representar uma nova escolha de horizonte pelo maior acerto desse modelo. O número de pares avaliados por ativo em 2025 é 245, 240 ou 229 para horizontes de 5, 10 ou 21 pregões, respectivamente.
+
+\begin{table}[H]
+\centering
+\caption{Desempenho das previsões utilizadas no experimento.}
+\label{tab:previsoes_pool_2025}
+{\footnotesize
+\begin{tabular}{@{}rrrrrr@{}}
+\hline
+Ativo & h & HR val. (\%) & HR 2025 (\%) & Maior classe (\%) & R$^{2}$ 2025 \\ \hline
+ABEV3 & 5 & 42,68 & 49,39 & 49,80 & -0,017 \\
+B3SA3 & 21 & 29,57 & 62,88 & 62,88 & -0,074 \\
+BBAS3 & 10 & 41,57 & 50,00 & 50,42 & -0,034 \\
+BBDC4 & 5 & 41,87 & 59,59 & 60,41 & -0,086 \\
+CMIG4 & 21 & 71,30 & 65,94 & 65,94 & -0,029 \\
+EQTL3 & 5 & 40,24 & 60,82 & 60,82 & -0,066 \\
+GGBR4 & 21 & 63,91 & 61,57 & 61,57 & -0,013 \\
+ITUB4 & 21 & 49,57 & 76,86 & 76,86 & -0,435 \\
+LREN3 & 10 & 43,57 & 56,25 & 57,92 & -0,009 \\
+MGLU3 & 21 & 56,52 & 59,83 & 52,40 & -0,027 \\
+PETR3 & 10 & 57,68 & 43,75 & 52,92 & -0,025 \\
+PETR4 & 21 & 54,78 & 48,47 & 51,53 & -0,057 \\
+PRIO3 & 21 & 46,96 & 48,47 & 51,53 & -0,031 \\
+RADL3 & 21 & 45,65 & 58,52 & 58,52 & 0,003 \\
+RAIL3 & 21 & 37,83 & 44,98 & 55,02 & -0,041 \\
+SANB11 & 21 & 39,78 & 64,19 & 64,19 & -0,139 \\
+SBSP3 & 21 & 57,39 & 70,31 & 70,31 & -0,352 \\
+SUZB3 & 10 & 54,36 & 37,08 & 62,92 & -0,082 \\
+VALE3 & 10 & 43,82 & 70,83 & 71,25 & -0,151 \\
+WEGE3 & 21 & 75,65 & 40,61 & 59,39 & -0,040 \\
+\hline
+\end{tabular}}
+\par\smallskip{\footnotesize Fonte: elaboração própria. HR: acurácia direcional; h: pregões. A maior classe é uma referência descritiva ex post; não é uma regra de negociação escolhida previamente.}
+\end{table}
+
+A média simples da acurácia entre ativos é 56,52\% em 2025. O contraste com a frequência da classe majoritária evidencia que acertar mais da metade das observações não assegura superioridade sobre uma referência trivial de sinal. A avaliação financeira exige, portanto, análise própria, sem transformar a acurácia em expectativa direta de retorno.
+
+\subsection*{Horizontes utilizados e alcance do sinal preditivo}
+\begin{table}[H]
+\centering
+\caption{Distribuição dos horizontes e diagnóstico agregado.}
+\label{tab:diagnostico_pool}
+{\footnotesize
+\begin{tabular}{@{}p{0.47\linewidth}p{0.43\linewidth}@{}}
+\hline
+Indicador & Resultado \\ \hline
+Horizonte de 5 pregões & 3 ativos (15\%) \\
+Horizonte de 10 pregões & 5 ativos (25\%) \\
+Horizonte de 21 pregões & 12 ativos (60\%) \\
+Acurácia média em 2025 & 56,52\% \\
+R$^{2}$ negativo em 2025 & 19 dos 20 ativos \\
+HR acima da classe majoritária & 1 ativo; 8 empates; 11 abaixo \\
+\hline
+\end{tabular}}
+\par\smallskip{\footnotesize Fonte: elaboração própria. Resultados do modelo conjunto, considerando o horizonte utilizado para cada ação.}
+\end{table}
+A predominância do horizonte de 21 pregões indica que o protocolo favorece sinais mais longos para a maior parte do universo, sem eliminar heterogeneidade entre empresas. Os extremos do diagnóstico são ITUB4, com 76,86\% de acerto direcional, e SUZB3, com 37,08\%. Entretanto, ITUB4 apenas empata com a frequência da classe majoritária. MGLU3 é o único ativo que supera essa referência descritiva; oito ativos empatam e onze permanecem abaixo dela.
+
+O R$^{2}$ avalia a magnitude prevista e pode ser negativo mesmo com acurácia direcional superior a 50\%. Nos horizontes utilizados, RADL3 é a única exceção positiva, com R$^{2}$ de 0,0026. O resultado dos demais ativos sugere erro quadrático superior ao da média retrospectiva da própria amostra avaliada, sem que essa média constitua uma previsão negociável. Como os alvos de vários pregões se sobrepõem, as observações não são independentes: não se interpreta a diferença para 50\% como significância estatística automática.
+
+\subsection*{Erros de magnitude e coeficiente de determinação}
+\begin{table}[H]
+\centering
+\caption{Métricas do XGBoost conjunto por horizonte em 2025.}
+\label{tab:metricas_pool_horizontes}
+{\footnotesize
+\begin{tabular}{@{}rrrrrr@{}}
+\hline
+h & MAE & RMSE & HR (\%) & R$^2$ médio & Ativos com R$^2>0$ \\ \hline
+5 & 3,10 & 4,09 & 53,92 & -0,0253 & 5 \\
+10 & 4,54 & 5,81 & 56,21 & -0,0554 & 2 \\
+21 & 6,72 & 8,42 & 58,41 & -0,1354 & 1 \\
+\hline
+\end{tabular}}
+\par\smallskip{\footnotesize Fonte: elaboração própria. Médias simples entre as vinte ações, nas mesmas datas de cada horizonte. MAE e RMSE expressos em log-retorno multiplicado por 100. O resumo por horizonte difere da composição de horizontes da carteira.}
+\end{table}
+No horizonte de 21 pregões, o MAE de 6,72 e o RMSE de 8,42 representam desvios elevados para uma previsão de retorno. Por ser uma média de erros absolutos, o MAE não define uma faixa simétrica garantida em torno de cada previsão. O R$^2$ médio por ativo permanece negativo nos três horizontes. Ao reunir todas as observações antes do cálculo, o R$^2$ é 0,0004, 0,0033 e -0,0085 nos horizontes de 5, 10 e 21 pregões, respectivamente. Essa agregação é distinta da média dos coeficientes individuais e também indica capacidade explicativa próxima de zero.
+
+A conclusão quantitativa é de sinal heterogêneo e fraco na magnitude. Uma eventual vantagem da carteira precisa ser relacionada à combinação de prior, covariância, restrições e custos, e não tomada como prova isolada de qualidade do XGBoost.
+
+\section{Qualidade da classificação de sentimento}
+
+Foram avaliados 300 registros da amostra aleatória simples de 300 manchetes, selecionada com semente 2025. Um único avaliador humano classificou as manchetes sem visualizar os rótulos do modelo na interface. A coluna denominada consenso no formulário reproduz a avaliação individual; não representa consenso entre avaliadores. Os rótulos humanos são a referência operacional desta comparação, sujeitos a subjetividade.
+
+\begin{table}[H]\centering\caption{Classificação do modelo em comparação com a referência humana.}
+
+\begin{tabular}{lrrrr}\hline Classe & Suporte humano & Precisão (\%) & Revocação (\%) & F1 (\%) \\ \hline
+
+Positivo & 81 & 43,14 & 81,48 & 56,41 \\
+
+Negativo & 74 & 61,96 & 77,03 & 68,67 \\
+
+Neutro & 145 & 76,36 & 28,97 & 42,00 \\
+
+\hline\end{tabular}\par\smallskip{\footnotesize Fonte: elaboração própria.}\end{table}
+
+A concordância observada é 55,00\% (165 de 300), com macro-F1 de 55,69\% e coeficiente kappa de Cohen de 0,355. A referência de sempre atribuir a classe humana mais frequente alcançaria 48,33\% de concordância nessa amostra.
+
+\begin{table}[H]\centering\caption{Matriz de confusão do sentimento: linhas humanas e colunas do modelo.}
+
+\begin{tabular}{lrrr}\hline Humano / Modelo & Positivo & Negativo & Neutro \\ \hline
+
+Positivo & 66 & 8 & 7\\
+
+Negativo & 11 & 57 & 6\\
+
+Neutro & 76 & 27 & 42\\
+
+\hline\end{tabular}\par\smallskip{\footnotesize Fonte: elaboração própria.}\end{table}
+
+A principal divergência está na classe neutra: dos 145 registros assim classificados pelo humano, o modelo atribui positivo a 76 e negativo a 27. O modelo utiliza a classe positiva em 153 registros, frente a 81 na referência humana. Isso indica maior frequência de atribuição de polaridade pelo modelo nesta amostra, sobretudo positiva, em comparação com o critério do avaliador. O contraste sugere revisar os critérios de neutralidade e exemplos do prompt antes de uma nova rodada de classificação, cuja avaliação deve utilizar uma amostra separada para evitar adaptação à referência já observada.
+
+O kappa compara a concordância observada com aquela esperada pelas frequências marginais; não mede concordância entre dois avaliadores humanos. Divergências podem decorrer de erro do modelo ou de interpretação humana. Não foi mensurada a confiabilidade entre avaliadores humanos. A amostra abrange registros do corpus completo e não apenas notícias habilitadas no rebalanceamento de 2025. Registros de eventos relacionados podem ser dependentes. Esses indicadores avaliam a rotulação textual, sem demonstrar capacidade de antecipar retornos ou contribuição financeira do sentimento.
+\section{Formação das views e cobertura informacional}
+O experimento utiliza gate de três notícias: a presença de pelo menos três manchetes no dia elegível habilita a view híbrida. Abaixo desse limiar, o hard prior reduz sua confiança a um valor próximo de zero. Para avaliar a influência potencial das views, a auditoria deve incidir sobre as datas mensais de decisão, e não apenas sobre a cobertura diária do ano.
+
+\begin{table}[H]
+\centering
+\caption{Cobertura nas datas de formação dos sinais mensais.}
+{\footnotesize
+\begin{tabular}{@{}rrr@{}}
+\hline
+Indicador & Quantidade & Percentual \\ \hline
+Pares ativo-data avaliados & 240 & 100,00\% \\
+Com alguma notícia no dia elegível & 40 & 16,67\% \\
+Com ao menos três notícias (gate = 3) & 6 & 2,50\% \\
+Abaixo do gate & 234 & 97,50\% \\
+Datas mensais com alguma view elegível & 3 de 12 & 25,00\% \\
+\hline
+\end{tabular}}
+\par\smallskip{\footnotesize Fonte: elaboração própria, com base na auditoria de sinais. Notícias elegíveis: dia civil anterior ao sinal; universo de 20 ativos.}
+\end{table}
+O gate habilita 6 dos 240 pares ativo-data, presentes em 3 das doze datas mensais. Nas demais decisões, nenhuma ação atinge o mínimo de três manchetes. Esses números expressam cobertura informacional, não o tamanho exato da contribuição das views aos pesos. A regra é mais restritiva que a mera presença de uma notícia, embora quarenta pares contenham alguma manchete.
+
+Nos ativos sem notícias elegíveis, a atualização permanece próxima do prior; nos demais, a mistura quantitativa e textual participa conforme a confiança estimada. A influência de uma opinião pode alcançar outros papéis pela estrutura de covariância. Por isso, o percentual de pares habilitados não deve ser interpretado diretamente como percentual da rentabilidade explicado pelas views.
+
+A consulta apenas ao dia civil anterior ao sinal e a frequência mensal também limitam a informação utilizada: notícias em outros dias não geram rebalanceamento adicional. O gate de três foi adotado após a sensibilidade de 1 a 5 no próprio ano de 2025. Assim, o resultado descreve uma escolha retrospectiva, sem constituir validação independente do limiar nem evidência de irrelevância do sinal textual.
+
+A Seção~\ref{sec:etapas_alocacao} apresenta controles com prior sem views e previsão quantitativa diretamente no otimizador. Entretanto, esses controles não equivalem a comparar BL apenas quantitativo, BL apenas textual e híbrido completo sob um protocolo independente. A avaliação preditiva controlada a seguir examina a polaridade textual nas expectativas. Uma ablação financeira específica da rodada consolidada continua necessária para atribuir rentabilidade a cada componente.
+
+\section{Qualidade das views e da atualização Black--Litterman}
+
+Esta auditoria complementar utiliza os artefatos de previsões e controles já disponíveis. Seus indicadores descrevem essa execução e não constituem uma ablação financeira da rodada pool consolidada. Esta análise confronta cada previsão com o retorno realizado. Seu objetivo é responder se o componente textual melhora Q e se a atualização Black--Litterman melhora a previsão. Não utiliza retorno financeiro de carteiras como substituto de qualidade preditiva.
+
+São comparadas sete configurações nas mesmas observações: XGBoost; Q completo; Q sem polaridade textual; BL alimentado somente pelo XGBoost; BL sem polaridade; BL completo; e prior sem views. No controle sem polaridade, o sentimento é fixado em zero, mas a contagem de notícias, a cobertura, o peso do sinal quantitativo, a matriz de incerteza, o gate e o prior permanecem iguais. Assim, a diferença contra a versão completa isola a contribuição numérica da polaridade textual, condicionada ao mecanismo de cobertura existente. Ela não representa ausência total de notícias, pois a quantidade de manchetes continua participando da confiança.
+
+O controle BL com XGB utiliza o retorno quantitativo como Q, mas mantém a matriz de incerteza e o gate da rodada original. Sua comparação com o XGBoost isola a atualização pelo prior e pela covariância sob essa confiança. Não se remove o gate nesse contraste, pois isso alteraria simultaneamente outra parte do sistema.
+
+A avaliação no horizonte nativo utiliza 228 pares ativo-data de 2025, dos quais 40 possuem notícias e 6 atingem o gate. O alvo é o log-retorno realizado em h pregões dividido por h, menos a referência diária livre de risco. O XGBoost e Q recebem a mesma escala; prior e posterior mantêm a escala diária do motor. A aproximação entre log-retornos e retornos aritméticos do BL permanece explícita. As classificações são do sinal do excesso de retorno, e não do retorno bruto.
+
+O score de magnitude é $S=1-\mathrm{MSE}_{modelo}/\mathrm{MSE}_{zero}$, usando zero excesso como referência (equivalente à referência livre de risco nesta escala). Valor positivo indica melhora de erro contra essa referência, zero indica empate e valor negativo indica piora. Não é uma nota arbitrária de zero a cem. A acurácia balanceada é a média da proporção de acertos em cada classe de sinal presente, reduzindo a influência do desequilíbrio entre altas e baixas.
+
+\begin{table}[H]\centering
+\caption{Scores preditivos no mesmo alvo e nas mesmas observações.}
+{\footnotesize\begin{tabular}{lrrrrrrr}\hline
+Previsão & N & HR (\%) & BA (\%) & MAE & RMSE & $100S$ & R$^2$\\ \hline
+XGBoost & 228 & 46,05 & 47,07 & 41,35 & 57,11 & -10,22 & -0,106\\
+Q sem polaridade & 228 & 46,05 & 47,22 & 41,30 & 56,88 & -9,32 & -0,097\\
+Q completo & 228 & 46,93 & 47,80 & 41,61 & 57,46 & -11,59 & -0,119\\
+BL com XGB & 228 & 53,07 & 50,11 & 39,60 & 54,23 & 0,59 & 0,003\\
+BL sem polaridade & 228 & 50,88 & 47,78 & 39,65 & 54,29 & 0,39 & 0,001\\
+BL completo & 228 & 55,70 & 52,37 & 39,20 & 53,82 & 2,12 & 0,018\\
+Prior & 228 & 54,39 & 50,00 & 39,47 & 54,18 & 0,79 & 0,005\\
+\hline\end{tabular}}\par\smallskip{\footnotesize Fonte: elaboração própria.}\end{table}
+
+MAE e RMSE estão em pontos-base por dia. Menor erro é melhor; maior acurácia, acurácia balanceada, R-quadrado e score é melhor. Esses critérios podem apontar vencedores distintos, pois acertar o sinal não garante estimar corretamente a magnitude.
+
+\begin{table}[H]\centering
+\caption{Efeito incremental pareado no horizonte selecionado.}
+{\footnotesize\begin{tabular}{lrrr}\hline
+Comparação & N & Redução MSE (\%) & Ganho HR (p.p.)\\ \hline
+XGBoost / Q completo & 228 & -1,24 & 0,88\\
+Q sem polaridade / Q completo & 228 & -2,07 & 0,88\\
+BL sem polaridade / BL completo & 228 & 1,73 & 4,82\\
+XGBoost / BL com XGB & 228 & 9,81 & 7,02\\
+Q completo / BL completo & 228 & 12,28 & 8,77\\
+Prior / BL completo & 228 & 1,34 & 1,32\\
+\hline\end{tabular}}\par\smallskip{\footnotesize Fonte: elaboração própria.}\end{table}
+
+Na tabela de efeitos, redução positiva de MSE indica melhora e ganho positivo de HR indica mais acertos de sinal. XGB para Q mede a mistura completa e não isola sentimento: a cobertura também muda o peso quantitativo. Q sem polaridade para Q completo e BL sem polaridade para BL completo são os controles específicos da polaridade textual.
+
+\begin{figure}[H]\centering
+\caption{Comparação de erro e acerto balanceado das previsões de cada camada.}
+\includegraphics[width=\textwidth]{05_Resultados/predicao_xgb/scores_camadas.png}
+\par\smallskip{\footnotesize Fonte: elaboração própria.}\end{figure}
+
+\begin{table}[H]\centering
+\caption{Efeito restrito às observações que possuem manchetes.}
+{\footnotesize\begin{tabular}{lrrr}\hline
+Comparação & N & Redução MSE (\%) & Ganho HR (p.p.)\\ \hline
+XGBoost / Q completo & 40 & -5,13 & 5,00\\
+Q sem polaridade / Q completo & 40 & -8,78 & 5,00\\
+BL sem polaridade / BL completo & 40 & 2,96 & 15,00\\
+XGBoost / BL com XGB & 40 & 6,44 & -10,00\\
+Q completo / BL completo & 40 & 13,17 & -12,50\\
+Prior / BL completo & 40 & 2,98 & 2,50\\
+\hline\end{tabular}}\par\smallskip{\footnotesize Fonte: elaboração própria.}\end{table}
+
+Os efeitos com gate ativo também foram exportados, mas envolvem apenas 6 pares e são estritamente descritivos. Mesmo com um gate ativo em um papel, a covariância pode transmitir a mudança a outros ativos no mesmo rebalanceamento. Por isso, o efeito textual sobre o posterior não precisa estar restrito aos ativos com manchetes.
+
+\subsection{Sensibilidade à definição de previsão diária}
+
+Como o BL trabalha na frequência diária, calcula-se também o erro contra o retorno simples do pregão seguinte ao sinal, com todos os 240 pares mensais. Para XGB e Q, a previsão de log-retorno diário equivalente é convertida em retorno simples por exponenciação; o posterior e o prior são utilizados como retornos simples excedentes. Essa conversão supõe uma taxa diária equivalente constante e não transforma o XGBoost em um modelo treinado para um pregão. O horizonte nativo e o pregão seguinte são tarefas distintas; seus scores não devem ser misturados.
+
+\begin{table}[H]\centering
+\caption{Scores contra o retorno simples excedente no pregão seguinte.}
+{\footnotesize\begin{tabular}{lrrrrrrr}\hline
+Previsão & N & HR (\%) & BA (\%) & MAE & RMSE & $100S$ & R$^2$\\ \hline
+XGBoost & 240 & 50,00 & 48,68 & 133,85 & 186,89 & -1,11 & -0,017\\
+Q sem polaridade & 240 & 49,17 & 47,65 & 133,85 & 186,92 & -1,13 & -0,017\\
+Q completo & 240 & 50,00 & 48,86 & 133,71 & 187,09 & -1,33 & -0,019\\
+BL com XGB & 240 & 46,67 & 50,42 & 133,69 & 185,80 & 0,07 & -0,005\\
+BL sem polaridade & 240 & 47,08 & 50,98 & 133,81 & 185,95 & -0,09 & -0,007\\
+BL completo & 240 & 49,17 & 53,40 & 133,34 & 185,48 & 0,42 & -0,002\\
+Prior & 240 & 44,58 & 50,00 & 134,00 & 186,14 & -0,30 & -0,009\\
+\hline\end{tabular}}\par\smallskip{\footnotesize Fonte: elaboração própria.}\end{table}
+
+As comparações são retrospectivas e limitadas às decisões mensais do experimento. Os horizontes e a configuração do BL não foram escolhidos novamente por esses scores. A amostra possui dependência temporal e entre ativos; diferenças pequenas não são declaradas estatisticamente significativas. O efeito controlado indica o que mudou nesta execução ao retirar a polaridade, não uma garantia de contribuição preditiva em outro período.
+
+A polaridade textual altera o MSE de Q em uma redução de -2,07\% e o do posterior em 1,73\%. O sinal negativo no primeiro resultado representa piora de magnitude em Q. Neste experimento, o efeito textual não é uniformemente favorável: sua combinação com a atualização BL apresenta resultado diferente da mistura direta em Q.
+
+Neste alvo, o menor RMSE pertence a BL completo, com 53,82 pontos-base, e a maior acurácia pertence a BL completo, com 55,70\%. As comparações específicas de sentimento e atualização BL devem ser lidas separadamente para identificar a origem dessa diferença.
+
+\section{Avaliação das etapas de alocação}
+\label{sec:etapas_alocacao}
+A avaliação intermediária distingue a previsão quantitativa, a expectativa posterior do BL e a carteira realizada. Na referência XGBoost direto, a previsão do modelo conjunto é dividida pelo horizonte e descontada da taxa livre de risco, entrando no mesmo otimizador de média--variância sem atualização BL. No prior sem views, utiliza-se a expectativa de equilíbrio, mantendo o otimizador, as restrições, os custos e o calendário. Essa referência não equivale a uma carteira equiponderada de compra e manutenção.
+
+\begin{table}[H]
+\centering
+\caption{Referências de alocação com vinte ativos.}
+\label{tab:etapas_alocacao}
+{\footnotesize
+\begin{tabular}{@{}lrrrr@{}}
+\hline
+Configuração & Retorno (\%) & Sharpe & MDD (\%) & Custo (R\$) \\ \hline
+BL híbrido & 27,79 & 0,70 & -8,46 & 507,76 \\
+XGBoost direto & 3,27 & -0,58 & -20,13 & 537,24 \\
+Prior sem views & 28,21 & 0,74 & -8,46 & 135,07 \\
+Markowitz & 19,10 & 0,29 & -12,78 & 644,25 \\
+\hline
+\end{tabular}}
+\par\smallskip{\footnotesize Fonte: elaboração própria. Mesmo universo e condições de execução; Sharpe sobre a referência Selic, que acumula 14,87\% no período.}
+\end{table}
+Com vinte ativos, o XGBoost direto retorna 3,27\%, abaixo da Selic, com Sharpe de -0,58 e drawdown máximo de -20,13\%. O BL apresenta 27,79\%, Sharpe de 0,70 e drawdown de -8,46\%. A diferença mostra que a expectativa quantitativa isolada e a atualização pelo BL produzem alocações distintas; não demonstra, por si só, qualidade elevada do previsor ou superioridade em outro período.
+
+O prior sem views retorna 28,21\%, com Sharpe de 0,74 e custo de R\$ 135,07. Nessa cardinalidade, sua rentabilidade supera a do híbrido em 0,42 p.p. e seu custo é menor. A combinação das views não assegura, portanto, contribuição financeira incremental positiva nesse recorte. A comparação oferece um controle de atribuição, mas não isola todas as interações entre as fontes de informação. O gate de três notícias habilita apenas seis dos 240 pares mensais, e a covariância pode transmitir a influência de uma opinião a outros ativos.
+
+\subsection*{Interpretação conjunta das etapas intermediárias}
+A concordância textual de 55,00\% e a baixa revocação da classe neutra indicam limitações na interpretação das manchetes. Na auditoria preditiva complementar, acrescentar polaridade piora o erro de magnitude de Q, mas melhora o posterior sob a mesma cobertura e confiança. O efeito depende, portanto, da interação entre sinal, prior e covariância. Esses resultados não transformam qualidade de classificação em capacidade automática de prever retornos.
+
+Na rodada financeira consolidada, o prior sem views supera o híbrido em retorno com vinte ativos. Os resultados preditivos complementares não podem ser convertidos diretamente em contribuição financeira: diferem a execução de referência, o objetivo avaliado e os efeitos de alocação e custos. A comparação das carteiras a seguir deve ser interpretada em conjunto com esses diagnósticos, sem atribuir sua vantagem exclusivamente ao XGBoost ou ao sentimento.
+\section{Comparação com ativos comuns}
+A comparação pareada controla a composição elegível: os dois modelos recebem os mesmos papéis e operam nas mesmas datas. A diferença mediana é calculada primeiro dentro de cada par e depois agregada; ela pode diferir da subtração das duas medianas marginais. A Selic acumula 14,87\% nas 250 datas, em vez de 15\%, devido à convenção de 252 dias úteis por ano.
+
+\begin{table}[H]
+\centering
+\caption{Retornos líquidos nos subconjuntos comuns.}
+\label{tab:retornos_comuns}
+{\footnotesize
+\begin{tabular}{@{}rrrrrr@{}}
+\hline
+n & Conjuntos & BL med. (\%) & MV med. (\%) & $\Delta$ pareado (p.p.) & BL > MV (\%) \\ \hline
+1 & 20 & 21,26 & 21,26 & 0,00 & 0,0 \\
+2 & 30 & 21,81 & 21,81 & 0,00 & 0,0 \\
+3 & 30 & 32,82 & 32,06 & 0,65 & 70,0 \\
+4 & 30 & 29,14 & 21,03 & 9,00 & 90,0 \\
+5 & 30 & 30,42 & 19,33 & 13,59 & 80,0 \\
+6 & 30 & 31,22 & 14,56 & 11,92 & 80,0 \\
+7 & 30 & 32,87 & 14,28 & 17,48 & 96,7 \\
+8 & 30 & 32,97 & 15,44 & 18,78 & 93,3 \\
+9 & 30 & 32,64 & 13,32 & 21,01 & 93,3 \\
+10 & 30 & 33,08 & 11,01 & 19,92 & 90,0 \\
+11 & 30 & 29,65 & 6,05 & 23,01 & 100,0 \\
+12 & 30 & 34,47 & 12,61 & 22,20 & 96,7 \\
+13 & 30 & 31,81 & 11,77 & 19,07 & 93,3 \\
+14 & 30 & 30,77 & 18,85 & 10,84 & 90,0 \\
+15 & 30 & 31,00 & 20,89 & 9,80 & 83,3 \\
+16 & 30 & 30,35 & 16,00 & 16,29 & 96,7 \\
+17 & 30 & 30,14 & 19,39 & 10,91 & 93,3 \\
+18 & 30 & 28,40 & 19,35 & 10,53 & 100,0 \\
+19 & 20 & 28,10 & 19,25 & 8,92 & 95,0 \\
+20 & 1 & 27,79 & 19,10 & 8,69 & 100,0 \\
+\hline
+\end{tabular}}
+\par\smallskip{\footnotesize Fonte: elaboração própria. MV: Markowitz. A última coluna contabiliza vitórias estritas; os casos n = 1 e n = 2 têm 100\% de empates.}
+\end{table}
+A vantagem varia com a cardinalidade e a composição. Para n = 5, BL supera Markowitz em 80,0\% dos conjuntos, com diferença pareada mediana de 13,59 p.p. Para n = 10, a frequência é 90,0\% e a diferença mediana é 19,92 p.p. Essas frequências descrevem os subconjuntos avaliados, não probabilidades de vitória em outro ano.
+
+\subsection*{Dispersão entre conjuntos e risco das carteiras}
+\begin{figure}[H]
+\centering
+\caption{Retorno por cardinalidade com controle dos ativos elegíveis.}
+\includegraphics[width=\textwidth]{05_Resultados/figures/retorno liquido ativos.png}
+\par\smallskip{\footnotesize Fonte: elaboração própria. Faixas: percentis entre subconjuntos, sem interpretação de intervalo de confiança.}
+\end{figure}
+\begin{table}[H]
+\centering
+\caption{Risco e desempenho ajustado nos conjuntos comuns.}
+\label{tab:risco_comuns}
+{\footnotesize
+\begin{tabular}{@{}rlrrr@{}}
+\hline
+n & Modelo & Sharpe med. & Vol. anual (\%) & MDD med. (\%) \\ \hline
+1 & BL & 0,34 & 26,85 & -21,47 \\
+1 & Markowitz & 0,34 & 26,85 & -21,47 \\
+5 & BL & 0,78 & 18,65 & -9,34 \\
+5 & Markowitz & 0,31 & 19,10 & -12,94 \\
+10 & BL & 0,90 & 17,39 & -8,44 \\
+10 & Markowitz & -0,05 & 19,40 & -18,19 \\
+20 & BL & 0,70 & 17,49 & -8,46 \\
+20 & Markowitz & 0,29 & 19,23 & -12,78 \\
+\hline
+\end{tabular}}
+\par\smallskip{\footnotesize Fonte: elaboração própria. Cada coluna é uma mediana marginal; não representa necessariamente o mesmo subconjunto.}
+\end{table}
+Para BL, os percentis de retorno em n = 5 são 13,01\% e 49,60\%; em n = 15, são 26,59\% e 35,74\%. A amplitude entre esses valores descreve a dependência da composição sorteada. Sua comparação permite avaliar robustez dentro do universo, sem assegurar generalização temporal.
+
+Em n = 1, os métodos coincidem por investirem integralmente na mesma ação. Em n = 2, o teto de 50\% impõe pesos-alvo iguais. Para n = 3, o teto de 34,17\% deixa pouca liberdade de alocação. Portanto, as diferenças nos primeiros pontos também refletem restrições geométricas, e não apenas qualidade das estimativas.
+
+\section{Comparação com seleção própria dos ativos}
+Na escolha livre, cada modelo ranqueia os ativos pelo retorno esperado excedente dividido pela volatilidade histórica. Markowitz utiliza a média móvel; BL utiliza o posterior. A regra é explicitamente acrescentada à alocação: não corresponde à solução exaustiva do problema combinatório de selecionar a melhor carteira com n ações. Os retornos abaixo incluem seleção e distribuição de pesos.
+
+\begin{table}[H]
+\centering
+\caption{Desempenho das estratégias com seleção própria.}
+\label{tab:selecao_propria}
+{\footnotesize
+\begin{tabular}{@{}rrrrrrr@{}}
+\hline
+n & Ret. BL (\%) & Ret. MV (\%) & Sharpe BL & Sharpe MV & MDD BL (\%) & MDD MV (\%) \\ \hline
+1 & -10,37 & 44,24 & -0,61 & 1,15 & -45,00 & -14,18 \\
+2 & 77,64 & 32,41 & 1,53 & 0,83 & -24,22 & -11,16 \\
+3 & 62,76 & 33,25 & 1,37 & 0,87 & -17,16 & -9,95 \\
+4 & 62,27 & 23,33 & 1,59 & 0,46 & -12,62 & -11,94 \\
+5 & 58,02 & 22,25 & 1,59 & 0,42 & -10,73 & -11,95 \\
+6 & 49,43 & 20,07 & 1,36 & 0,33 & -10,68 & -12,68 \\
+7 & 52,97 & 19,12 & 1,49 & 0,29 & -9,83 & -13,00 \\
+8 & 46,08 & 18,78 & 1,31 & 0,27 & -8,20 & -13,00 \\
+9 & 48,11 & 18,78 & 1,41 & 0,27 & -9,09 & -12,99 \\
+10 & 43,72 & 18,84 & 1,27 & 0,27 & -9,16 & -12,97 \\
+11 & 40,54 & 18,90 & 1,18 & 0,28 & -7,62 & -12,96 \\
+12 & 40,46 & 18,88 & 1,19 & 0,28 & -7,57 & -12,95 \\
+13 & 38,57 & 18,91 & 1,13 & 0,28 & -6,75 & -12,91 \\
+14 & 33,46 & 18,96 & 0,92 & 0,28 & -6,73 & -12,89 \\
+15 & 34,76 & 19,03 & 0,97 & 0,28 & -7,09 & -12,84 \\
+16 & 34,40 & 19,09 & 0,97 & 0,28 & -7,28 & -12,82 \\
+17 & 33,66 & 19,06 & 0,95 & 0,28 & -7,41 & -12,82 \\
+18 & 32,48 & 19,05 & 0,90 & 0,28 & -8,04 & -12,82 \\
+19 & 29,96 & 19,06 & 0,79 & 0,28 & -8,59 & -12,80 \\
+20 & 27,79 & 19,10 & 0,70 & 0,29 & -8,46 & -12,78 \\
+\hline
+\end{tabular}}
+\par\smallskip{\footnotesize Fonte: elaboração própria. Selic no período: 14,87\%. Há uma trajetória dinâmica por modelo e cardinalidade.}
+\end{table}
+BL supera Markowitz em retorno para 19 das 20 cardinalidades. Com uma ação, seu retorno é -10,37\%, contra 44,24\% de Markowitz, e seu drawdown é -45,00\%. Nesse caso, a distribuição de pesos é trivial: toda diferença decorre das ações escolhidas e das operações. A concentração exige atenção própria, mesmo quando carteiras maiores apresentam resultados favoráveis.
+
+\subsection*{Trajetórias de capital e comparação com a renda fixa}
+\begin{figure}[H]
+\centering
+\caption{Capital realizado em cardinalidades ilustrativas.}
+\includegraphics[width=\textwidth]{05_Resultados/figures/trajetoria de capital.png}
+\par\smallskip{\footnotesize Fonte: elaboração própria. Capital inicial de R\$ 100 mil; custos de 10 bps. Os tamanhos são exemplos, não uma seleção de cardinalidade feita antes do teste.}
+\end{figure}
+\begin{table}[H]
+\centering
+\caption{Resultado com todo o universo de vinte ativos.}
+\label{tab:universo_completo}
+{\footnotesize
+\begin{tabular}{@{}lrrr@{}}
+\hline
+Indicador & BL & Markowitz & Selic \\ \hline
+Capital final (R\$) & 127.786,54 & 119.098,15 & 114.872,51 \\
+Retorno líquido (\%) & 27,79 & 19,10 & 14,87 \\
+Volatilidade anual (\%) & 17,49 & 19,23 & 0,00 \\
+Sharpe sobre a Selic & 0,70 & 0,29 & Não definido \\
+Drawdown máximo (\%) & -8,46 & -12,78 & 0,00 \\
+\hline
+\end{tabular}}
+\par\smallskip{\footnotesize Fonte: elaboração própria. A Selic é uma série determinística; seu Sharpe não é definido por ter excesso e volatilidade nulos.}
+\end{table}
+Em n = 20, os cenários coincidem, pois todos os ativos são elegíveis. A diferença de retorno BL menos Markowitz é 8,69 p.p.; frente à Selic, é 12,91 p.p. As volatilidades são 17,49\% e 19,23\%, respectivamente. Essa comparação deve considerar também os drawdowns, pois a renda fixa não apresenta as oscilações das ações neste modelo simplificado.
+
+O maior retorno de BL na escolha livre ocorre em n = 2, com 77,64\%; seu maior Sharpe ocorre em n = 5, com 1,59. Esses máximos foram identificados retrospectivamente, não validam um tamanho ótimo antes do teste.
+
+\section{Sensibilidade à cardinalidade e aos custos de transação}
+Na escolha livre de BL, os retornos em n = 1, n = 2 e n = 20 são, respectivamente, -10,37\%, 77,64\% e 27,79\%. A volatilidade passa de 32,48\% para 17,49\% entre os extremos. Não se presume melhora monotônica: aumentar n modifica as ações selecionadas, o risco de concentração e a liberdade de otimização.
+
+\begin{table}[H]
+\centering
+\caption{Efeito dos custos nas estratégias com seleção própria.}
+\label{tab:custos}
+{\footnotesize
+\begin{tabular}{@{}rlrrrr@{}}
+\hline
+n & Modelo & Sem custo (\%) & Líquido (\%) & Impacto (p.p.) & Custo pago (R\$) \\ \hline
+1 & BL & -9,74 & -10,37 & 0,63 & 709,63 \\
+1 & Markowitz & 45,25 & 44,24 & 1,01 & 735,18 \\
+2 & BL & 79,27 & 77,64 & 1,63 & 1.318,63 \\
+2 & Markowitz & 33,27 & 32,41 & 0,87 & 686,56 \\
+5 & BL & 59,05 & 58,02 & 1,03 & 872,29 \\
+5 & Markowitz & 23,01 & 22,25 & 0,76 & 639,14 \\
+10 & BL & 44,59 & 43,72 & 0,86 & 756,24 \\
+10 & Markowitz & 19,60 & 18,84 & 0,76 & 647,94 \\
+20 & BL & 28,37 & 27,79 & 0,59 & 507,76 \\
+20 & Markowitz & 19,85 & 19,10 & 0,75 & 644,25 \\
+\hline
+\end{tabular}}
+\par\smallskip{\footnotesize Fonte: elaboração própria. O contrafactual sem custo mantém os mesmos pesos e operações, removendo apenas o desconto financeiro; não há nova otimização.}
+\end{table}
+O custo nominal pago e a perda de capital final não são a mesma medida: uma despesa antecipada também reduz o capital sujeito a retornos posteriores. Para n = 20, BL paga R\$ 507,76, com impacto de 0,59 p.p. de retorno. Markowitz paga R\$ 644,25, com impacto de 0,75 p.p.; seu turnover é 6,30, contra 4,58 de BL.
+
+Em n = 2, BL tem turnover de 9,13 e custo de R\$ 1.318,63, com impacto de 1,63 p.p. Embora os pesos-alvo sejam 50/50, a troca das ações escolhidas e a restauração das proporções geram negociação. A comparação entre retorno bruto e líquido permite distinguir desempenho financeiro e despesas de implementação.
+
+A frequência de rebalanceamento é mensal. A dispersão entre subconjuntos é uma análise de composição, mas não equivale a uma exclusão controlada de um ativo específico. A avaliação de outras frequências e da remoção de ativos exige execução homogênea antes de receber conclusões numéricas.
+
+\section{Limitações e alcance das conclusões}
+A primeira limitação é temporal. O treino purga os alvos por maturidade e utiliza 2024 na seleção dos grupos de atributos, mas a escolha de destacar o modelo conjunto ocorreu após o exame de 2025. Os horizontes por ativo seguem o protocolo direcional previamente fixado, sem nova seleção pelo pool. Além disso, o gate de três foi escolhido após observar o desempenho de 2025. O respeito à disponibilidade da informação no motor não elimina esses problemas de seleção. A avaliação é exploratória, não uma comprovação definitiva fora da amostra.
+
+A segunda limitação é estatística. Há apenas um ano de avaliação financeira e vários tamanhos de carteira examinados. Os subconjuntos compartilham ações, datas e choques de mercado, de modo que as 1.142 trajetórias principais e as 1.142 trajetórias de controle não representam amostras independentes. As frequências de vitória são descritivas. A escolha do melhor n pelo retorno de 2025 favoreceria uma configuração ex post; sua utilidade operacional exige validação anterior e teste em outro período, além de procedimentos que respeitem a dependência temporal.
+
+A terceira limitação é de atribuição. Com gate de três notícias, 6 dos 240 pares ativo-data habilitam as views. As referências sem views e com XGBoost direto não separam integralmente os efeitos do prior, das restrições, da covariância e de cada fonte de inteligência computacional. O diagnóstico quantitativo, com R$^2$ negativo em 19 ativos e acurácia superior à classe majoritária em apenas um, reforça a necessidade de evitar inferências causais apenas pelo retorno agregado.
+
+A quarta limitação é operacional. O universo é fixo, está sujeito a viés de sobrevivência e inclui classes de ações da mesma empresa, como PETR3 e PETR4; vinte papéis não equivalem a vinte fontes independentes de risco. A execução ao fechamento seguinte é uma aproximação, os custos são lineares e não se simulam spread, impacto de mercado, tributação ou liquidação terminal. O piso de 0,1\% mantém exatamente n posições, mas algumas podem ser economicamente pequenas.
+
+Por fim, o prior equiponderado evita usar capitalização observada posteriormente, mas se afasta da especificação de equilíbrio ponderado por valor de mercado. A escala diária das views também é aproximada. O referencial de 15\% ao ano é uma taxa constante hipotética, e não a trajetória histórica da Selic. Essas convenções delimitam a comparação e precisam permanecer explícitas no procedimento experimental.
+
+No universo completo, BL retorna 27,79\%, frente aos 19,10\% de Markowitz e aos 14,87\% da Selic, enquanto o prior sem views retorna 28,21\%. O resultado da carteira deve ser interpretado em conjunto com a baixa precisão quantitativa e os controles de atribuição.

@@ -1,0 +1,82 @@
+\subsection{Avaliação preditiva de cada camada e contribuição das notícias}
+
+Esta análise confronta cada previsão com o retorno realizado. Seu objetivo é responder se o componente textual melhora Q e se a atualização Black--Litterman melhora a previsão. Não utiliza retorno financeiro de carteiras como substituto de qualidade preditiva.
+
+São comparadas sete configurações nas mesmas observações: XGBoost; Q completo; Q sem polaridade textual; BL alimentado somente pelo XGBoost; BL sem polaridade; BL completo; e prior sem views. No controle sem polaridade, o sentimento é fixado em zero, mas a contagem de notícias, a cobertura, o peso do sinal quantitativo, a matriz de incerteza, o gate e o prior permanecem iguais. Assim, a diferença contra a versão completa isola a contribuição numérica da polaridade textual, condicionada ao mecanismo de cobertura existente. Ela não representa ausência total de notícias, pois a quantidade de manchetes continua participando da confiança.
+
+O controle BL com XGB utiliza o retorno quantitativo como Q, mas mantém a matriz de incerteza e o gate da rodada original. Sua comparação com o XGBoost isola a atualização pelo prior e pela covariância sob essa confiança. Não se remove o gate nesse contraste, pois isso alteraria simultaneamente outra parte do sistema.
+
+A avaliação no horizonte nativo utiliza 228 pares ativo-data de 2025, dos quais 40 possuem notícias e 6 atingem o gate. O alvo é o log-retorno realizado em h pregões dividido por h, menos a referência diária livre de risco. O XGBoost e Q recebem a mesma escala; prior e posterior mantêm a escala diária do motor. A aproximação entre log-retornos e retornos aritméticos do BL permanece explícita. As classificações são do sinal do excesso de retorno, e não do retorno bruto.
+
+O score de magnitude é $S=1-\mathrm{MSE}_{modelo}/\mathrm{MSE}_{zero}$, usando zero excesso como referência (equivalente à referência livre de risco nesta escala). Valor positivo indica melhora de erro contra essa referência, zero indica empate e valor negativo indica piora. Não é uma nota arbitrária de zero a cem. A acurácia balanceada é a média da proporção de acertos em cada classe de sinal presente, reduzindo a influência do desequilíbrio entre altas e baixas.
+
+\begin{table}[H]\centering
+\caption{Scores preditivos no mesmo alvo e nas mesmas observações.}
+{\footnotesize\begin{tabular}{lrrrrrrr}\hline
+Previsão & N & HR (\%) & BA (\%) & MAE & RMSE & $100S$ & R$^2$\\ \hline
+XGBoost & 228 & 46,05 & 47,07 & 41,35 & 57,11 & -10,22 & -0,106\\
+Q sem polaridade & 228 & 46,05 & 47,22 & 41,30 & 56,88 & -9,32 & -0,097\\
+Q completo & 228 & 46,93 & 47,80 & 41,61 & 57,46 & -11,59 & -0,119\\
+BL com XGB & 228 & 53,07 & 50,11 & 39,60 & 54,23 & 0,59 & 0,003\\
+BL sem polaridade & 228 & 50,88 & 47,78 & 39,65 & 54,29 & 0,39 & 0,001\\
+BL completo & 228 & 55,70 & 52,37 & 39,20 & 53,82 & 2,12 & 0,018\\
+Prior & 228 & 54,39 & 50,00 & 39,47 & 54,18 & 0,79 & 0,005\\
+\hline\end{tabular}}\par\smallskip{\footnotesize Fonte: elaboração própria.}\end{table}
+
+MAE e RMSE estão em pontos-base por dia. Menor erro é melhor; maior acurácia, acurácia balanceada, R-quadrado e score é melhor. Esses critérios podem apontar vencedores distintos, pois acertar o sinal não garante estimar corretamente a magnitude.
+
+\begin{table}[H]\centering
+\caption{Efeito incremental pareado no horizonte selecionado.}
+{\footnotesize\begin{tabular}{lrrr}\hline
+Comparação & N & Redução MSE (\%) & Ganho HR (p.p.)\\ \hline
+XGBoost / Q completo & 228 & -1,24 & 0,88\\
+Q sem polaridade / Q completo & 228 & -2,07 & 0,88\\
+BL sem polaridade / BL completo & 228 & 1,73 & 4,82\\
+XGBoost / BL com XGB & 228 & 9,81 & 7,02\\
+Q completo / BL completo & 228 & 12,28 & 8,77\\
+Prior / BL completo & 228 & 1,34 & 1,32\\
+\hline\end{tabular}}\par\smallskip{\footnotesize Fonte: elaboração própria.}\end{table}
+
+Na tabela de efeitos, redução positiva de MSE indica melhora e ganho positivo de HR indica mais acertos de sinal. XGB para Q mede a mistura completa e não isola sentimento: a cobertura também muda o peso quantitativo. Q sem polaridade para Q completo e BL sem polaridade para BL completo são os controles específicos da polaridade textual.
+
+\begin{figure}[H]\centering
+\caption{Comparação de erro e acerto balanceado das previsões de cada camada.}
+\includegraphics[width=\textwidth]{05_Resultados/predicao_xgb/scores_camadas.png}
+\par\smallskip{\footnotesize Fonte: elaboração própria.}\end{figure}
+
+\begin{table}[H]\centering
+\caption{Efeito restrito às observações que possuem manchetes.}
+{\footnotesize\begin{tabular}{lrrr}\hline
+Comparação & N & Redução MSE (\%) & Ganho HR (p.p.)\\ \hline
+XGBoost / Q completo & 40 & -5,13 & 5,00\\
+Q sem polaridade / Q completo & 40 & -8,78 & 5,00\\
+BL sem polaridade / BL completo & 40 & 2,96 & 15,00\\
+XGBoost / BL com XGB & 40 & 6,44 & -10,00\\
+Q completo / BL completo & 40 & 13,17 & -12,50\\
+Prior / BL completo & 40 & 2,98 & 2,50\\
+\hline\end{tabular}}\par\smallskip{\footnotesize Fonte: elaboração própria.}\end{table}
+
+Os efeitos com gate ativo também foram exportados, mas envolvem apenas 6 pares e são estritamente descritivos. Mesmo com um gate ativo em um papel, a covariância pode transmitir a mudança a outros ativos no mesmo rebalanceamento. Por isso, o efeito textual sobre o posterior não precisa estar restrito aos ativos com manchetes.
+
+\subsection{Sensibilidade à definição de previsão diária}
+
+Como o BL trabalha na frequência diária, calcula-se também o erro contra o retorno simples do pregão seguinte ao sinal, com todos os 240 pares mensais. Para XGB e Q, a previsão de log-retorno diário equivalente é convertida em retorno simples por exponenciação; o posterior e o prior são utilizados como retornos simples excedentes. Essa conversão supõe uma taxa diária equivalente constante e não transforma o XGBoost em um modelo treinado para um pregão. O horizonte nativo e o pregão seguinte são tarefas distintas; seus scores não devem ser misturados.
+
+\begin{table}[H]\centering
+\caption{Scores contra o retorno simples excedente no pregão seguinte.}
+{\footnotesize\begin{tabular}{lrrrrrrr}\hline
+Previsão & N & HR (\%) & BA (\%) & MAE & RMSE & $100S$ & R$^2$\\ \hline
+XGBoost & 240 & 50,00 & 48,68 & 133,85 & 186,89 & -1,11 & -0,017\\
+Q sem polaridade & 240 & 49,17 & 47,65 & 133,85 & 186,92 & -1,13 & -0,017\\
+Q completo & 240 & 50,00 & 48,86 & 133,71 & 187,09 & -1,33 & -0,019\\
+BL com XGB & 240 & 46,67 & 50,42 & 133,69 & 185,80 & 0,07 & -0,005\\
+BL sem polaridade & 240 & 47,08 & 50,98 & 133,81 & 185,95 & -0,09 & -0,007\\
+BL completo & 240 & 49,17 & 53,40 & 133,34 & 185,48 & 0,42 & -0,002\\
+Prior & 240 & 44,58 & 50,00 & 134,00 & 186,14 & -0,30 & -0,009\\
+\hline\end{tabular}}\par\smallskip{\footnotesize Fonte: elaboração própria.}\end{table}
+
+As comparações são retrospectivas e limitadas às decisões mensais do experimento. Os horizontes e a configuração do BL não foram escolhidos novamente por esses scores. A amostra possui dependência temporal e entre ativos; diferenças pequenas não são declaradas estatisticamente significativas. O efeito controlado indica o que mudou nesta execução ao retirar a polaridade, não uma garantia de contribuição preditiva em outro período.
+
+A polaridade textual altera o MSE de Q em uma redução de -2,07\% e o do posterior em 1,73\%. O sinal negativo no primeiro resultado representa piora de magnitude em Q. Neste experimento, o efeito textual não é uniformemente favorável: sua combinação com a atualização BL apresenta resultado diferente da mistura direta em Q.
+
+Neste alvo, o menor RMSE pertence a BL completo, com 53,82 pontos-base, e a maior acurácia pertence a BL completo, com 55,70\%. As comparações específicas de sentimento e atualização BL devem ser lidas separadamente para identificar a origem dessa diferença.

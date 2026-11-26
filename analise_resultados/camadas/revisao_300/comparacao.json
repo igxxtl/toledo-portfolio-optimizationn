@@ -1,0 +1,95 @@
+{
+  "n": 300,
+  "tipo_avaliador": "IA; nao constitui segundo avaliador humano",
+  "modelo_original": "gpt-5.6-luna",
+  "cegamento": "Rotulos individuais nao exibidos antes da anotacao; metricas agregadas e suspeita de vies ja conhecidas nesta conversa. Nao constitui cegamento experimental completo.",
+  "escopo": "Somente manchete e ticker, sem consultas externas ou precos futuros",
+  "frequencias": {
+    "rotulo_modelo_original": {
+      "negativo": 92,
+      "positivo": 153,
+      "neutro": 55
+    },
+    "rotulo_ia": {
+      "negativo": 78,
+      "positivo": 108,
+      "neutro": 114
+    },
+    "rotulo_humano_original": {
+      "negativo": 74,
+      "positivo": 81,
+      "neutro": 145
+    }
+  },
+  "humano_ia": {
+    "concordancia": 0.66,
+    "matriz": {
+      "positivo": {
+        "positivo": 57,
+        "negativo": 4,
+        "neutro": 20
+      },
+      "negativo": {
+        "positivo": 9,
+        "negativo": 56,
+        "neutro": 9
+      },
+      "neutro": {
+        "positivo": 42,
+        "negativo": 18,
+        "neutro": 85
+      }
+    },
+    "kappa": 0.4809160305343512,
+    "acordos": 198
+  },
+  "humano_modelo_original": {
+    "concordancia": 0.55,
+    "matriz": {
+      "positivo": {
+        "positivo": 66,
+        "negativo": 8,
+        "neutro": 7
+      },
+      "negativo": {
+        "positivo": 11,
+        "negativo": 57,
+        "neutro": 6
+      },
+      "neutro": {
+        "positivo": 76,
+        "negativo": 27,
+        "neutro": 42
+      }
+    },
+    "kappa": 0.3553419075512544,
+    "acordos": 165
+  },
+  "ia_modelo_original": {
+    "concordancia": 0.7866666666666666,
+    "matriz": {
+      "positivo": {
+        "positivo": 108,
+        "negativo": 0,
+        "neutro": 0
+      },
+      "negativo": {
+        "positivo": 1,
+        "negativo": 75,
+        "neutro": 2
+      },
+      "neutro": {
+        "positivo": 44,
+        "negativo": 17,
+        "neutro": 53
+      }
+    },
+    "kappa": 0.6801599200399799,
+    "acordos": 236
+  },
+  "divergencias": 102,
+  "casos_ambiguos": 93,
+  "consenso": "Pendente de adjudicacao; campos confirmados vazios",
+  "sha256_anotacao": "FF67E8AAED0681CCD16C7809845C52336E22FEB93A69BBF4B365F524F48B25A0",
+  "sha256_fonte_humana": "E240640D4796C7833F3CAF4CD1F23F7A9CAC8C3C42D2B674B08A3879687FE2BB"
+}

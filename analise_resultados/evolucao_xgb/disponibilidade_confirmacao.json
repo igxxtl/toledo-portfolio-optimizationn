@@ -1,0 +1,12 @@
+{
+  "requested_window": [
+    "2026-04-09",
+    "2026-11-08"
+  ],
+  "source": "Yahoo Finance via yfinance",
+  "recipe_frozen_before_request": true,
+  "original_files_changed": false,
+  "status": "unavailable",
+  "reason": "O provedor retornou amostra vazia para a janela solicitada.",
+  "observed_provider_error": "curl (28): resolving timed out; nenhuma cotacao nova recebida"
+}

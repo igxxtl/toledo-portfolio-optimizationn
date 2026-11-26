@@ -1,0 +1,87 @@
+\subsection{Comparação das previsões com referências observáveis}
+
+A avaliação complementar utiliza os mesmos artefatos quantitativos e os horizontes escolhidos em 2024. O alvo é o log-retorno acumulado em 5, 10 ou 21 pregões. Para cada ativo e horizonte, o modelo e as referências são avaliados nos mesmos pares, com desfechos terminando até 30 de dezembro de 2025. Não houve retreinamento ou escolha de novos modelos usando os resultados abaixo.
+
+São utilizadas três referências: retorno zero; média expansiva dos log-retornos de mesmo horizonte já realizados; e direção mais frequente entre esses alvos históricos. As duas referências históricas exigem pelo menos 80 alvos conhecidos. Na previsão ao fechamento de t, o último alvo admitido é aquele iniciado em t-h e concluído em t. A direção majoritária é somente uma regra de classificação; não lhe é atribuída magnitude ou RMSE. Diferentemente da maior classe observada em 2025, apresentada anteriormente como diagnóstico ex post, esta referência é calculável sem consultar desfechos futuros.
+
+Define-se $S_0=1-\mathrm{MSE}_{XGB}/\mathrm{MSE}_{0}$. Valores positivos representam melhora contra o retorno zero. O indicador $S_{hist}$ substitui o denominador pelo MSE da média histórica. Essa comparação respeita a escala de cada ativo e horizonte; RMSEs brutos de horizontes distintos não são comparados como problemas equivalentes.
+
+\begin{table}[H]\centering
+\caption{Qualidade preditiva dos horizontes selecionados em 2024.}
+{\footnotesize\begin{tabular}{lrrrrrr}\hline
+Ativo & h & HR XGB & HR maj. & HR média & $100S_0$ & $100S_{hist}$\\ \hline
+ABEV3 & 5 & 45,71 & 48,57 & 48,57 & -6,07 & -5,05\\
+B3SA3 & 21 & 53,28 & 61,14 & 62,88 & -2,14 & -6,51\\
+BBAS3 & 10 & 43,75 & 50,42 & 50,42 & -13,56 & -11,55\\
+BBDC4 & 5 & 52,65 & 60,41 & 53,47 & 0,87 & 0,77\\
+CMIG4 & 21 & 61,14 & 65,94 & 65,94 & -24,00 & -33,14\\
+EQTL3 & 5 & 54,69 & 60,82 & 60,82 & 0,02 & -5,06\\
+GGBR4 & 21 & 44,10 & 61,57 & 61,57 & -23,26 & -28,15\\
+ITUB4 & 21 & 65,07 & 76,86 & 76,86 & 3,16 & -8,98\\
+LREN3 & 10 & 47,08 & 40,83 & 40,83 & -1,06 & 0,08\\
+MGLU3 & 21 & 47,60 & 52,40 & 47,60 & -37,10 & -31,91\\
+PETR3 & 10 & 46,67 & 46,67 & 46,67 & -10,48 & -3,82\\
+PETR4 & 21 & 54,59 & 48,47 & 48,47 & -8,39 & 10,49\\
+PRIO3 & 21 & 48,47 & 48,47 & 48,47 & -20,34 & 3,64\\
+RADL3 & 21 & 67,25 & 58,52 & 58,08 & -1,08 & -0,37\\
+RAIL3 & 21 & 55,46 & 44,98 & 44,98 & -0,17 & 1,60\\
+SANB11 & 21 & 56,33 & 57,21 & 64,19 & 2,77 & 0,10\\
+SBSP3 & 21 & 70,31 & 70,31 & 70,31 & 29,52 & 12,34\\
+SUZB3 & 10 & 37,08 & 37,08 & 37,08 & -6,20 & 4,75\\
+VALE3 & 10 & 33,75 & 71,25 & 71,25 & -10,99 & -20,32\\
+WEGE3 & 21 & 63,76 & 40,61 & 40,61 & 16,13 & 25,04\\
+\hline\end{tabular}}\par\smallskip{\footnotesize Fonte: elaboração própria.}\end{table}
+
+A acurácia média entre ativos é 52,44\%, frente a 55,13\% para a direção majoritária histórica e 54,95\% para o sinal da média histórica. O XGBoost supera estritamente a direção majoritária em 5 ativos e empata em 4. Em magnitude, melhora o RMSE do retorno zero em 6 ativos e o da média histórica em 9. Os resultados distinguem capacidade de acertar o sinal e capacidade de estimar a magnitude. Valores de HR e skills na tabela estão em porcentagem.
+
+LREN3, PETR4, RADL3, RAIL3 e WEGE3 superam a direção majoritária histórica. WEGE3 também reduz o erro frente às duas referências de magnitude. SBSP3 apresenta elevada acurácia, mas empata com a direção majoritária; isso mostra por que um percentual alto de acertos, isoladamente, não certifica ganho preditivo. O skill frente ao retorno zero e o R-quadrado usam referências diferentes: é possível superar o retorno zero e ainda apresentar R-quadrado negativo frente à média retrospectiva do teste.
+
+\subsection{Horizontes e estabilidade temporal}
+
+\begin{table}[H]\centering
+\caption{Diagnóstico de todos os horizontes em 2025, sem nova seleção.}
+{\footnotesize\begin{tabular}{rrrrr}\hline
+h & HR XGB (\%) & HR maj. (\%) & $100S_0$ médio & Ativos com melhora\\ \hline
+5 & 50,67 & 51,78 & -3,81 & 6\\
+10 & 50,27 & 54,31 & -2,55 & 6\\
+21 & 54,65 & 54,83 & -10,33 & 5\\
+\hline\end{tabular}}\par\smallskip{\footnotesize Fonte: elaboração própria.}\end{table}
+
+Os três horizontes são mostrados como diagnóstico retrospectivo. Seu desempenho em 2025 não é utilizado para substituir a escolha feita em 2024. Cada horizonte possui quantidade diferente de alvos elegíveis e graus distintos de sobreposição.
+
+\begin{figure}[H]\centering
+\caption{Heterogeneidade do erro preditivo por ativo e horizonte.}
+\includegraphics[width=0.92\textwidth]{05_Resultados/predicao_xgb/skill_horizontes.png}
+\par\smallskip{\footnotesize Fonte: elaboração própria.}\end{figure}
+
+\begin{table}[H]\centering
+\caption{Estabilidade trimestral dos horizontes previamente selecionados.}
+{\footnotesize\begin{tabular}{lrrr}\hline
+Trimestre & HR XGB (\%) & HR maj. (\%) & HR média (\%)\\ \hline
+2025Q1 & 52,87 & 52,21 & 50,25\\
+2025Q2 & 55,90 & 50,57 & 53,20\\
+2025Q3 & 50,30 & 54,02 & 53,41\\
+2025Q4 & 50,95 & 67,78 & 66,68\\
+\hline\end{tabular}}\par\smallskip{\footnotesize Fonte: elaboração própria.}\end{table}
+
+\begin{figure}[H]\centering
+\caption{Comparação trimestral com referências disponíveis no instante da previsão.}
+\includegraphics[width=0.92\textwidth]{05_Resultados/predicao_xgb/estabilidade_trimestral.png}
+\par\smallskip{\footnotesize Fonte: elaboração própria.}\end{figure}
+
+No segundo trimestre, a acurácia média do XGBoost é 55,90\%, contra 50,57\% da direção majoritária histórica. No quarto trimestre, o modelo alcança 50,95\%, enquanto essa referência atinge 67,78\%. Essa mudança evidencia dependência temporal do desempenho, sem permitir identificar sua causa somente pelas métricas agregadas.
+
+As médias trimestrais atribuem o mesmo peso a cada ativo. O trimestre corresponde à data de origem da previsão; um alvo pode terminar no trimestre seguinte, desde que concluído até o final do teste. Os alvos sobrepostos e os choques comuns entre ações impedem tratar os pares como observações independentes. As diferenças apresentadas são descritivas, sem interpretação automática de significância estatística.
+
+\subsection{Atributos e limites da explicabilidade}
+
+\begin{figure}[H]\centering
+\caption{Participação relativa dos atributos nos resumos SHAP históricos.}
+\includegraphics[width=0.92\textwidth]{05_Resultados/predicao_xgb/shap_historico.png}
+\par\smallskip{\footnotesize Fonte: elaboração própria.}\end{figure}
+
+Nos resumos disponíveis, os atributos de momentum de 252 e 126 pregões possuem as maiores participações médias, seguidos por medidas de risco de mercado, volatilidade e tendência de mercado de 63 pregões. A presença dessas variáveis descreve os modelos salvos; não prova que elas tenham acrescentado poder preditivo fora da amostra.
+
+Para cada ativo, normaliza-se a média do valor absoluto de SHAP pela soma de seus atributos; as participações são então promediadas igualmente entre os vinte ativos. Valores absolutos informam intensidade de contribuição, sem indicar se um atributo eleva ou reduz a previsão. Os arquivos disponíveis são resumos dos modelos salvos, e não explicações individuais das previsões OOF de 2025. Portanto, a figura não demonstra estabilidade temporal, causalidade econômica ou importância exclusiva no teste.
+
+O conjunto de evidências aponta desempenho heterogêneo e capacidade limitada de previsão de magnitude. O retorno da carteira não constitui validação isolada do XGBoost. Embora o horizonte tenha sido escolhido em 2024, os artefatos preservam a seleção original entre regressor e classificador, que pode consultar o OOF completo. A validação interna de hiperparâmetros também precisa ser auditada quanto à separação de alvos sobrepostos. Uma avaliação confirmatória exige reconstruir treino e seleção de forma aninhada antes de um novo período de teste.

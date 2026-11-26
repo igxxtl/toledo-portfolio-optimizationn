@@ -1,0 +1,33 @@
+\subsection*{Avaliação humana da classificação de sentimento}
+
+Foram avaliados 300 registros da amostra aleatória simples de 300 manchetes, selecionada com semente 2025. Um único avaliador humano classificou as manchetes sem visualizar os rótulos do modelo na interface. A coluna denominada consenso no formulário reproduz a avaliação individual; não representa consenso entre avaliadores. Os rótulos humanos são a referência operacional desta comparação, sujeitos a subjetividade.
+
+\begin{table}[H]\centering\caption{Classificação do modelo em comparação com a referência humana.}
+
+\begin{tabular}{lrrrr}\hline Classe & Suporte humano & Precisão (\%) & Revocação (\%) & F1 (\%) \\ \hline
+
+Positivo & 81 & 43,14 & 81,48 & 56,41 \\
+
+Negativo & 74 & 61,96 & 77,03 & 68,67 \\
+
+Neutro & 145 & 76,36 & 28,97 & 42,00 \\
+
+\hline\end{tabular}\par\smallskip{\footnotesize Fonte: elaboração própria.}\end{table}
+
+A concordância observada é 55,00\% (165 de 300), com macro-F1 de 55,69\% e coeficiente kappa de Cohen de 0.355. A referência de sempre atribuir a classe humana mais frequente alcançaria 48,33\% de concordância nessa amostra.
+
+\begin{table}[H]\centering\caption{Matriz de confusão do sentimento: linhas humanas e colunas do modelo.}
+
+\begin{tabular}{lrrr}\hline Humano / Modelo & Positivo & Negativo & Neutro \\ \hline
+
+Positivo & 66 & 8 & 7\\
+
+Negativo & 11 & 57 & 6\\
+
+Neutro & 76 & 27 & 42\\
+
+\hline\end{tabular}\par\smallskip{\footnotesize Fonte: elaboração própria.}\end{table}
+
+A principal divergência está na classe neutra: dos 145 registros assim classificados pelo humano, o modelo atribui positivo a 76 e negativo a 27. O modelo utiliza a classe positiva em 153 registros, frente a 81 na referência humana. Isso indica maior frequência de atribuição de polaridade pelo modelo nesta amostra, sobretudo positiva, em comparação com o critério do avaliador. O contraste sugere revisar os critérios de neutralidade e exemplos do prompt antes de uma nova rodada de classificação, cuja avaliação deve utilizar uma amostra separada para evitar adaptação à referência já observada.
+
+O kappa compara a concordância observada com aquela esperada pelas frequências marginais; não mede concordância entre dois avaliadores humanos. Divergências podem decorrer de erro do modelo ou de interpretação humana. Não foi mensurada a confiabilidade entre avaliadores humanos. A amostra abrange registros do corpus completo e não apenas notícias habilitadas no rebalanceamento de 2025. Registros de eventos relacionados podem ser dependentes. Esses indicadores avaliam a rotulação textual, sem demonstrar capacidade de antecipar retornos ou contribuição financeira do sentimento.

@@ -1,0 +1,13 @@
+{
+  "client_date": "2026-11-08",
+  "proposed_window": [
+    "2026-04-09",
+    "2026-11-08"
+  ],
+  "status": "receita congelada antes de solicitar novos precos",
+  "sha256": {
+    "analise_resultados/metodologia_xgb/escolhas_2024.csv": "6ccbd62b9f4667a622bcd7d651c3f2e8a0e3810fdd2835cb0b1b95676d8ea218",
+    "analise_resultados/metodologia_xgb/protocolo.json": "db11d62937edb25e425d90e2848252ebc32b611896d0a6ee8f440fc339f30c38",
+    "analise_resultados/metodologia_xgb/selecao_features_global_2024.csv": "70f73270132deb11138ec4e680e090ccb628a8769be17044ec0aff735c9722a8"
+  }
+}

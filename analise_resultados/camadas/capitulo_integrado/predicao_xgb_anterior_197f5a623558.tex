@@ -1,0 +1,200 @@
+\subsection{Inventário de todas as previsões quantitativas disponíveis}
+
+O inventário contém 60 combinações de vinte ativos e três horizontes (5, 10 e 21 pregões), totalizando 41,852 previsões OOF entre 2023-02-14 e 2026-03-31. Os vinte arquivos de vencedores são aliases das séries por horizonte e não são contados novamente. Cada previsão possui data, retorno realizado, retorno estimado, erro e fold. As métricas abaixo utilizam os alvos originais salvos no treinamento, enquanto o teste financeiro de 2025 é um recorte específico discutido anteriormente.
+
+\begin{table}[H]\centering
+\caption{Métricas do histórico OOF completo por horizonte (médias entre ativos).}
+{\footnotesize\begin{tabular}{rrrrrrr}\hline
+h & Previsões & HR (\%) & MAE$\times100$ & RMSE$\times100$ & R$^2$ & NRMSE\\ \hline
+5 & 14005 & 51,74 & 3,16 & 4,14 & -0,033 & 1,016\\
+10 & 13965 & 52,49 & 4,63 & 5,95 & -0,050 & 1,024\\
+21 & 13882 & 54,73 & 7,05 & 8,91 & -0,112 & 1,053\\
+\hline\end{tabular}}\par\smallskip{\footnotesize Fonte: elaboração própria.}\end{table}
+
+MAE e RMSE estão multiplicados por 100 em unidades de log-retorno, e não correspondem exatamente a percentuais de retorno simples. São médias simples das métricas dos vinte ativos; não se calcula um R-quadrado agregado misturando as séries. Todos os resultados individuais seguem na tabela completa e nos arquivos por ano e por fold. A extensão até 2026 descreve o acervo de treinamento e não amplia retroativamente o período do experimento financeiro de 2025.
+
+A reconciliação identificou 25 combinações em que as métricas de erro do resumo histórico não correspondem às previsões finais salvas. O código calcula MAE, RMSE e R-quadrado do regressor antes de escolher o classificador, mas pode exportar a previsão do classificador vencedor sem atualizar essas métricas. Por isso, as tabelas abaixo recalculam todas as métricas a partir dos pares y-real/y-pred efetivamente armazenados, sem alterar os arquivos originais. A acurácia direcional do resumo foi reproduzida nas sessenta combinações.
+
+\subsection{Como as métricas se relacionam}
+
+Para o erro $e_t=\widehat y_t-y_t$, MAE é a média de $|e_t|$, MSE é a média de $e_t^2$ e RMSE é a raiz do MSE. O RMSE dá maior peso a erros grandes e é pelo menos tão alto quanto o MAE na mesma amostra. A acurácia direcional ignora o tamanho do erro: uma previsão pode acertar alta ou baixa e ainda errar fortemente sua intensidade.
+
+Com a variância populacional dos alvos $\sigma_y^2$, tem-se $R^2=1-\mathrm{MSE}/\sigma_y^2$ e $\mathrm{NRMSE}=\mathrm{RMSE}/\sigma_y=\sqrt{1-R^2}$. Assim, R-quadrado e NRMSE expressam a mesma informação de erro normalizado, em escalas distintas. R-quadrado negativo significa erro superior ao da média retrospectiva dos alvos da amostra; essa média não é uma previsão negociável.
+
+A correlação de Pearson mede associação linear entre previsão e resultado, mas não sua calibração. Se $r=\mathrm{corr}(y,\widehat y)$, $k=\sigma_{\widehat y}/\sigma_y$ e $b=\mathrm{média}(\widehat y-y)/\sigma_y$, então $R^2=2rk-k^2-b^2$. Mesmo correlação positiva pode coexistir com R-quadrado negativo se a amplitude ou o viés estiverem inadequados.
+
+\begin{figure}[H]\centering
+\caption{Relação entre qualidade da direção e da magnitude no histórico OOF.}
+\includegraphics[width=0.95\textwidth]{05_Resultados/predicao_xgb/relacao_acuracia_r2.png}
+\par\smallskip{\footnotesize Fonte: elaboração própria.}\end{figure}
+
+Entre as sessenta combinações, a correlação de Pearson entre acurácia direcional e R-quadrado é 0,176. Essa associação é descritiva: as combinações compartilham datas e ativos e não constituem sessenta experimentos independentes. Não há identidade matemática entre acurácia e R-quadrado, diferentemente da relação entre NRMSE e R-quadrado.
+
+\subsection{Métricas individuais de todas as combinações}
+
+As tabelas por horizonte apresentam toda a cobertura, incluindo a correlação entre previsão e alvo (r). Os registros individuais, métricas por ano e por fold foram preservados para rastrear mudanças de desempenho. Os arquivos armazenam a previsão do estimador escolhido em cada combinação. O resumo histórico contém acurácia de regressor e classificador, mas não preserva ambas as séries perdedoras; não é possível reconstruir seus MAE, RMSE ou R-quadrado separadamente sem nova execução.
+
+\begin{table}[H]\centering
+\caption{Todas as previsões OOF: horizonte de 5 pregões.}
+{\footnotesize\begin{tabular}{lrrrrrr}\hline
+Ativo & N & HR (\%) & MAE$\times100$ & RMSE$\times100$ & R$^2$ & r\\ \hline
+ABEV3 & 719 & 51,88 & 2,25 & 3,13 & -0,034 & -0,015\\
+B3SA3 & 694 & 51,01 & 3,36 & 4,35 & -0,033 & -0,017\\
+BBAS3 & 644 & 51,55 & 2,65 & 3,61 & -0,018 & 0,047\\
+BBDC4 & 694 & 50,00 & 2,85 & 3,86 & -0,024 & 0,085\\
+CMIG4 & 694 & 56,92 & 2,48 & 3,41 & -0,020 & -0,023\\
+EQTL3 & 719 & 49,65 & 2,44 & 3,12 & -0,043 & -0,040\\
+GGBR4 & 719 & 50,90 & 3,13 & 3,92 & -0,056 & 0,004\\
+ITUB4 & 719 & 52,57 & 2,21 & 2,91 & -0,047 & 0,085\\
+LREN3 & 694 & 50,43 & 4,25 & 5,45 & -0,015 & 0,058\\
+MGLU3 & 669 & 54,71 & 7,26 & 9,39 & -0,078 & -0,029\\
+PETR3 & 719 & 55,35 & 3,24 & 4,26 & 0,004 & 0,080\\
+PETR4 & 719 & 57,16 & 3,05 & 3,98 & -0,040 & -0,045\\
+PRIO3 & 694 & 50,72 & 3,62 & 4,59 & -0,071 & -0,062\\
+RADL3 & 719 & 49,93 & 3,35 & 4,74 & -0,053 & -0,063\\
+RAIL3 & 694 & 48,41 & 3,07 & 3,87 & -0,023 & -0,028\\
+SANB11 & 669 & 48,88 & 2,70 & 3,48 & -0,046 & -0,131\\
+SBSP3 & 719 & 61,20 & 2,50 & 3,21 & -0,001 & 0,162\\
+SUZB3 & 719 & 42,98 & 2,86 & 3,78 & -0,030 & -0,042\\
+VALE3 & 694 & 46,11 & 2,90 & 3,67 & -0,036 & -0,084\\
+WEGE3 & 694 & 54,47 & 3,04 & 4,00 & 0,003 & 0,114\\
+\hline\end{tabular}}\par\smallskip{\footnotesize Fonte: elaboração própria.}\end{table}
+
+\begin{table}[H]\centering
+\caption{Todas as previsões OOF: horizonte de 10 pregões.}
+{\footnotesize\begin{tabular}{lrrrrrr}\hline
+Ativo & N & HR (\%) & MAE$\times100$ & RMSE$\times100$ & R$^2$ & r\\ \hline
+ABEV3 & 717 & 48,26 & 3,50 & 4,67 & -0,074 & -0,109\\
+B3SA3 & 692 & 52,31 & 4,91 & 6,19 & -0,028 & 0,108\\
+BBAS3 & 642 & 51,71 & 4,02 & 5,51 & -0,075 & -0,213\\
+BBDC4 & 692 & 54,48 & 4,23 & 5,55 & -0,015 & 0,182\\
+CMIG4 & 692 & 60,98 & 3,35 & 4,39 & 0,035 & 0,220\\
+EQTL3 & 717 & 47,84 & 3,55 & 4,44 & -0,129 & -0,024\\
+GGBR4 & 717 & 53,00 & 4,36 & 5,55 & -0,011 & 0,088\\
+ITUB4 & 717 & 50,49 & 3,44 & 4,45 & -0,153 & -0,043\\
+LREN3 & 692 & 53,18 & 6,27 & 7,92 & -0,012 & 0,066\\
+MGLU3 & 667 & 56,37 & 10,82 & 14,00 & -0,122 & -0,176\\
+PETR3 & 717 & 63,60 & 4,89 & 6,31 & 0,022 & 0,163\\
+PETR4 & 717 & 62,48 & 4,56 & 5,89 & -0,010 & 0,040\\
+PRIO3 & 692 & 53,47 & 5,04 & 6,38 & -0,069 & -0,072\\
+RADL3 & 717 & 45,19 & 5,06 & 6,77 & -0,058 & -0,037\\
+RAIL3 & 692 & 46,68 & 4,08 & 5,11 & -0,028 & -0,085\\
+SANB11 & 667 & 49,33 & 4,11 & 5,17 & -0,066 & -0,009\\
+SBSP3 & 717 & 56,21 & 3,81 & 4,72 & -0,104 & 0,049\\
+SUZB3 & 717 & 40,03 & 4,24 & 5,41 & -0,098 & -0,043\\
+VALE3 & 692 & 47,54 & 4,14 & 5,11 & -0,042 & -0,059\\
+WEGE3 & 692 & 56,65 & 4,31 & 5,47 & 0,036 & 0,295\\
+\hline\end{tabular}}\par\smallskip{\footnotesize Fonte: elaboração própria.}\end{table}
+
+\begin{table}[H]\centering
+\caption{Todas as previsões OOF: horizonte de 21 pregões.}
+{\footnotesize\begin{tabular}{lrrrrrr}\hline
+Ativo & N & HR (\%) & MAE$\times100$ & RMSE$\times100$ & R$^2$ & r\\ \hline
+ABEV3 & 713 & 51,47 & 5,95 & 7,67 & -0,211 & -0,171\\
+B3SA3 & 688 & 53,20 & 7,39 & 9,03 & -0,050 & -0,008\\
+BBAS3 & 637 & 47,88 & 6,65 & 8,59 & -0,108 & -0,052\\
+BBDC4 & 688 & 47,67 & 7,43 & 9,25 & -0,158 & 0,155\\
+CMIG4 & 688 & 62,94 & 4,88 & 6,38 & -0,260 & -0,124\\
+EQTL3 & 713 & 51,05 & 5,07 & 6,18 & -0,007 & 0,062\\
+GGBR4 & 713 & 53,16 & 6,44 & 7,95 & -0,079 & 0,110\\
+ITUB4 & 713 & 52,59 & 5,56 & 7,01 & -0,277 & 0,121\\
+LREN3 & 688 & 48,84 & 10,34 & 13,01 & -0,108 & -0,091\\
+MGLU3 & 662 & 59,06 & 15,76 & 20,37 & -0,139 & -0,075\\
+PETR3 & 713 & 66,06 & 7,00 & 9,11 & -0,044 & 0,077\\
+PETR4 & 713 & 68,16 & 6,26 & 8,13 & 0,019 & 0,212\\
+PRIO3 & 688 & 56,54 & 8,37 & 10,21 & -0,230 & -0,068\\
+RADL3 & 713 & 57,22 & 7,51 & 10,24 & -0,052 & -0,013\\
+RAIL3 & 688 & 52,18 & 5,56 & 7,08 & -0,087 & -0,098\\
+SANB11 & 662 & 52,57 & 6,18 & 7,54 & -0,049 & 0,050\\
+SBSP3 & 713 & 64,94 & 5,44 & 6,67 & -0,121 & 0,023\\
+SUZB3 & 713 & 48,25 & 6,66 & 8,24 & -0,207 & -0,066\\
+VALE3 & 688 & 42,01 & 6,30 & 7,78 & -0,159 & -0,114\\
+WEGE3 & 688 & 58,87 & 6,28 & 7,71 & 0,094 & 0,409\\
+\hline\end{tabular}}\par\smallskip{\footnotesize Fonte: elaboração própria.}\end{table}
+
+\subsection{Avaliação preditiva de cada camada e contribuição das notícias}
+
+Esta análise confronta cada previsão com o retorno realizado. Seu objetivo é responder se o componente textual melhora Q e se a atualização Black--Litterman melhora a previsão. Não utiliza retorno financeiro de carteiras como substituto de qualidade preditiva.
+
+São comparadas sete configurações nas mesmas observações: XGBoost; Q completo; Q sem polaridade textual; BL alimentado somente pelo XGBoost; BL sem polaridade; BL completo; e prior sem views. No controle sem polaridade, o sentimento é fixado em zero, mas a contagem de notícias, a cobertura, o peso do sinal quantitativo, a matriz de incerteza, o gate e o prior permanecem iguais. Assim, a diferença contra a versão completa isola a contribuição numérica da polaridade textual, condicionada ao mecanismo de cobertura existente. Ela não representa ausência total de notícias, pois a quantidade de manchetes continua participando da confiança.
+
+O controle BL com XGB utiliza o retorno quantitativo como Q, mas mantém a matriz de incerteza e o gate da rodada original. Sua comparação com o XGBoost isola a atualização pelo prior e pela covariância sob essa confiança. Não se remove o gate nesse contraste, pois isso alteraria simultaneamente outra parte do sistema.
+
+A avaliação no horizonte nativo utiliza 228 pares ativo-data de 2025, dos quais 40 possuem notícias e 6 atingem o gate. O alvo é o log-retorno realizado em h pregões dividido por h, menos a referência diária livre de risco. O XGBoost e Q recebem a mesma escala; prior e posterior mantêm a escala diária do motor. A aproximação entre log-retornos e retornos aritméticos do BL permanece explícita. As classificações são do sinal do excesso de retorno, e não do retorno bruto.
+
+O score de magnitude é $S=1-\mathrm{MSE}_{modelo}/\mathrm{MSE}_{zero}$, usando zero excesso como referência (equivalente à referência livre de risco nesta escala). Valor positivo indica melhora de erro contra essa referência, zero indica empate e valor negativo indica piora. Não é uma nota arbitrária de zero a cem. A acurácia balanceada é a média da proporção de acertos em cada classe de sinal presente, reduzindo a influência do desequilíbrio entre altas e baixas.
+
+\begin{table}[H]\centering
+\caption{Scores preditivos no mesmo alvo e nas mesmas observações.}
+{\footnotesize\begin{tabular}{lrrrrrrr}\hline
+Previsão & N & HR (\%) & BA (\%) & MAE & RMSE & $100S$ & R$^2$\\ \hline
+XGBoost & 228 & 46,05 & 47,07 & 41,35 & 57,11 & -10,22 & -0,106\\
+Q sem polaridade & 228 & 46,05 & 47,22 & 41,30 & 56,88 & -9,32 & -0,097\\
+Q completo & 228 & 46,93 & 47,80 & 41,61 & 57,46 & -11,59 & -0,119\\
+BL com XGB & 228 & 53,07 & 50,11 & 39,60 & 54,23 & 0,59 & 0,003\\
+BL sem polaridade & 228 & 50,88 & 47,78 & 39,65 & 54,29 & 0,39 & 0,001\\
+BL completo & 228 & 55,70 & 52,37 & 39,20 & 53,82 & 2,12 & 0,018\\
+Prior & 228 & 54,39 & 50,00 & 39,47 & 54,18 & 0,79 & 0,005\\
+\hline\end{tabular}}\par\smallskip{\footnotesize Fonte: elaboração própria.}\end{table}
+
+MAE e RMSE estão em pontos-base por dia. Menor erro é melhor; maior acurácia, acurácia balanceada, R-quadrado e score é melhor. Esses critérios podem apontar vencedores distintos, pois acertar o sinal não garante estimar corretamente a magnitude.
+
+\begin{table}[H]\centering
+\caption{Efeito incremental pareado no horizonte selecionado.}
+{\footnotesize\begin{tabular}{lrrr}\hline
+Comparação & N & Redução MSE (\%) & Ganho HR (p.p.)\\ \hline
+XGBoost / Q completo & 228 & -1,24 & 0,88\\
+Q sem polaridade / Q completo & 228 & -2,07 & 0,88\\
+BL sem polaridade / BL completo & 228 & 1,73 & 4,82\\
+XGBoost / BL com XGB & 228 & 9,81 & 7,02\\
+Q completo / BL completo & 228 & 12,28 & 8,77\\
+Prior / BL completo & 228 & 1,34 & 1,32\\
+\hline\end{tabular}}\par\smallskip{\footnotesize Fonte: elaboração própria.}\end{table}
+
+Na tabela de efeitos, redução positiva de MSE indica melhora e ganho positivo de HR indica mais acertos de sinal. XGB para Q mede a mistura completa e não isola sentimento: a cobertura também muda o peso quantitativo. Q sem polaridade para Q completo e BL sem polaridade para BL completo são os controles específicos da polaridade textual.
+
+\begin{figure}[H]\centering
+\caption{Comparação de erro e acerto balanceado das previsões de cada camada.}
+\includegraphics[width=\textwidth]{05_Resultados/predicao_xgb/scores_camadas.png}
+\par\smallskip{\footnotesize Fonte: elaboração própria.}\end{figure}
+
+\begin{table}[H]\centering
+\caption{Efeito restrito às observações que possuem manchetes.}
+{\footnotesize\begin{tabular}{lrrr}\hline
+Comparação & N & Redução MSE (\%) & Ganho HR (p.p.)\\ \hline
+XGBoost / Q completo & 40 & -5,13 & 5,00\\
+Q sem polaridade / Q completo & 40 & -8,78 & 5,00\\
+BL sem polaridade / BL completo & 40 & 2,96 & 15,00\\
+XGBoost / BL com XGB & 40 & 6,44 & -10,00\\
+Q completo / BL completo & 40 & 13,17 & -12,50\\
+Prior / BL completo & 40 & 2,98 & 2,50\\
+\hline\end{tabular}}\par\smallskip{\footnotesize Fonte: elaboração própria.}\end{table}
+
+Os efeitos com gate ativo também foram exportados, mas envolvem apenas 6 pares e são estritamente descritivos. Mesmo com um gate ativo em um papel, a covariância pode transmitir a mudança a outros ativos no mesmo rebalanceamento. Por isso, o efeito textual sobre o posterior não precisa estar restrito aos ativos com manchetes.
+
+\subsection{Sensibilidade à definição de previsão diária}
+
+Como o BL trabalha na frequência diária, calcula-se também o erro contra o retorno simples do pregão seguinte ao sinal, com todos os 240 pares mensais. Para XGB e Q, a previsão de log-retorno diário equivalente é convertida em retorno simples por exponenciação; o posterior e o prior são utilizados como retornos simples excedentes. Essa conversão supõe uma taxa diária equivalente constante e não transforma o XGBoost em um modelo treinado para um pregão. O horizonte nativo e o pregão seguinte são tarefas distintas; seus scores não devem ser misturados.
+
+\begin{table}[H]\centering
+\caption{Scores contra o retorno simples excedente no pregão seguinte.}
+{\footnotesize\begin{tabular}{lrrrrrrr}\hline
+Previsão & N & HR (\%) & BA (\%) & MAE & RMSE & $100S$ & R$^2$\\ \hline
+XGBoost & 240 & 50,00 & 48,68 & 133,85 & 186,89 & -1,11 & -0,017\\
+Q sem polaridade & 240 & 49,17 & 47,65 & 133,85 & 186,92 & -1,13 & -0,017\\
+Q completo & 240 & 50,00 & 48,86 & 133,71 & 187,09 & -1,33 & -0,019\\
+BL com XGB & 240 & 46,67 & 50,42 & 133,69 & 185,80 & 0,07 & -0,005\\
+BL sem polaridade & 240 & 47,08 & 50,98 & 133,81 & 185,95 & -0,09 & -0,007\\
+BL completo & 240 & 49,17 & 53,40 & 133,34 & 185,48 & 0,42 & -0,002\\
+Prior & 240 & 44,58 & 50,00 & 134,00 & 186,14 & -0,30 & -0,009\\
+\hline\end{tabular}}\par\smallskip{\footnotesize Fonte: elaboração própria.}\end{table}
+
+As comparações são retrospectivas e limitadas às decisões mensais do experimento. Os horizontes e a configuração do BL não foram escolhidos novamente por esses scores. A amostra possui dependência temporal e entre ativos; diferenças pequenas não são declaradas estatisticamente significativas. O efeito controlado indica o que mudou nesta execução ao retirar a polaridade, não uma garantia de contribuição preditiva em outro período.
+
+A polaridade textual altera o MSE de Q em uma redução de -2,07\% e o do posterior em 1,73\%. O sinal negativo no primeiro resultado representa piora de magnitude em Q. Neste experimento, o efeito textual não é uniformemente favorável: sua combinação com a atualização BL apresenta resultado diferente da mistura direta em Q.
+
+Neste alvo, o menor RMSE pertence a BL completo, com 53,82 pontos-base, e a maior acurácia pertence a BL completo, com 55,70\%. As comparações específicas de sentimento e atualização BL devem ser lidas separadamente para identificar a origem dessa diferença.
+
+\subsection{Alcance da avaliação conjunta}
+
+A comparação permite separar três perguntas: qual sinal foi previsto, qual magnitude foi estimada e quanto a integração alterou a previsão. O histórico completo, os recortes anuais e os folds são descrições dos artefatos existentes. A escolha original entre regressor e classificador e os ajustes de hiperparâmetros não foram refeitos de forma aninhada. Horizontes sobrepostos, empresas relacionadas e configurações selecionadas retrospectivamente limitam a independência das observações. Nenhuma dessas métricas, isoladamente, comprova rentabilidade ou ganho causal de uma camada.

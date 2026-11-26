@@ -1,0 +1,13 @@
+{
+  "status": "passed",
+  "pages": 10,
+  "tables": 9,
+  "figures": 2,
+  "news_gate": 3,
+  "numeric_data_checks": "passed",
+  "source_hashes": "passed",
+  "text_extraction": "no replacement characters",
+  "text_bounds": "within page margins",
+  "visual_review": "all 10 rendered pages inspected",
+  "latex_compile": "success, desktop editor compiler"
+}

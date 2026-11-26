@@ -1,0 +1,21 @@
+{
+  "cases": 1,
+  "forecast_pairs_test": 245,
+  "chosen_counts": {
+    "sq_regular_w0": 1
+  },
+  "wins_vs_current": 0,
+  "wins_vs_zero": 0,
+  "wins_vs_historical": 0,
+  "current_horizon": {
+    "assets": 1,
+    "rmse_current": 0.034257957255035075,
+    "rmse_new": 0.03497303286366481,
+    "mae_current": 0.023996389048931827,
+    "mae_new": 0.02472052418035795,
+    "hr_current": 45.714285714285715,
+    "hr_new": 42.44897959183673,
+    "wins_rmse": 0
+  },
+  "caution": "2025 ja foi examinado na pesquisa: resultado retrospectivo; nao e novo teste independente."
+}

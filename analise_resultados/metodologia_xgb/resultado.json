@@ -1,0 +1,23 @@
+{
+  "cases": 60,
+  "chosen_counts": {
+    "pool_vol": 17,
+    "movel_4a": 15,
+    "expansivo": 12,
+    "vol_normalizada": 9,
+    "movel_2a": 6,
+    "pool": 1
+  },
+  "wins_current": 41,
+  "wins_previous": 31,
+  "wins_features": 30,
+  "wins_zero": 25,
+  "wins_historical": 27,
+  "current_horizons": {
+    "assets": 20,
+    "rmse_current": 0.0750241601036313,
+    "rmse_new": 0.0734294379475752,
+    "hr_current": 52.436540118230695,
+    "hr_new": 53.89670780976147
+  }
+}

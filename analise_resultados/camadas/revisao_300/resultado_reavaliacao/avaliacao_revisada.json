@@ -1,0 +1,55 @@
+{
+  "n": 300,
+  "n_reavaliados": 102,
+  "n_mantidos_sem_reavaliacao": 198,
+  "rotulos_alterados": 74,
+  "rotulos_mantidos_na_reavaliacao": 28,
+  "concordancia_modelo_original": 0.73,
+  "acordos": 219,
+  "macro_f1": 0.7218839737011105,
+  "kappa": 0.5951282094003565,
+  "referencia_majoritaria": 0.39,
+  "metricas_por_classe": [
+    {
+      "classe": "positivo",
+      "suporte": 110,
+      "precisao": 0.673202614379085,
+      "revocacao": 0.9363636363636364,
+      "f1": 0.7832699619771863
+    },
+    {
+      "classe": "negativo",
+      "suporte": 73,
+      "precisao": 0.7391304347826086,
+      "revocacao": 0.9315068493150684,
+      "f1": 0.8242424242424242
+    },
+    {
+      "classe": "neutro",
+      "suporte": 117,
+      "precisao": 0.8727272727272727,
+      "revocacao": 0.41025641025641024,
+      "f1": 0.5581395348837209
+    }
+  ],
+  "matriz": {
+    "positivo": {
+      "positivo": 103,
+      "negativo": 3,
+      "neutro": 4
+    },
+    "negativo": {
+      "positivo": 2,
+      "negativo": 68,
+      "neutro": 3
+    },
+    "neutro": {
+      "positivo": 48,
+      "negativo": 21,
+      "neutro": 48
+    }
+  },
+  "metodo": "Revisão pelo mesmo humano de 102 divergências após avaliação por IA; possibilidade de consultar rótulos e justificativas. Não é avaliação humana independente ou necessariamente cega; 198 rótulos iniciais mantidos.",
+  "observacoes": "Campo de observação do caso 39 contém o texto 1; preservado literalmente.",
+  "sha256_arquivo_importado": "61A4548749F032AAB4FE7CA1DCD365F42F7B351EA25020745F3309BB23E6A62D"
+}

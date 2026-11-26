@@ -1,0 +1,41 @@
+TESTES DE MELHORIA DO XGBOOST — COMPARAÇÃO COM OS RESULTADOS ATUAIS
+
+Os modelos e previsões atuais foram preservados. Foram testadas oito configurações de regressão pura: perda quadrática com dois perfis de complexidade e pesos temporais lambda=0/1/5; perda absoluta com perfil conservador e lambda=0/1.
+A configuração de cada ativo/horizonte foi escolhida pelo menor RMSE em 2024. Essa escolha ficou fixa para a comparação de 2025. Os oito candidatos fixos também são apresentados, mas seu ranking em 2025 não foi usado para escolher o candidato.
+Treinos expansivos com alvos maturados antes de cada fold. Purga adicional entre treino e early stopping. Após escolher o número de árvores com a validação interna, refit em todos os alvos conhecidos. Em 2025, atualização trimestral, sem reajuste de hiperparâmetros pelo resultado do teste.
+O perfil conservador altera profundidade, peso mínimo da folha e regularização conjuntamente. A comparação entre perfis não identifica isoladamente cada hiperparâmetro. O candidato abs busca erro absoluto, mas ainda é selecionado por RMSE para manter a pergunta sobre magnitude.
+Erros abaixo são médias simples entre os vinte ativos, na escala de log-retorno multiplicada por 100. Não comparar níveis de erro de horizontes diferentes como se fossem o mesmo alvo.
+
+5 pregões:
+  MAE atual 3,20 → candidato 3,14.
+  RMSE atual 4,20 → candidato 4,13; redução 1,59%.
+  Acerto direcional atual 50,67% → candidato 49,35%.
+  Melhora de RMSE em 13/20 ativos; supera retorno zero em 6/20.
+
+10 pregões:
+  MAE atual 4,65 → candidato 4,66.
+  RMSE atual 5,96 → candidato 5,97; redução -0,11%.
+  Acerto direcional atual 50,27% → candidato 51,21%.
+  Melhora de RMSE em 11/20 ativos; supera retorno zero em 6/20.
+
+21 pregões:
+  MAE atual 7,11 → candidato 7,00.
+  RMSE atual 8,97 → candidato 8,82; redução 1,64%.
+  Acerto direcional atual 54,65% → candidato 52,01%.
+  Melhora de RMSE em 12/20 ativos; supera retorno zero em 5/20.
+
+Mantendo o horizonte atualmente utilizado por cada ativo:
+  RMSE médio atual 7,50 → candidato 7,49.
+  MAE médio atual 5,93 → candidato 5,92.
+  Melhora de RMSE em 10/20 ativos.
+  Redução do RMSE médio: 0,15%; acurácia média: 52,44% → 50,92%.
+No conjunto das 60 combinações, melhora frente ao atual em 36/60, frente ao retorno zero em 17/60 e frente à média histórica em 22/60.
+
+INTERPRETAÇÃO E LIMITES
+Nesta execução, as pequenas reduções de erro em cinco e 21 pregões não resolvem a baixa precisão de magnitude. No horizonte de 21 pregões, o acerto de direção também cai. Mantendo os horizontes usados atualmente no sistema, o erro médio praticamente empata com o atual e só metade dos ativos melhora. A rodada não sustenta substituição global do pipeline apenas por esses resultados.
+Melhorar contra o modelo antigo não basta: o candidato também deve superar referências simples. Prever perto de zero pode reduzir RMSE sem revelar sinal útil. Resultados positivos em apenas alguns ativos devem ser tratados como heterogeneidade, não como justificativa para seleção retrospectiva.
+2025 já havia sido examinado nesta pesquisa. A rodada é comparativa retrospectiva, não um novo teste independente. Os hiperparâmetros foram escolhidos usando apenas a validação anterior, mas o desenho experimental foi motivado pelos diagnósticos observados. O histórico de preços locais e a seleção fixa das vinte ações mantêm as limitações de sobrevivência e revisões dos dados.
+O baseline é o conjunto de previsões originalmente salvo, inclusive a seleção histórica entre regressor e classificador. As candidatas usam um novo protocolo de treino; a diferença contra o baseline não isola uma única mudança. Os contrastes em efeitos_controlados.csv comparam pesos/perfis/perdas dentro do mesmo protocolo novo.
+Não foram realizados testes de significância que suponham observações independentes, nem atualização do BL, backtest financeiro ou substituição automática do pipeline.
+Versões: {"xgboost": "3.4.1", "sklearn": "1.9.1", "numpy": "2.3.5", "pandas": "3.0.1", "optuna": "5.0.0"}
+Verificações: maturidade antes de cada decisão; purga no early stopping; mesmos pares; hashes dos artefatos originais inalterados.

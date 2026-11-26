@@ -1,0 +1,62 @@
+\section{Qualidade da classificação de sentimento}
+\label{sec:avaliacao_sentimento}
+
+A classificação de sentimento foi avaliada em uma amostra aleatória simples de 300 manchetes, selecionada com semente 2025. Inicialmente, um único avaliador humano classificou os registros sem visualizar os rótulos do modelo na interface. Posteriormente, foi realizada uma segunda classificação por IA das mesmas manchetes, considerando o título e a ação associada. Os rótulos individuais anteriores não foram consultados pela IA antes de registrar suas decisões, embora o histórico da conversa já contivesse estatísticas agregadas da avaliação inicial. Essa etapa não constitui uma segunda avaliação humana independente.
+
+A comparação entre o avaliador humano e a revisão por IA identificou 102 divergências. Esses casos foram reapresentados ao mesmo avaliador humano em uma interface que permitia consultar os rótulos anteriores e as justificativas da IA. O avaliador alterou 74 rótulos e manteve 28. Os demais 198 registros conservaram a classificação humana inicial. A referência revisada resulta, portanto, de uma revisão humana assistida por IA, e não de consenso entre dois avaliadores humanos. Como a revisão incidiu sobre os casos divergentes e permitia consultar as classificações, seus resultados devem ser apresentados junto aos da avaliação inicial.
+
+\begin{table}[H]
+\centering
+\caption{Concordância do modelo original com as referências humanas inicial e revisada.}
+\label{tab:sentimento_antes_depois}
+{\footnotesize
+\begin{tabular}{@{}lrrrr@{}}
+\hline
+Referência & Registros & Concordância (\%) & Macro-F1 (\%) & Kappa \\ \hline
+Humana inicial & 300 & 55,00 & 55,69 & 0,355 \\
+Humana revisada com apoio de IA & 300 & 73,00 & 72,19 & 0,595 \\
+\hline
+\end{tabular}}
+\par\smallskip{\footnotesize Fonte: elaboração própria.}
+\end{table}
+
+O modelo original e seus rótulos foram mantidos nas duas comparações. Assim, o aumento de concordância de 165 para 219 registros decorre da alteração da referência humana e não de uma melhoria do classificador. A concordância revisada é um resultado descritivo desta amostra, sujeito à influência das informações apresentadas durante a revisão. A referência de sempre atribuir a classe humana revisada mais frequente alcançaria 39,00\% de concordância.
+
+\begin{table}[H]
+\centering
+\caption{Classificação do modelo em comparação com a referência humana revisada.}
+\label{tab:sentimento_metricas_revisadas}
+{\footnotesize
+\begin{tabular}{@{}lrrrr@{}}
+\hline
+Classe & Suporte humano & Precisão (\%) & Revocação (\%) & F1 (\%) \\ \hline
+Positivo & 110 & 67,32 & 93,64 & 78,33 \\
+Negativo & 73 & 73,91 & 93,15 & 82,42 \\
+Neutro & 117 & 87,27 & 41,03 & 55,81 \\
+\hline
+\end{tabular}}
+\par\smallskip{\footnotesize Fonte: elaboração própria.}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Matriz de confusão: referência humana revisada e modelo original.}
+\label{tab:sentimento_confusao_revisada}
+{\footnotesize
+\begin{tabular}{@{}lrrr@{}}
+\hline
+Humano / Modelo & Positivo & Negativo & Neutro \\ \hline
+Positivo & 103 & 3 & 4 \\
+Negativo & 2 & 68 & 3 \\
+Neutro & 48 & 21 & 48 \\
+\hline
+\end{tabular}}
+\par\smallskip{\footnotesize Fonte: elaboração própria. Linhas: referência humana revisada; colunas: modelo original.}
+\end{table}
+
+A principal divergência permanece na neutralidade. Dos 117 registros considerados neutros na referência revisada, o modelo classifica 48 como positivos e 21 como negativos, reconhecendo 48 como neutros. Sua revocação nessa classe é de 41,03\%. O modelo atribui a classe positiva a 153 registros, frente a 110 na referência revisada. Esses números descrevem diferenças de classificação nesta amostra; isoladamente, não demonstram que o modelo ou o avaliador humano apresenta viés sistemático.
+
+O kappa compara a concordância observada com aquela esperada pelas frequências marginais. Nesta análise, ele mede a concordância entre o modelo e cada versão da referência humana, sem estimar a confiabilidade entre avaliadores humanos. Divergências podem refletir erros, ambiguidade das manchetes ou diferenças nos critérios de classificação. Qualquer alteração do prompt ou dos critérios a partir desta revisão deve ser avaliada em uma amostra separada, com protocolo fixado antes da rotulação.
+
+A amostra abrange registros do corpus completo e não apenas notícias habilitadas no rebalanceamento de 2025. Manchetes relacionadas ao mesmo evento podem ser dependentes. Esses indicadores avaliam a classificação textual, sem demonstrar capacidade de antecipar retornos ou contribuição financeira do sentimento.
+

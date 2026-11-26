@@ -1,0 +1,136 @@
+﻿sample_id,ticker,titulo,data,rotulo_avaliador_1,rotulo_avaliador_2,rotulo_consenso,observacao,sentimento,human
+3,LREN3,Lojas Renner (LREN3) troca de look organizacional; veja quais são os benefícios - Investidor10,"Mon, 26 May 2025 07:00:00 GMT",neutro,,neutro,,positivo,neutro
+14,SANB11,Santander (SANB11) pagará R$ 2 bilhões em juros sobre o capital próprio - Money Times,"Thu, 10 Jul 2025 07:00:00 GMT",neutro,,neutro,,positivo,neutro
+15,WEGE3,WEG anuncia nova vice-presidência de tecnologia e integra unidades de automação & sistemas - ADVFN,"Mon, 27 Oct 2025 07:00:00 GMT",neutro,,neutro,,positivo,neutro
+19,BBAS3,"Banco do Brasil (BBAS3): Lucro tomba mais 60% no 3T25, a R$ 3,8 bi, mas fica dentro das expectativas - moneytimes.com.br","Thu, 13 Nov 2025 08:00:00 GMT",neutro,,neutro,,negativo,neutro
+20,SBSP3,"Sabesp (SBSP3) aprova dividendos de 100% do lucro após privatização, mas há uma ""pegadinha"" aí - Estadão","Thu, 20 Jun 2024 07:00:00 GMT",neutro,,neutro,,positivo,neutro
+21,B3SA3,Ibovespa abre com leve queda em meio a‘super quarta’; dólar cai - BPMoney,"Thu, 18 Sep 2025 07:00:00 GMT",negativo,,negativo,,neutro,negativo
+23,SBSP3,TJ-SP nega ação sobre conflito de interesses na privatização da Sabesp - VEJA,"Fri, 26 Jul 2024 07:00:00 GMT",negativo,,negativo,,positivo,negativo
+26,GGBR4,Gerdau firma acordo com Cade para encerrar ações - capitalist.com.br,"Tue, 31 Dec 2024 08:00:00 GMT",negativo,,negativo,,positivo,negativo
+29,PETR3,BB Seguridade (BBSE3) assume a liderança em dividendos; Petrobras (PETR3) fica fora do top 10 - suno.com.br,"Mon, 15 Sep 2025 07:00:00 GMT",positivo,,positivo,,negativo,positivo
+32,RADL3,"Raia Drogasil (RADL3) não agrada, mas analistas veem potencial - Acionista.com.br","Fri, 06 Sep 2024 07:00:00 GMT",positivo,,positivo,,neutro,positivo
+35,LREN3,"Lojas Renner (LREN3) anuncia R$ 223,7 milhões em JCP; veja quem tem direito - suno.com.br","Mon, 08 Dec 2025 08:00:00 GMT",neutro,,neutro,,positivo,neutro
+36,MGLU3,"""Selic em 15% não tem cabimento"", diz Luiza Trajano. Presidente e CEO do Magazine Luiza (MGLU3) criticam travas ao varejo com juros nas alturas - Seu Dinheiro","Mon, 08 Dec 2025 08:00:00 GMT",neutro,,neutro,,negativo,neutro
+38,PETR3,Como ficam as ‘juniors oils’ com a suspensão da venda de ativos pela Petrobras - Bloomberg Línea Brasil,"Tue, 06 Feb 2024 08:00:00 GMT",neutro,,neutro,,negativo,neutro
+41,GGBR4,"Gerdau (GGBR4) 3T25: em linha com o esperado, com forte desempenho na América do Norte novamente compensando os números fracos no Brasil - InvesTalk","Fri, 31 Oct 2025 07:00:00 GMT",positivo,,positivo,,neutro,positivo
+44,GGBR4,Mercado financeiro hoje: Contrato de Gerdau (GGBR4) e Ambipar (AMBP3) movimentam o dia dos investidores - Estadão,"Fri, 16 Aug 2024 07:00:00 GMT",positivo,,positivo,,neutro,positivo
+45,BBAS3,Problemas do Banco do Brasil (BBAS3) e o que investidores devem saber - nordinvestimentos.com.br,"Mon, 26 May 2025 07:00:00 GMT",neutro,,neutro,,negativo,neutro
+53,SANB11,Santander (SANB3) anuncia contratação de assessores de investimento - Estadão,"Wed, 28 Jun 2023 07:00:00 GMT",neutro,,neutro,,positivo,neutro
+58,B3SA3,Banco do Brasil (BBAS3) supera Vale (VALE3) como ação mais negociada por PF’s na B3 - Money Times,"Thu, 11 Sep 2025 07:00:00 GMT",positivo,,positivo,,neutro,positivo
+59,B3SA3,B3 anuncia aumento de investimentos e recompra de ações - Safra,"Mon, 16 Dec 2024 08:00:00 GMT",neutro,,neutro,,positivo,neutro
+65,VALE3,Weg (WEGE3) ultrapassa Vale (VALE3) e consolida posição como terceira maior empresa do Ibovespa - Exame,"Tue, 14 Jan 2025 08:00:00 GMT",positivo,,positivo,,negativo,positivo
+67,VALE3,"Dividendos de janeiro: VALE3, CXSE3, ITSA4, EMBR3 e mais pagam proventos neste mês; veja a agenda completa - Empiricus","Wed, 31 Dec 2025 08:00:00 GMT",neutro,,neutro,,positivo,neutro
+69,B3SA3,Santander eleva recomendação da B3 - guiadoinvestidor.com.br,"Thu, 24 Apr 2025 07:00:00 GMT",neutro,,neutro,,positivo,neutro
+71,PRIO3,"Prio (PRIO3) anuncia recompra de até 86,9 milhões de ações - Estadão","Thu, 18 Dec 2025 08:00:00 GMT",neutro,,neutro,,positivo,neutro
+72,EQTL3,"Equatorial (EQTL3) amplia geração renovável no 2º tri, mas enfrenta um problema, diz Citi - Estadão","Thu, 31 Jul 2025 07:00:00 GMT",neutro,,neutro,,negativo,neutro
+73,SUZB3,"Suzano (SUZB3): Por que as ações sobem mesmo com prejuízo? - Investing.com Brasil - Finanças, Câmbio e Investimentos","Thu, 13 Feb 2025 08:00:00 GMT",negativo,,negativo,,positivo,negativo
+75,RAIL3,Rumo Logística (RAIL3) registra lucro ajustado de R$ 731 milhões no 2T25 - Visno Invest,"Thu, 07 Aug 2025 07:00:00 GMT",neutro,,neutro,,positivo,neutro
+78,WEGE3,Dividendos hoje: Weg (WEGE3) deposita R$ 263 milhões; veja quais acionistas recebem - Estadão,"Wed, 14 Aug 2024 07:00:00 GMT",neutro,,neutro,,positivo,neutro
+79,BBDC3,Bradesco (BBDC4) divulga cronograma de pagamento mensal de JCP relativo a 2024; confira datas - InfoMoney,"Fri, 15 Dec 2023 08:00:00 GMT",neutro,,neutro,,positivo,neutro
+85,BBAS3,Banco do Brasil (BBAS3) vai pagar dividendos hoje? Veja o que esperar - moneytimes.com.br,"Wed, 12 Nov 2025 08:00:00 GMT",neutro,,neutro,,positivo,neutro
+86,B3SA3,Best in Class B3 (B3SA3): tão boa que poderá ter concorrência - Acionista.com.br,"Mon, 18 Mar 2024 07:00:00 GMT",neutro,,neutro,,positivo,neutro
+87,ITUB3,"Dividendos hoje: Itaú Unibanco (ITUB4) distribui R$ 0,0177 proventos; veja quem recebe - Estadão","Fri, 01 Aug 2025 07:00:00 GMT",neutro,,neutro,,positivo,neutro
+90,MGLU3,Fundador do Kabum faz acusação séria contra o Magalu - suno.com.br,"Tue, 25 Apr 2023 07:00:00 GMT",neutro,,neutro,,negativo,neutro
+92,LREN3,Lojas Renner: JPMorgan e Morgan reiteram compra após turbulência; veja por quê - InfoMoney,"Fri, 07 Mar 2025 08:00:00 GMT",neutro,,neutro,,positivo,neutro
+93,RADL3,Raia Drogasil (RADL3) negocia com plano de saúde para ser alternativa ao PS - Nord Investimentos,"Fri, 24 Jan 2025 08:00:00 GMT",neutro,,neutro,,positivo,neutro
+94,GGBR4,Gerdau (GGBR4) e Metalúrgica Gerdau (GOAU4) adiantam dividendos em 2025 - Investidor10,"Wed, 19 Feb 2025 08:00:00 GMT",neutro,,neutro,,positivo,neutro
+95,SBSP3,Sabesp após os R$ 100 por ação: BBI vê mais alta com revisão e expansão no saneamento - InfoMoney,"Wed, 02 Apr 2025 07:00:00 GMT",neutro,,neutro,,positivo,neutro
+99,PETR3,"Mesmo com produção máxima, dividendos da Petrobras (PETR4) seguem no escuro, diz Santander - Estadão","Wed, 24 Sep 2025 07:00:00 GMT",neutro,,neutro,,negativo,neutro
+100,VALE3,"Vale (VALE3) lucra R$ 14,6 bi no 3º trimestre, alta de 9%; valor por ação vem abaixo das projeções - valorinveste.globo.com","Thu, 30 Oct 2025 07:00:00 GMT",positivo,,positivo,,negativo,positivo
+101,PRIO3,"PRIO (PRIO3) vira ‘história de execução’ e se aproxima de nova fase de dividendos, diz BTG - suno.com.br","Tue, 09 Dec 2025 08:00:00 GMT",neutro,,neutro,,positivo,neutro
+103,VALE3,"CMIN3, GGBR4 e VALE3: após alta na B3, qual dessas ações é recomendada para buscar dividendos? - moneytimes.com.br","Thu, 24 Jul 2025 07:00:00 GMT",neutro,,neutro,,positivo,neutro
+105,BBAS3,Banco do Brasil (BBAS3) critica campanha nas redes sociais e diz que acionará medidas legais - moneytimes.com.br,"Sat, 23 Aug 2025 07:00:00 GMT",neutro,,neutro,,negativo,neutro
+107,BBAS3,"Banco do Brasil (BBAS3) precisará provar que superou crise do agro, mercado está otimista com fim do shutdown nos EUA no horizonte, e o que mais você precisa saber sobre a bolsa hoje - seudinheiro.com","Mon, 10 Nov 2025 08:00:00 GMT",neutro,,neutro,,negativo,neutro
+108,BBAS3,"Clientes do BB (BBAS3) já podem ""financiar"" o Pix; veja como funciona - Estadão","Thu, 26 Sep 2024 07:00:00 GMT",neutro,,neutro,,positivo,neutro
+111,VALE3,Quer dividendos da Vale (VALE3)? Hoje é data final para adquirir ações - valorinveste.globo.com,"Thu, 11 Dec 2025 08:00:00 GMT",neutro,,neutro,,positivo,neutro
+114,CMIG4,XP rebaixa Cemig (CMIG4) a neutro e reitera recomendação de compra de Copel (CPLE6) - InfoMoney,"Fri, 27 Sep 2024 07:00:00 GMT",neutro,,neutro,,negativo,neutro
+121,CMIG4,"Nem Cemig (CMIG4), nem Taesa (TAEE11): Saiba qual é a ação do setor elétrico preferida da Empiricus para buscar dividendos - Empiricus","Tue, 19 Aug 2025 07:00:00 GMT",neutro,,neutro,,negativo,neutro
+126,VALE3,"Lucro da Vale (VALE3) cai 24%, mas vem acima das projeções; mineradora anuncia provento bilionário e ADRs sobem em Nova York - seudinheiro.com","Thu, 31 Jul 2025 07:00:00 GMT",negativo,,negativo,,positivo,negativo
+128,BBAS3,"Banco do Brasil negocia parceria com Genial e Warren para investidor, dizem fontes - Bloomberg Línea Brasil","Tue, 29 Apr 2025 07:00:00 GMT",neutro,,neutro,,positivo,neutro
+130,VALE3,"Vale (VALE3) dá bons sinais no 2T23, mesmo com queda no lucro; entenda - Empiricus","Fri, 28 Jul 2023 07:00:00 GMT",neutro,,neutro,,positivo,neutro
+136,PETR3,"Cotado para Petrobras (PETR4), Mercadante deve substituir Prates; confira a agenda desta sexta (05) - Money Times","Fri, 05 Apr 2024 07:00:00 GMT",neutro,,neutro,,negativo,neutro
+137,SANB11,Santander abre vagas para assessores de investimentos em SP; veja detalhes - Estadão,"Tue, 31 Oct 2023 07:00:00 GMT",neutro,,neutro,,positivo,neutro
+140,VALE3,"Vale (VALE3) pagará dividendos de R$ 2,14 por ação e JCP de R$ 0,52 por ação - InfoMoney","Wed, 19 Feb 2025 08:00:00 GMT",neutro,,neutro,,positivo,neutro
+141,BBAS3,"Havaianas vira alvo de polêmica e mexe com a Bolsa; BBAS3, WEGE3 e novas apostas em dividendos entram no radar - A Revista","Thu, 25 Dec 2025 08:00:00 GMT",negativo,,negativo,,neutro,negativo
+145,B3SA3,"B3: volumes operacionais sobem, mas correlação com mercado acionário gera dificuldade - InfoMoney","Wed, 11 Dec 2024 08:00:00 GMT",neutro,,neutro,,negativo,neutro
+147,BBAS3,Banco do Brasil (BBAS3) ainda exige cautela? Veja o que dizem os analistas sobre as ações - suno.com.br,"Thu, 04 Sep 2025 07:00:00 GMT",neutro,,neutro,,negativo,neutro
+148,CMIG4,"Bradesco (BBDC4), Cemig (CMIG4), PetroRecôncavo (RECV3), Cogna (COGN3) e Tenda (TEND3) pagam R$ 5 bilhões em proventos; Itaú (ITUB4) anuncia bônus em ações - Seu Dinheiro","Thu, 18 Dec 2025 08:00:00 GMT",neutro,,neutro,,positivo,neutro
+149,VALE3,Vale (VALE3) e Wabtec fecham parceria para descarbonizar Estrada de Ferro de Carajás - InfoMoney,"Thu, 13 Jul 2023 07:00:00 GMT",neutro,,neutro,,positivo,neutro
+152,BBAS3,"Santander, Bradesco, Itaú e Banco do Brasil: qual ação tem recomendação de compra após o 4T23? - moneytimes.com.br","Wed, 14 Feb 2024 08:00:00 GMT",neutro,,neutro,,positivo,neutro
+157,PETR3,Siemens Energy e Seatrium fecham acordo para eficiência de FPSOs da Petrobras - InfoMoney,"Mon, 07 Jul 2025 07:00:00 GMT",neutro,,neutro,,positivo,neutro
+158,SANB11,Santander (SANB11) e mais: Os bancos envolvidos na recuperação judicial do Grupo Petrópolis - Money Times,"Tue, 28 Mar 2023 07:00:00 GMT",negativo,,negativo,,neutro,negativo
+160,SANB11,"Santander (SANB11) vai depositar R$ 1,5 bilhão na conta dos acionistas; saiba mais sobre os proventos anunciados pelo banco - Seu Dinheiro","Wed, 10 Apr 2024 07:00:00 GMT",neutro,,neutro,,positivo,neutro
+162,RADL3,RD Saúde (RADL3): nova atualização pode reanimar o consenso e elevar o potencial da ação - Acionista.com.br,"Tue, 02 Dec 2025 08:00:00 GMT",neutro,,neutro,,positivo,neutro
+164,PETR3,Quando a Petrobras (PETR4) vai pagar dividendos? Veja datas - suno.com.br,"Mon, 01 Sep 2025 07:00:00 GMT",neutro,,neutro,,positivo,neutro
+165,MGLU3,"Adeus, centavos? Magalu decide grupamento de ações nesta semana; entenda mudança - InfoMoney","Mon, 22 Apr 2024 07:00:00 GMT",neutro,,neutro,,negativo,neutro
+166,B3SA3,B3 lança aplicativo que reúne seus investimentos em um só painel; saiba como funciona - suno.com.br,"Wed, 10 Dec 2025 08:00:00 GMT",neutro,,neutro,,positivo,neutro
+170,BBAS3,"Banco do Brasil (BBAS3): ""Esse temor da interferência política foge da razoabilidade"" - Estadão","Mon, 22 Apr 2024 07:00:00 GMT",neutro,,neutro,,positivo,neutro
+171,B3SA3,"B3 é a 20ª maior bolsa do mundo, veja ranking - Investidor10","Fri, 31 May 2024 07:00:00 GMT",positivo,,positivo,,neutro,positivo
+173,LREN3,Lojas Renner (LREN3) anuncia R$ 223 milhões em JCP e recompra de ações - Investidor10,"Mon, 08 Dec 2025 08:00:00 GMT",neutro,,neutro,,positivo,neutro
+174,PETR3,"Mario Carminatti, que liderou descoberta do pré-sal, é escolhido para diretoria da Petrobras (PETR4), diz Reuters - InfoMoney","Fri, 27 Jan 2023 08:00:00 GMT",neutro,,neutro,,positivo,neutro
+178,SUZB3,Klabin (KLBN11) ou Suzano (SUZB3)? Uma delas está barata. Itaú BBA eleva preço-alvo das duas ações e conta qual é a oportunidade do momento - Seu Dinheiro,"Wed, 27 Mar 2024 17:05:00 GMT",neutro,,neutro,,positivo,neutro
+179,GGBR4,Gerdau (GGBR4) e Metalúrgica Gerdau (GOAU4) aprovam novos programas de recompras de ações - Money Times,"Tue, 21 Jan 2025 08:00:00 GMT",neutro,,neutro,,positivo,neutro
+180,CMIG4,Morgan reforça preferência por Sabesp e corta ações de Cemig e Engie para venda - InfoMoney,"Tue, 21 Jan 2025 08:00:00 GMT",neutro,,neutro,,negativo,neutro
+182,ABEV3,Ambev (ABEV3) é pressionada por preço maior e produção menor; saiba o que fazer com a ação agora - seudinheiro.com,"Thu, 04 Sep 2025 07:00:00 GMT",neutro,,neutro,,negativo,neutro
+189,BBAS3,Banco do Brasil (BBAS3): ação barata ou risco disfarçado? Veja análise - suno.com.br,"Tue, 08 Jul 2025 07:00:00 GMT",negativo,,negativo,,neutro,negativo
+190,RADL3,RD Saúde eleva projeção para abertura de até 350 lojas da Raia e da Drogasil em 2025 - Bloomberg Línea Brasil,"Sun, 01 Dec 2024 08:00:00 GMT",neutro,,neutro,,positivo,neutro
+194,VALE3,"Vale (VALE3) paga JCP de R$ 1,89 por ação nesta quarta-feira (3) - moneytimes.com.br","Wed, 03 Sep 2025 07:00:00 GMT",neutro,,neutro,,positivo,neutro
+196,MGLU3,"Magazine Luiza (MGLU3) vai acelerar oferta de crédito em 2025 mesmo com juros em alta, diz Fred Trajano - Seu Dinheiro","Fri, 14 Mar 2025 07:00:00 GMT",neutro,,neutro,,positivo,neutro
+198,BBAS3,Vale a pena investir em Banco do Brasil (BBAS3)? Citi recomenda compra e eleva preço-alvo - suno.com.br,"Fri, 19 Sep 2025 07:00:00 GMT",neutro,,neutro,,positivo,neutro
+199,ITUB3,Que surpresas reservam os dividendos extraordinários do Itaú (ITUB4)? Veja o que o mercado diz - Estadão,"Thu, 27 Jun 2024 07:00:00 GMT",neutro,,neutro,,positivo,neutro
+200,BBAS3,"Banco do Brasil (BBAS3) aprova pagamento de R$ 1,91 bi em juros sobre capital próprio - InfoMoney","Thu, 15 May 2025 07:00:00 GMT",neutro,,neutro,,positivo,neutro
+201,PETR3,BDRs da B3 pagam mais dividendos do que Petrobras e Banco do Brasil – valem a pena? - InfoMoney,"Mon, 07 Oct 2024 07:00:00 GMT",neutro,,neutro,,negativo,neutro
+202,VALE3,O que levantou as ações da Vale (VALE3)? Entenda o movimento desta quinta (14) - moneytimes.com.br,"Fri, 15 Sep 2023 07:00:00 GMT",neutro,,neutro,,positivo,neutro
+203,PETR3,"Petrobras (PETR4): introduzindo novo preço-alvo de R$ 48,50 para 2025 - InvesTalk","Wed, 25 Sep 2024 07:00:00 GMT",neutro,,neutro,,positivo,neutro
+206,PETR3,"Petrobras fecha em queda nesta sexta-feira (31/10), refletindo volatilidade do petróleo no mercado internacional - ADVFN","Fri, 31 Oct 2025 07:00:00 GMT",neutro,,neutro,,negativo,neutro
+208,ABEV3,Ambev (ABEV3) disputa torneio de melhores cervejas do mundo; Veja quais podem ganhar - suno.com.br,"Sat, 19 Aug 2023 07:00:00 GMT",neutro,,neutro,,positivo,neutro
+209,VALE3,Vale (VALE3) vai pagar dividendos extraordinários em 2025? Lucro forte e dívida em queda no 3T25 animam investidor de renda passiva; veja as projeções para o balanço de hoje - Estadão,"Thu, 30 Oct 2025 07:00:00 GMT",neutro,,neutro,,positivo,neutro
+210,BBAS3,Banco do Brasil (BBAS3) adia pagamento de dividendos; veja nova data - Investidor10,"Thu, 21 Aug 2025 07:00:00 GMT",neutro,,neutro,,negativo,neutro
+213,SUZB3,Suzano (SUZB3) estima investimentos de capital bilionário para 2024 - Estadão,"Fri, 01 Dec 2023 08:00:00 GMT",positivo,,positivo,,negativo,positivo
+215,VALE3,"Mercado hoje: indicadores econômicos do Brasil e exterior em destaque, em meio a indefinições na Petrobras (PETR4) e na Vale (VALE3) - Estadão","Tue, 12 Mar 2024 07:00:00 GMT",neutro,,neutro,,negativo,neutro
+216,RAIL3,Rumo (RAIL3) reporta 7 bilhões de toneladas transportadas em setembro; veja - Estadão,"Wed, 09 Oct 2024 07:00:00 GMT",neutro,,neutro,,positivo,neutro
+217,LREN3,"Renner, C&A e Guararapes caem após rumor de suspensão de imposto - BPMoney","Mon, 14 Jul 2025 07:00:00 GMT",neutro,,neutro,,negativo,neutro
+218,VALE3,"Vale (VALE3), Itaú (ITUB4) e Axia (AXIA6): O que os dividendos ‘gordos’ anunciados pelas companhias têm em comum? - Empiricus","Fri, 28 Nov 2025 08:00:00 GMT",neutro,,neutro,,positivo,neutro
+219,MGLU3,Balanço do 2T25 revela estratégia do Magazine Luiza (MGLU3) e já tem analista vendo janela para retomada do lucro - Estadão,"Fri, 08 Aug 2025 07:00:00 GMT",neutro,,neutro,,positivo,neutro
+220,SANB11,"Santander Brasil (SANB11) tem lucro gerencial recorrente de R$ 2,309 bi no 2º trimestre, queda anual de 45% - InfoMoney","Wed, 26 Jul 2023 07:00:00 GMT",positivo,,positivo,,negativo,positivo
+221,BBAS3,Banco do Brasil (BBAS3) antecipa pagamento de JCP; veja detalhes - Terra,"Wed, 19 Nov 2025 08:00:00 GMT",neutro,,neutro,,positivo,neutro
+225,MGLU3,'Ganha-ganha': Magazine Luiza (MGLU3) espera 'boom' de vendas em parceria com AliExpress; veja as projeções de Trajano - Money Times,"Mon, 24 Jun 2024 07:00:00 GMT",neutro,,neutro,,positivo,neutro
+227,BBAS3,Banco do Brasil (BBAS3) lança produto para o agro via Whatsapp - Estadão,"Mon, 04 Mar 2024 08:00:00 GMT",neutro,,neutro,,positivo,neutro
+231,SANB11,"JPMorgan busca Gustavo Miranda, ex-head de investment banking do Santander - Bloomberg Línea Brasil","Thu, 04 May 2023 07:00:00 GMT",neutro,,neutro,,negativo,neutro
+234,B3SA3,B3 (B3SA3) lança novo contrato futuro de ouro - EuQueroInvestir,"Wed, 09 Jul 2025 07:00:00 GMT",neutro,,neutro,,positivo,neutro
+235,VALE3,"Vale (VALE3) negocia compra da Aliança Energia da Cemig (CMIG4), diz Lauro Jardim - EuQueroInvestir","Mon, 30 Oct 2023 07:00:00 GMT",positivo,,positivo,,neutro,positivo
+236,ABEV3,Ambev (ABEV3) troca de comando após 5 anos; veja quem assume os negócios - Estadão,"Wed, 01 Jan 2025 08:00:00 GMT",negativo,,negativo,,neutro,negativo
+237,BBAS3,"Banco do Brasil (BBAS3) paga R$ 2,25 bi em dividendos hoje; veja valor por ação e se você vai receber - InfoMoney","Thu, 30 Nov 2023 08:00:00 GMT",neutro,,neutro,,positivo,neutro
+240,PETR3,Petrobras e Total Energies avaliam novas parcerias - capitalist.com.br,"Tue, 24 Sep 2024 07:00:00 GMT",neutro,,neutro,,positivo,neutro
+243,VALE3,Vale (VALE3) revela resultados do 2º Trimestre nesta quinta - Guia do Investidor,"Thu, 25 Jul 2024 07:00:00 GMT",positivo,,positivo,,neutro,positivo
+244,LREN3,BlackRock eleva participação na Renner - InvestNews,"Mon, 16 Oct 2023 07:00:00 GMT",neutro,,neutro,,positivo,neutro
+248,MGLU3,"Magazine Luiza (MGLU3) reorganiza lideranças sob o comando de André Fatala, com foco na expansão do digital - Seu Dinheiro","Mon, 10 Mar 2025 07:00:00 GMT",neutro,,neutro,,positivo,neutro
+249,MGLU3,"Selic a 15% ainda castiga o Magazine Luiza (MGLU3) e lucro no 2T24 vira prejuízo de R$ 24,4 milhões no 2T25 - Seu Dinheiro","Thu, 07 Aug 2025 07:00:00 GMT",neutro,,neutro,,negativo,neutro
+251,WEGE3,"Weg (WEGE3) está sendo negociada com prêmio de 60% ante pares globais, diz BBA - suno.com.br","Tue, 09 Jan 2024 08:00:00 GMT",positivo,,positivo,,negativo,positivo
+255,PETR3,"Notícia da Embraer, Azul, Petrobras, Weg, JPC da B3, dividendo do Banco Mercantil e outros destaques - financenews.com.br","Wed, 24 Dec 2025 08:00:00 GMT",negativo,,negativo,,neutro,negativo
+258,BBAS3,"BBAS3, BBDC4, ITUB4 ou SANB11: todos os ‘bancões’ já divulgaram os resultados do 3T23, mas só um deles vale a pena - Empiricus","Wed, 15 Nov 2023 08:00:00 GMT",neutro,,neutro,,negativo,neutro
+260,BBAS3,Bradesco (BBDC4) ou Banco do Brasil (BBAS3)? BTG vê retomada do interesse estrangeiro e aponta favorito - Estadão,"Tue, 16 Dec 2025 08:00:00 GMT",neutro,,neutro,,positivo,neutro
+261,BBDC3,"Bradesco cancela 50,1 milhões de ações mantidas em tesouraria - Visno Invest","Fri, 07 Feb 2025 08:00:00 GMT",negativo,,negativo,,positivo,negativo
+262,GGBR4,Gerdau (GGBR4) anuncia pagamento de dividendos; veja o valor - Estadão,"Tue, 08 Aug 2023 07:00:00 GMT",neutro,,neutro,,positivo,neutro
+264,VALE3,"Vale (VALE3) pagará “bolada” em JCP de R$ 1,89 por ação; veja quem tem direito - Investidor10","Thu, 31 Jul 2025 07:00:00 GMT",neutro,,neutro,,positivo,neutro
+265,ABEV3,Ambev (ABEV3) rebate acusação da CervBrasil sobre rombo de R$ 30 bilhões - moneytimes.com.br,"Wed, 01 Feb 2023 08:00:00 GMT",negativo,,negativo,,positivo,negativo
+269,BBAS3,BB (BBAS3) pagará entre 40% e 45% do lucro em 2025 e define calendário de pagamentos - InfoMoney,"Wed, 19 Feb 2025 08:00:00 GMT",neutro,,neutro,,positivo,neutro
+272,ABEV3,Ambev (ABEV3) diz que consumo de cerveja em bares e restaurantes caiu com inverno rigoroso e orçamento apertado - seudinheiro.com,"Thu, 30 Oct 2025 07:00:00 GMT",neutro,,neutro,,negativo,neutro
+275,SBSP3,Oposição a Tarcísio usa apagão para tentar barrar privatização da Sabesp (SBSP3) - EuQueroInvestir,"Wed, 08 Nov 2023 08:00:00 GMT",positivo,,positivo,,negativo,positivo
+276,VALE3,"Vale (VALE3) dispara, na contramão do Ibovespa, com minério a US$ 100: e investir, vale? - Exame","Wed, 02 Jul 2025 07:00:00 GMT",negativo,,negativo,,positivo,negativo
+277,SUZB3,"Suzano (SUZB3) corta projeção de investimentos para R$ 10,9 bi em 2026; veja motivo - Estadão","Wed, 10 Dec 2025 08:00:00 GMT",negativo,,negativo,,positivo,negativo
+279,SUZB3,Suzano (SUZB3) aprova novo programa de recompra de ações - Investidor10,"Fri, 09 Aug 2024 07:00:00 GMT",neutro,,neutro,,positivo,neutro
+280,SUZB3,Dividendos hoje: Suzano (SUZB3) distribui R$ 2 bilhões em proventos; veja o valor por ação - Estadão,"Fri, 10 Jan 2025 08:00:00 GMT",neutro,,neutro,,positivo,neutro
+281,RADL3,RD Saúde (RADL3) aprova programa de recompra de ações; saiba mais - Estadão,"Wed, 06 Nov 2024 08:00:00 GMT",neutro,,neutro,,positivo,neutro
+282,RADL3,RD Saúde salta 18% após balanço – RADL3 voltou a ser o que era após 1T frustrante? - InfoMoney,"Wed, 06 Aug 2025 07:00:00 GMT",negativo,,negativo,,positivo,negativo
+286,BBAS3,Clientes do BB (BBAS3) com investimentos nestes fundos poderão aumentar limite de cartão - Estadão,"Wed, 11 Dec 2024 08:00:00 GMT",neutro,,neutro,,positivo,neutro
+288,BBAS3,"Banco do Brasil (BBAS3) pagará R$ 2,7 bilhões em dividendos e JCP - Investidor10","Wed, 19 Feb 2025 08:00:00 GMT",neutro,,neutro,,positivo,neutro
+289,WEGE3,"JCP: WEG (WEGE3) paga R$ 301,8 milhões a quem mantiver ações até hoje (15) - SpaceMoney","Fri, 15 Dec 2023 08:00:00 GMT",neutro,,neutro,,positivo,neutro
+290,PETR3,Petrobras planeja fábrica de fertilizantes na Bolívia com estatal local - Bloomberg Línea Brasil,"Thu, 26 Oct 2023 07:00:00 GMT",neutro,,neutro,,positivo,neutro
+291,LREN3,"BlackRock reduz participação na Cosan (CSAN3), Schroder Investment aumenta posição na Renner (LREN3) - SmallCaps.com.br","Wed, 05 Mar 2025 08:00:00 GMT",negativo,,negativo,,positivo,negativo
+292,VALE3,"Ometto, da Cosan (CSAN3), culpa juros alto em investimento frustrado na Vale (VALE3) - moneytimes.com.br","Wed, 26 Feb 2025 08:00:00 GMT",neutro,,neutro,,negativo,neutro
+294,BBAS3,"Mesmo com caso Americanas, Banco do Brasil supera expectativas no quarto trimestre e renova lucro recorde - seudinheiro.com","Mon, 13 Feb 2023 08:00:00 GMT",neutro,,neutro,,positivo,neutro
+295,BBAS3,Por que o lucro do Banco do Brasil caiu 60%? Qual é o impacto para o acionista de BBAS3? - oglobo.globo.com,"Fri, 15 Aug 2025 07:00:00 GMT",positivo,,positivo,,negativo,positivo
+297,PETR3,"Petrobras (PETR4) continua entre as melhores ações para se investir, diz analista; conheça as outras 9 - Seu Dinheiro","Wed, 06 Aug 2025 07:00:00 GMT",neutro,,neutro,,positivo,neutro
+298,WEGE3,"WEG (WEGE3) passa a deter 100% das ações da BirminD, empresa de AI voltada para processos industriais - InfoMoney","Thu, 27 Jul 2023 07:00:00 GMT",neutro,,neutro,,positivo,neutro
+300,PETR3,"Petrobras (PETR4): ações da estatal sobem 0,34% na abertura - Estadão","Mon, 23 Jan 2023 08:00:00 GMT",negativo,,negativo,,positivo,negativo

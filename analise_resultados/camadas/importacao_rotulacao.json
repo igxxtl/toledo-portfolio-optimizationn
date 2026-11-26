@@ -1,0 +1,11 @@
+{
+  "source": "C:\\Users\\igor.toledo_visagio\\Downloads\\rotulacao_humana.csv",
+  "sha256": "e240640d4796c7833f3caf4cd1f23f7a9cac8c3c42d2b674b08a3879687fe2bb",
+  "n": 300,
+  "identity_verified": [
+    "sample_id",
+    "ticker",
+    "titulo",
+    "data"
+  ]
+}

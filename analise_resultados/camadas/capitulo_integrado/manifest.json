@@ -1,0 +1,11 @@
+{
+  "source": "C:\\Users\\igor.toledo_visagio\\.codex\\attachments\\ba1131df-9214-43fb-856f-4dad0d3fe2ce\\Texto colado.txt",
+  "source_sha256": "d71195e02017f3def816a19e49fcc8dbf2e3c80c9ae1d399d480af519d00ca50",
+  "financial_original_tables_preserved": true,
+  "prediction_layers": 7,
+  "financial_control_runs": 21,
+  "target_files": [
+    "C:\\Users\\igor.toledo_visagio\\Documents\\TCC 2\\05_Resultados\\resultados.tex",
+    "C:\\Users\\igor.toledo_visagio\\Documents\\TCC 2\\05_Resultados\\predicao_xgb.tex"
+  ]
+}

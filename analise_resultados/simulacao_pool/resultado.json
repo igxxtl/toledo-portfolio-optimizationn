@@ -1,0 +1,12 @@
+{
+  "runs": 3997,
+  "bl_new_return_n20": 27.78654153511193,
+  "bl_old_return_n20": 28.20851836941012,
+  "bl_return_delta_n20_pp": -0.42197683429818866,
+  "direct_old_return_n20": -1.80800265986365,
+  "direct_pool_return_n20": 3.267299580888694,
+  "bl_new_sharpe_n20": 0.7013172672436908,
+  "bl_old_sharpe_n20": 0.7277402941599727,
+  "gate_pairs": 6,
+  "baseline_reproduced": 1142
+}

@@ -1,0 +1,15 @@
+{
+  "runs": 21,
+  "cardinalities": [
+    5,
+    10,
+    20
+  ],
+  "cost_bps": 10,
+  "window": 126,
+  "risk_aversion": 3,
+  "protocol": "Mesma selecao por excesso/volatilidade e otimizacao com restricoes; muda somente o vetor de expectativas.",
+  "prices": "Retornos simples diarios locais; sem uso de alvos realizados na escolha dos pesos.",
+  "predictions_sha256": "be5119b4a64d4bbd4b53d944eb0f8523a3806a4de5a299efecdc609a5d5ab4a6",
+  "historical_hybrid_prior_xgb_gate_reproduced": true
+}

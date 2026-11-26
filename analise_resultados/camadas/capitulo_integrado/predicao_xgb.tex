@@ -1,0 +1,142 @@
+\subsection{Diagnóstico do histórico completo e comparação com referências}
+
+Para contextualizar a qualidade da inteligência quantitativa, o inventário reúne 41.852 previsões out-of-fold (OOF) de vinte ativos em três horizontes, entre 14 de fevereiro de 2023 e 31 de março de 2026. Os vinte arquivos dos vencedores são cópias das séries por horizonte e não são contabilizados novamente. O histórico completo é um diagnóstico dos artefatos de treinamento; a janela financeira deste capítulo permanece restrita a 2025.
+
+\begin{table}[H]\centering
+\caption{Desempenho das previsões OOF no histórico completo, por horizonte.}
+\label{tab:xgb_historico_completo}
+{\footnotesize\setlength{\tabcolsep}{4pt}\begin{tabular}{rrrrrr}\hline
+h & Previsões & HR (\%) & MAE$\times100$ & RMSE$\times100$ & R$^2$ médio\\ \hline
+5 & 14.005 & 51,74 & 3,16 & 4,14 & -0,033\\
+10 & 13.965 & 52,49 & 4,63 & 5,95 & -0,050\\
+21 & 13.882 & 54,73 & 7,05 & 8,91 & -0,112\\
+\hline\end{tabular}}
+\par\smallskip{\footnotesize Fonte: elaboração própria. Métricas em médias simples entre os vinte ativos. Erros multiplicados por 100 em unidades de log-retorno.}
+\end{table}
+
+A acurácia média aumenta de 51,74\% para 54,73\% entre os horizontes de cinco e 21 pregões, enquanto o R-quadrado médio passa de -0,033 para -0,112. O contraste mostra que maior acerto de direção não implica melhor estimativa da magnitude. Os valores brutos de erro dos diferentes horizontes correspondem a alvos distintos e não permitem, isoladamente, escolher o melhor horizonte.
+
+A reconciliação dos arquivos identificou 25 combinações em que o resumo histórico conserva MAE, RMSE e R-quadrado do regressor, embora a série exportada pertença ao classificador vencedor. As métricas da Tabela~\ref{tab:xgb_historico_completo} foram recalculadas diretamente dos pares de previsão e resultado efetivamente salvos. Os arquivos originais foram preservados. Essa correção de mensuração não corresponde a retreinamento.
+
+No recorte de 2025, avalia-se também a direção mais frequente dos retornos históricos já realizados, calculada em janela expansiva com no mínimo 80 alvos conhecidos. Essa referência alcança 55,13\% de acurácia média, contra 52,44\% do XGBoost; o modelo a supera em 5 ativos. O sinal da média histórica alcança 54,95\%. Diferentemente da maior classe do próprio teste, essas referências utilizam somente alvos já conhecidos no fechamento da previsão. O RMSE do XGBoost é inferior ao da previsão de retorno zero em seis ativos e ao da média histórica em nove.
+
+\begin{table}[H]\centering
+\caption{Estabilidade trimestral das previsões selecionadas para 2025.}
+\label{tab:xgb_estabilidade}
+{\footnotesize\setlength{\tabcolsep}{4pt}\begin{tabular}{lrrr}\hline
+Trimestre & HR XGB (\%) & HR maj. histórica (\%) & HR média histórica (\%)\\ \hline
+2025 / T1 & 52,87 & 52,21 & 50,25\\
+2025 / T2 & 55,90 & 50,57 & 53,20\\
+2025 / T3 & 50,30 & 54,02 & 53,41\\
+2025 / T4 & 50,95 & 67,78 & 66,68\\
+\hline\end{tabular}}
+\par\smallskip{\footnotesize Fonte: elaboração própria.}
+\end{table}
+
+O modelo supera as referências no segundo trimestre, mas perde essa vantagem no segundo semestre. No quarto trimestre, sua acurácia é 50,95\%, contra 67,78\% da direção majoritária histórica. Os trimestres são definidos pela data de origem da previsão, e os desfechos podem terminar no trimestre seguinte, desde que conhecidos até o encerramento do teste. As médias atribuem o mesmo peso a cada ativo.
+
+\section{Qualidade preditiva das etapas intermediárias}
+
+\label{sec:etapas_preditivas}
+
+A avaliação financeira descreve o processo completo, mas não identifica por si só qual componente gera previsões melhores. Por isso, esta seção confronta o resultado realizado com a previsão quantitativa, com a opinião Q e com o posterior do BL. As comparações respondem a três perguntas: a mistura com notícias melhora a previsão; a atualização BL melhora a previsão quantitativa; e o sistema completo acrescenta informação frente ao prior sem opiniões.
+
+\subsection{Configurações e controles utilizados}
+
+\begin{table}[H]\centering
+\caption{Configurações utilizadas para avaliar as camadas intermediárias.}
+\label{tab:configuracoes_camadas}
+{\footnotesize\setlength{\tabcolsep}{4pt}\begin{tabular}{lp{0.77\linewidth}}\hline
+Código & Configuração e finalidade\\ \hline
+XGB & Previsão quantitativa sem atualização BL.\\
+$Q_0$ & Mistura com polaridade textual zerada; preserva o peso quantitativo.\\
+$Q$ & Opinião híbrida completa, antes do BL.\\
+$BL_X$ & Atualização BL recebendo somente a previsão XGB como opinião.\\
+$BL_0$ & Atualização BL recebendo a opinião com polaridade textual zerada.\\
+BL & Atualização BL recebendo a opinião híbrida completa.\\
+$\pi$ & Prior sem incorporação de opiniões.\\
+\hline\end{tabular}}
+\par\smallskip{\footnotesize Fonte: elaboração própria.}
+\end{table}
+
+Nos controles com BL, a covariância, o prior e a matriz de incerteza são os mesmos da rodada original. No controle de polaridade zerada, mantém-se a quantidade de manchetes, o gate, a confiança e o peso quantitativo dependente da cobertura; retira-se somente a parcela numérica associada ao sentimento. Portanto, esse controle não representa retirar todas as informações de notícias: a quantidade de registros ainda influencia a confiança. A nomenclatura evita confundir polaridade zerada com a utilização integral da previsão quantitativa.
+
+Com $c=\min(1,n_{not}/3)$ e $a(c)=1-(1-\alpha)c$, a opinião no horizonte nativo pode ser escrita como $Q_h=a(c)\widehat r_h+(1-\alpha)c\rho_h\psi$. No controle $Q_0$, fixa-se $\psi=0$, mantendo $a(c)$; em $BL_X$, a opinião de entrada é a previsão inteira $\widehat r_h$. Assim, as comparações controladas distinguem retirar polaridade, modificar a mistura e aplicar o BL.
+
+\subsection{Alvos, métricas e score de previsão}
+
+Dos 240 pares ativo-data nas decisões mensais, 228 possuem desfechos de h pregões concluídos até 30 de dezembro de 2025. As sete configurações são avaliadas nesses mesmos 228 pares; os doze restantes são excluídos de todas elas. O conjunto contém quarenta pares com alguma notícia e seis com gate ativo. A utilização das datas mensais corresponde aos sinais efetivamente consultados pelo processo de alocação, e não a uma nova avaliação financeira com 228 pregões.
+
+O alvo comparável é $z_{i,t}=\log(P_{i,t+h}/P_{i,t})/h-r_f^{dia}$. A previsão XGB e Q são convertidas à mesma escala diária de excesso; prior e posterior mantêm a escala diária do motor. Essa harmonização entre log-retornos e estimativas baseadas em retornos simples é aproximada, não equivale a treinar um previsor diário e deve ser considerada ao interpretar os níveis de erro. Um ponto-base (pb) corresponde a 0,0001 na escala de retorno.
+
+Para o erro $e=\widehat z-z$, calculam-se MAE, RMSE, acurácia direcional (HR), acurácia balanceada (BA) e R-quadrado. HR mede o acerto do sinal do excesso de retorno, e BA é a média das taxas de acerto nas classes de sinal presentes. Por isso, esses acertos não devem ser confundidos com os acertos de retorno bruto da avaliação diária do XGBoost. O RMSE dá maior peso a erros grandes; a acurácia ignora a magnitude.
+
+Adota-se o score de habilidade $S=1-\mathrm{MSE}_{modelo}/\mathrm{MSE}_{zero}$, em que a referência prevê excesso de retorno zero, correspondente à taxa livre de risco nessa escala. S positivo indica menor erro quadrático que essa referência, S nulo indica empate e S negativo indica piora. O score não é uma probabilidade nem uma nota limitada ao intervalo de zero a cem. Apresenta-se $100S$ para facilitar a leitura.
+
+O R-quadrado usa como referência a média retrospectiva dos alvos da amostra, enquanto S usa excesso zero. São referências diferentes. Uma previsão pode acertar a direção e ainda ter R-quadrado negativo. A correlação entre duas camadas também não mede o acerto em relação ao resultado realizado; por isso, não é usada como score principal de qualidade.
+
+\begin{table}[H]\centering
+\caption{Scores das previsões nas mesmas 228 observações de 2025.}
+\label{tab:scores_camadas}
+{\footnotesize\setlength{\tabcolsep}{4pt}\begin{tabular}{lrrrrrr}\hline
+Config. & HR (\%) & BA (\%) & MAE (pb) & RMSE (pb) & $100S$ & R$^2$\\ \hline
+XGB & 46,05 & 47,07 & 41,35 & 57,11 & -10,22 & -0,106\\
+$Q_0$ & 46,05 & 47,22 & 41,30 & 56,88 & -9,32 & -0,097\\
+$Q$ & 46,93 & 47,80 & 41,61 & 57,46 & -11,59 & -0,119\\
+$BL_X$ & 53,07 & 50,11 & 39,60 & 54,23 & 0,59 & 0,003\\
+$BL_0$ & 50,88 & 47,78 & 39,65 & 54,29 & 0,39 & 0,001\\
+BL & 55,70 & 52,37 & 39,20 & 53,82 & 2,12 & 0,018\\
+$\pi$ & 54,39 & 50,00 & 39,47 & 54,18 & 0,79 & 0,005\\
+\hline\end{tabular}}
+\par\smallskip{\footnotesize Fonte: elaboração própria. Alvo: excesso de log-retorno diário equivalente no horizonte selecionado. Menor MAE/RMSE e maior HR/BA/S/R-quadrado são melhores.}
+\end{table}
+
+O BL completo apresenta o menor RMSE, 53,82 pb/dia, e a maior HR, 55,70\%. Sua acurácia balanceada é 52,37\%, frente a 50,00\% do prior, evidenciando que parte da HR bruta decorre da distribuição de sinais. O score de 2,12 indica redução de aproximadamente 2,12\% do MSE frente ao excesso zero, e não um acerto de 2,12\%. O R-quadrado de 0,018 mostra que a capacidade explicativa permanece pequena, mesmo na configuração que apresenta o melhor resultado relativo.
+
+\subsection{Contribuição incremental das notícias e da atualização BL}
+
+\begin{table}[H]\centering
+\caption{Efeito incremental das camadas sobre o erro e o acerto de sinal.}
+\label{tab:efeito_incremental}
+{\footnotesize\setlength{\tabcolsep}{4pt}\begin{tabular}{lrr}\hline
+Comparação & Redução do MSE (\%) & Ganho de HR (p.p.)\\ \hline
+XGB $\rightarrow$ $Q$ & -1,24 & 0,88\\
+$Q_0$ $\rightarrow$ $Q$ & -2,07 & 0,88\\
+$BL_0$ $\rightarrow$ BL & 1,73 & 4,82\\
+XGB $\rightarrow$ $BL_X$ & 9,81 & 7,02\\
+$Q$ $\rightarrow$ BL & 12,28 & 8,77\\
+$\pi$ $\rightarrow$ BL & 1,34 & 1,32\\
+\hline\end{tabular}}
+\par\smallskip{\footnotesize Fonte: elaboração própria. Cada contraste utiliza os mesmos 228 pares. Reduções negativas de MSE indicam piora.}
+\end{table}
+
+A passagem de $Q_0$ para Q aumenta o MSE em 2,07\% e eleva a HR em 0,88 p.p. Assim, a polaridade textual melhora ligeiramente a direção, mas piora a magnitude antes do BL. No posterior, a passagem de $BL_0$ para BL reduz o MSE em 1,73\% e eleva a HR em 4,82 p.p. O efeito das notícias depende, portanto, da forma de integração; não se observa melhora uniforme em todas as etapas.
+
+Comparar XGB e $BL_X$ isola a atualização BL sob a mesma confiança da rodada: o MSE cai 9,81\% e a HR cresce 7,02 p.p. A transformação de Q em posterior reduz o MSE em 12,28\%. Por outro lado, a melhora do BL completo contra o prior é de apenas 1,34\% do MSE e 1,32 p.p. de HR. Essa diferença menor indica que uma parcela relevante do desempenho preditivo final já está presente no prior.
+
+Nos quarenta pares com notícias, a polaridade aumenta o MSE de Q em 8,78\%, mas reduz o MSE do posterior em 2,96\%. A influência sobre outros ativos do mesmo rebalanceamento pode ser transmitida pela covariância. Os seis pares com gate ativo são insuficientes para uma conclusão estatística autônoma sobre esse subconjunto. Ausência de significância demonstrada não equivale a ausência de efeito; nesta análise, os efeitos são descritos, sem teste confirmatório.
+
+\begin{figure}[H]\centering
+\caption{Qualidade preditiva das configurações no mesmo alvo e nas mesmas observações.}
+\label{fig:scores_camadas}
+\includegraphics[width=0.95\textwidth]{05_Resultados/predicao_xgb/scores_camadas.png}
+\par\smallskip{\footnotesize Fonte: elaboração própria.}\end{figure}
+
+\subsection{Sensibilidade ao alvo de um pregão}
+
+Como o BL opera na frequência diária, verifica-se também o retorno simples excedente do fechamento do sinal ao fechamento seguinte, nos 240 pares mensais. As previsões de XGB e Q são convertidas do log-retorno diário equivalente para retorno simples por exponenciação. Essa é uma pergunta preditiva distinta, pois o XGBoost foi treinado para vários pregões.
+
+\begin{table}[H]\centering
+\caption{Sensibilidade dos scores ao alvo de retorno excedente no pregão seguinte.}
+\label{tab:scores_pregao_seguinte}
+{\footnotesize\setlength{\tabcolsep}{4pt}\begin{tabular}{lrrrr}\hline
+Config. & HR (\%) & BA (\%) & RMSE (pb) & $100S$\\ \hline
+XGB & 50,00 & 48,68 & 186,89 & -1,11\\
+$Q$ & 50,00 & 48,86 & 187,09 & -1,33\\
+BL & 49,17 & 53,40 & 185,48 & 0,42\\
+$\pi$ & 44,58 & 50,00 & 186,14 & -0,30\\
+\hline\end{tabular}}
+\par\smallskip{\footnotesize Fonte: elaboração própria. N = 240 pares nas quatro configurações.}
+\end{table}
+
+No alvo de um pregão, o BL completo mantém o menor RMSE, mas sua HR de 49,17\% fica abaixo dos 50,00\% de XGB e Q. Sua BA, entretanto, é superior. Isso reforça que o melhor previsor depende do alvo e da métrica adotados. A comparação principal permanece no horizonte previamente selecionado, e nenhum resultado é usado para escolher retroativamente outro horizonte.

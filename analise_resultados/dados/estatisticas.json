@@ -1,0 +1,72 @@
+{
+  "forecasts": {
+    "horizon_counts": {
+      "21": 12,
+      "10": 5,
+      "5": 3
+    },
+    "mean_validation_hr": 60.286551836679095,
+    "mean_test_hr": 52.436540118230695,
+    "test_hr_min": 33.75,
+    "test_hr_max": 70.3056768558952,
+    "negative_test_r2": 19,
+    "below_majority": 15,
+    "above_majority": 4,
+    "original_mean_hr": 55.778812038657556,
+    "original_negative_r2": 18,
+    "original_horizon_counts": {
+      "21": 15,
+      "10": 4,
+      "5": 1
+    },
+    "changed_horizons": 4
+  },
+  "news": {
+    "gate": 3,
+    "observations": 240,
+    "with_news": 40,
+    "eligible": 6,
+    "dates_with_any_eligible": 3
+  },
+  "n20": [
+    {
+      "scenario": "escolha_livre",
+      "n": 20,
+      "repetition": 0,
+      "model": "BL",
+      "return_pct": 28.20851836941012,
+      "final_capital_brl": 128208.51836941011,
+      "volatility_pct": 17.259329674119293,
+      "sharpe": 0.7277402941599727,
+      "max_drawdown_pct": -8.463547658803739,
+      "turnover_total": 4.047734237229568,
+      "cost_brl": 447.60625368408114,
+      "selic_return_pct": 14.872510217327983,
+      "cap": 0.341677,
+      "n_days": 250
+    },
+    {
+      "scenario": "escolha_livre",
+      "n": 20,
+      "repetition": 0,
+      "model": "Markowitz",
+      "return_pct": 19.09815153646608,
+      "final_capital_brl": 119098.15153646607,
+      "volatility_pct": 19.226636541333285,
+      "sharpe": 0.2854405902855454,
+      "max_drawdown_pct": -12.781942525525537,
+      "turnover_total": 6.301160233800891,
+      "cost_brl": 644.2472861936283,
+      "selic_return_pct": 14.872510217327983,
+      "cap": 0.341677,
+      "n_days": 250
+    }
+  ],
+  "source_hashes": {
+    "intel\\Blacklitterman\\outputs\\dois_cenarios\\manifest.json": "62174471e2fdfdb0a785534eb00f55ee045d53e4e3d1acc04633d3787abe48f1",
+    "intel\\Blacklitterman\\outputs\\dois_cenarios\\metricas.csv": "848fc96ea026488b29a44adadff70320583c16bfb42f0a0aa2e0e63ccbd4e5d5",
+    "intel\\Blacklitterman\\outputs\\dois_cenarios\\resumo.csv": "82ff1992e1f1fefccce4aff08f66eb9859f165ed912b012b4f4e698c99df7a61",
+    "intel\\Blacklitterman\\outputs\\dois_cenarios\\series.csv": "a438cef65e25dd4b941aaa6ba1b76890f4e30d8d49a3d9abd4edffccbe56bf1b",
+    "criacao_modelo_xgb\\metricas_vencedores.csv": "8750518981f717ff210e69ab73e5ab37141bcd1458ba174f141d31b10e995a41"
+  }
+}

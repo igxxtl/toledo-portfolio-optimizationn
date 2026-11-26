@@ -1,0 +1,11 @@
+{
+  "cases": 60,
+  "configurations": 8,
+  "folds": 6,
+  "model_fold_audits": 2880,
+  "forecast_pairs_2025": 14280,
+  "validation_only_selection_verified": true,
+  "temporal_purges_verified": true,
+  "baseline_unchanged": true,
+  "originals_checked": 83
+}

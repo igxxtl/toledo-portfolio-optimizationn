@@ -1,0 +1,99 @@
+CAPITULO 4 - ANALISE E DISCUSSAO DE RESULTADOS
+
+Entrega baseada no manuscrito enviado e nos resultados da rodada dois_cenarios.
+O PDF de leitura tem 10 paginas, 9 tabelas e 2 figuras. O capitulo esta redigido
+em portugues academico e preserva a distincao entre evidencia e interpretacao.
+
+ARQUIVOS PRINCIPAIS
+- output/pdf/capitulo_4_resultados.pdf: PDF diagramado do capitulo, com paginacao local.
+- Desktop/TCC/05_Resultados/resultados.tex: fragmento editavel para o TCC.
+- Desktop/TCC/05_Resultados/figuras/: figuras vetoriais PDF e SVG.
+- analise_resultados/latex/: projeto independente de leitura e validacao do LaTeX.
+- analise_resultados/dados/: tabelas numericas consolidadas em precisao completa.
+- analise_resultados/consolidar.py: reproducao dos diagnosticos e contrafactual de custos.
+- analise_resultados/gerar_capitulo.py: reproducao do PDF e do fragmento LaTeX.
+- analise_resultados/manifesto_capitulo.json: rastreabilidade das fontes numericas.
+
+ESTRUTURA ADOTADA
+4.1 Delimitacao do experimento e criterios de comparacao
+4.2 Desempenho quantitativo e escolha dos horizontes
+4.3 Comparacao com ativos comuns
+4.4 Comparacao com selecao propria dos ativos
+4.5 Sensibilidade a cardinalidade e aos custos de transacao
+4.6 Cobertura de noticias e influencia efetiva das views
+4.7 Limitacoes e alcance das conclusoes
+
+COMO INCLUIR NO PROJETO ORIGINAL
+No masterthesis.tex, depois do capitulo de procedimento e antes das referencias:
+
+\input{./05_Resultados/resultados.tex}
+
+O arquivo principal e os capitulos existentes nao foram alterados. O preambulo
+atual ja carrega float e epsfig, que disponibilizam [H] e includegraphics. Caso
+troque o preambulo, mantenha graphicx e float. A numeracao das tabelas e figuras
+do novo capitulo e definida como 4.1, 4.2 etc. A paginacao final pode mudar ao
+integrar ao template UERJ; o PDF independente tem exatamente 10 paginas.
+
+AJUSTES NECESSARIOS NOS CAPITULOS 2 E 3
+Estas mudancas nao foram aplicadas silenciosamente ao manuscrito anterior:
+1. Substituir a cardinalidade fixa k=5 pela varredura n=1..20, distinguindo os
+   dois cenarios e informando 551 conjuntos comuns e 1.142 simulacoes individuais.
+2. Manter validacao em 2024, teste em 2025 e referencia hipotetica de 15% a.a.
+   O roteiro antigo mencionava 2024 e 14%; isso nao corresponde a esta rodada.
+3. A rodada atual usa gate de 3 noticias, com hard prior, conforme solicitado
+   pelo autor apos a sensibilidade de gates 1 a 5 em 2025. A auditoria encontrou
+   6 views elegiveis em 240 pares ativo-data mensais, em 3 das 12 datas de decisao.
+   A escolha do limiar e retrospectiva: esta rodada nao constitui teste temporal
+   independente do gate. A rodada anterior de gate 1 foi preservada no historico.
+4. O prior desta rodada usa equilibrio equiponderado, nao capitalizacao de
+   mercado pontual. Aversao ao risco fixa igual a 3 para os dois metodos.
+5. A janela comum de medias e covariancia e de 126 pregoes. Nao usar o baseline
+   antigo de 60 pregoes nem o minimo de 80 observacoes como descricao atual.
+6. A alocacao resolve diretamente o problema media-variancia com restricoes;
+   nao consiste em cortar e renormalizar uma solucao irrestrita.
+7. O piso de peso e 0,1% por ativo e o teto e max(34,1677%,1/n). Em n=2 os pesos
+   alvo sao obrigatoriamente 50/50. Os limites valem nas operacoes; ha drift depois.
+8. O Sharpe desta rodada desconta a Selic diaria. A equacao de Sharpe_impl do
+   texto anterior usa retorno total e deve ser atualizada para excesso de retorno.
+9. A decisao ocorre no fechamento do primeiro pregao do mes; a operacao ocorre
+   no fechamento seguinte. A nova posicao captura retornos so a partir do pregao
+   posterior a execucao. Ate o investimento inicial, o caixa rende a Selic.
+10. As posicoes variam com os precos entre operacoes. Custos sao 10 bps de meia
+    L1 dos valores negociados incluindo caixa, com financiamento pelo patrimonio.
+    Ha custo de entrada e nao ha liquidacao terminal, spread, imposto ou impacto.
+11. Noticias usadas sao exclusivamente as do dia civil anterior ao sinal.
+    Confianca e escala usam somente alvos antigos ja encerrados na data da decisao.
+12. O horizonte e escolhido na validacao de 2024. A selecao original entre
+    classificador e regressor ainda precisa ser refeita com separacao temporal
+    integral. Acuracia OOF nao elimina esse problema de selecao.
+13. A nova analise nao usa o escore composto como evidencia principal; reporta
+    retorno, risco, Sharpe excedente, drawdown, custos e comparacoes pareadas.
+
+ALTERACOES DO ROTEIRO ORIGINAL
+- Capital estimado versus realizado foi substituido pela trajetoria de capital
+  realizado, porque os CSVs antigos de estimativa pertencem a outro motor.
+- Sensibilidade daily/weekly/monthly e exclusao controlada de um ativo nao foram
+  reaproveitadas dos CSVs antigos. Nao existe nesta rodada uma comparacao homogenea
+  dessas variantes; o capitulo nao apresenta numeros inventados para preenche-la.
+- O contrafactual sem custos mantem o caminho de pesos e operacoes e remove
+  apenas o desconto de custo. Nao e uma nova otimizacao nem um sweep de taxas.
+- A queda de acuracia, o R2 negativo e a cobertura efetiva das views sao discutidos
+  no corpo do capitulo. Nao se atribui o ganho da carteira isoladamente a IA/NLP.
+- O gate de 3 foi escolhido apos examinar 2025. A selecao temporal dos horizontes
+  em 2024 nao torna essa escolha de gate independente do ano de avaliacao.
+
+FONTES NUMERICAS
+Resultado principal: intel/Blacklitterman/outputs/dois_cenarios/.
+Dados quantitativos: criacao_modelo_xgb/*_h*d_predicoes.csv e dados_diarios/*.csv.
+As metricas de 2025 aceitam apenas alvos com termino ate 30/12/2025.
+Diagnostico historico separado: criacao_modelo_xgb/metricas_vencedores.csv.
+Nao se misturam as metricas historicas com o horizonte selecionado em 2024.
+
+REPRODUCAO
+Na raiz do repositorio, com Python e numpy/pandas/reportlab/pypdf instalados:
+python analise_resultados/consolidar.py
+python analise_resultados/gerar_capitulo.py
+
+O gerador utiliza as fontes Times do Windows para o PDF. A saida de leitura usa
+12 pontos e entrelinha de 18 pontos. O projeto LaTeX independente usa arquivos
+copiados do fragmento para nao alterar a compilacao do TCC original.

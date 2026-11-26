@@ -1,0 +1,165 @@
+\subsection{Inventário de todas as previsões quantitativas disponíveis}
+
+O inventário contém 60 combinações de vinte ativos e três horizontes (5, 10 e 21 pregões), totalizando 41,852 previsões OOF entre 2023-02-14 e 2026-03-31. Os vinte arquivos de vencedores são aliases das séries por horizonte e não são contados novamente. Cada previsão possui data, retorno realizado, retorno estimado, erro e fold. As métricas abaixo utilizam os alvos originais salvos no treinamento, enquanto o teste financeiro de 2025 é um recorte específico discutido anteriormente.
+
+\begin{table}[H]\centering
+\caption{Métricas do histórico OOF completo por horizonte (médias entre ativos).}
+{\footnotesize\begin{tabular}{rrrrrrr}\hline
+h & Previsões & HR (\%) & MAE$\times100$ & RMSE$\times100$ & R$^2$ & NRMSE\\ \hline
+5 & 14005 & 51,74 & 3,16 & 4,14 & -0,033 & 1,016\\
+10 & 13965 & 52,49 & 4,63 & 5,95 & -0,050 & 1,024\\
+21 & 13882 & 54,73 & 7,05 & 8,91 & -0,112 & 1,053\\
+\hline\end{tabular}}\par\smallskip{\footnotesize Fonte: elaboração própria.}\end{table}
+
+MAE e RMSE estão multiplicados por 100 em unidades de log-retorno, e não correspondem exatamente a percentuais de retorno simples. São médias simples das métricas dos vinte ativos; não se calcula um R-quadrado agregado misturando as séries. Todos os resultados individuais seguem na tabela completa e nos arquivos por ano e por fold. A extensão até 2026 descreve o acervo de treinamento e não amplia retroativamente o período do experimento financeiro de 2025.
+
+A reconciliação identificou 25 combinações em que as métricas de erro do resumo histórico não correspondem às previsões finais salvas. O código calcula MAE, RMSE e R-quadrado do regressor antes de escolher o classificador, mas pode exportar a previsão do classificador vencedor sem atualizar essas métricas. Por isso, as tabelas abaixo recalculam todas as métricas a partir dos pares y-real/y-pred efetivamente armazenados, sem alterar os arquivos originais. A acurácia direcional do resumo foi reproduzida nas sessenta combinações.
+
+\subsection{Como as métricas se relacionam}
+
+Para o erro $e_t=\widehat y_t-y_t$, MAE é a média de $|e_t|$, MSE é a média de $e_t^2$ e RMSE é a raiz do MSE. O RMSE dá maior peso a erros grandes e é pelo menos tão alto quanto o MAE na mesma amostra. A acurácia direcional ignora o tamanho do erro: uma previsão pode acertar alta ou baixa e ainda errar fortemente sua intensidade.
+
+Com a variância populacional dos alvos $\sigma_y^2$, tem-se $R^2=1-\mathrm{MSE}/\sigma_y^2$ e $\mathrm{NRMSE}=\mathrm{RMSE}/\sigma_y=\sqrt{1-R^2}$. Assim, R-quadrado e NRMSE expressam a mesma informação de erro normalizado, em escalas distintas. R-quadrado negativo significa erro superior ao da média retrospectiva dos alvos da amostra; essa média não é uma previsão negociável.
+
+A correlação de Pearson mede associação linear entre previsão e resultado, mas não sua calibração. Se $r=\mathrm{corr}(y,\widehat y)$, $k=\sigma_{\widehat y}/\sigma_y$ e $b=\mathrm{média}(\widehat y-y)/\sigma_y$, então $R^2=2rk-k^2-b^2$. Mesmo correlação positiva pode coexistir com R-quadrado negativo se a amplitude ou o viés estiverem inadequados.
+
+\begin{figure}[H]\centering
+\caption{Relação entre qualidade da direção e da magnitude no histórico OOF.}
+\includegraphics[width=0.95\textwidth]{05_Resultados/predicao_xgb/relacao_acuracia_r2.png}
+\par\smallskip{\footnotesize Fonte: elaboração própria.}\end{figure}
+
+Entre as sessenta combinações, a correlação de Pearson entre acurácia direcional e R-quadrado é 0,176. Essa associação é descritiva: as combinações compartilham datas e ativos e não constituem sessenta experimentos independentes. Não há identidade matemática entre acurácia e R-quadrado, diferentemente da relação entre NRMSE e R-quadrado.
+
+\subsection{Métricas individuais de todas as combinações}
+
+As tabelas por horizonte apresentam toda a cobertura, incluindo a correlação entre previsão e alvo (r). Os registros individuais, métricas por ano e por fold foram preservados para rastrear mudanças de desempenho. Os arquivos armazenam a previsão do estimador escolhido em cada combinação. O resumo histórico contém acurácia de regressor e classificador, mas não preserva ambas as séries perdedoras; não é possível reconstruir seus MAE, RMSE ou R-quadrado separadamente sem nova execução.
+
+\begin{table}[H]\centering
+\caption{Todas as previsões OOF: horizonte de 5 pregões.}
+{\footnotesize\begin{tabular}{lrrrrrr}\hline
+Ativo & N & HR (\%) & MAE$\times100$ & RMSE$\times100$ & R$^2$ & r\\ \hline
+ABEV3 & 719 & 51,88 & 2,25 & 3,13 & -0,034 & -0,015\\
+B3SA3 & 694 & 51,01 & 3,36 & 4,35 & -0,033 & -0,017\\
+BBAS3 & 644 & 51,55 & 2,65 & 3,61 & -0,018 & 0,047\\
+BBDC4 & 694 & 50,00 & 2,85 & 3,86 & -0,024 & 0,085\\
+CMIG4 & 694 & 56,92 & 2,48 & 3,41 & -0,020 & -0,023\\
+EQTL3 & 719 & 49,65 & 2,44 & 3,12 & -0,043 & -0,040\\
+GGBR4 & 719 & 50,90 & 3,13 & 3,92 & -0,056 & 0,004\\
+ITUB4 & 719 & 52,57 & 2,21 & 2,91 & -0,047 & 0,085\\
+LREN3 & 694 & 50,43 & 4,25 & 5,45 & -0,015 & 0,058\\
+MGLU3 & 669 & 54,71 & 7,26 & 9,39 & -0,078 & -0,029\\
+PETR3 & 719 & 55,35 & 3,24 & 4,26 & 0,004 & 0,080\\
+PETR4 & 719 & 57,16 & 3,05 & 3,98 & -0,040 & -0,045\\
+PRIO3 & 694 & 50,72 & 3,62 & 4,59 & -0,071 & -0,062\\
+RADL3 & 719 & 49,93 & 3,35 & 4,74 & -0,053 & -0,063\\
+RAIL3 & 694 & 48,41 & 3,07 & 3,87 & -0,023 & -0,028\\
+SANB11 & 669 & 48,88 & 2,70 & 3,48 & -0,046 & -0,131\\
+SBSP3 & 719 & 61,20 & 2,50 & 3,21 & -0,001 & 0,162\\
+SUZB3 & 719 & 42,98 & 2,86 & 3,78 & -0,030 & -0,042\\
+VALE3 & 694 & 46,11 & 2,90 & 3,67 & -0,036 & -0,084\\
+WEGE3 & 694 & 54,47 & 3,04 & 4,00 & 0,003 & 0,114\\
+\hline\end{tabular}}\par\smallskip{\footnotesize Fonte: elaboração própria.}\end{table}
+
+\begin{table}[H]\centering
+\caption{Todas as previsões OOF: horizonte de 10 pregões.}
+{\footnotesize\begin{tabular}{lrrrrrr}\hline
+Ativo & N & HR (\%) & MAE$\times100$ & RMSE$\times100$ & R$^2$ & r\\ \hline
+ABEV3 & 717 & 48,26 & 3,50 & 4,67 & -0,074 & -0,109\\
+B3SA3 & 692 & 52,31 & 4,91 & 6,19 & -0,028 & 0,108\\
+BBAS3 & 642 & 51,71 & 4,02 & 5,51 & -0,075 & -0,213\\
+BBDC4 & 692 & 54,48 & 4,23 & 5,55 & -0,015 & 0,182\\
+CMIG4 & 692 & 60,98 & 3,35 & 4,39 & 0,035 & 0,220\\
+EQTL3 & 717 & 47,84 & 3,55 & 4,44 & -0,129 & -0,024\\
+GGBR4 & 717 & 53,00 & 4,36 & 5,55 & -0,011 & 0,088\\
+ITUB4 & 717 & 50,49 & 3,44 & 4,45 & -0,153 & -0,043\\
+LREN3 & 692 & 53,18 & 6,27 & 7,92 & -0,012 & 0,066\\
+MGLU3 & 667 & 56,37 & 10,82 & 14,00 & -0,122 & -0,176\\
+PETR3 & 717 & 63,60 & 4,89 & 6,31 & 0,022 & 0,163\\
+PETR4 & 717 & 62,48 & 4,56 & 5,89 & -0,010 & 0,040\\
+PRIO3 & 692 & 53,47 & 5,04 & 6,38 & -0,069 & -0,072\\
+RADL3 & 717 & 45,19 & 5,06 & 6,77 & -0,058 & -0,037\\
+RAIL3 & 692 & 46,68 & 4,08 & 5,11 & -0,028 & -0,085\\
+SANB11 & 667 & 49,33 & 4,11 & 5,17 & -0,066 & -0,009\\
+SBSP3 & 717 & 56,21 & 3,81 & 4,72 & -0,104 & 0,049\\
+SUZB3 & 717 & 40,03 & 4,24 & 5,41 & -0,098 & -0,043\\
+VALE3 & 692 & 47,54 & 4,14 & 5,11 & -0,042 & -0,059\\
+WEGE3 & 692 & 56,65 & 4,31 & 5,47 & 0,036 & 0,295\\
+\hline\end{tabular}}\par\smallskip{\footnotesize Fonte: elaboração própria.}\end{table}
+
+\begin{table}[H]\centering
+\caption{Todas as previsões OOF: horizonte de 21 pregões.}
+{\footnotesize\begin{tabular}{lrrrrrr}\hline
+Ativo & N & HR (\%) & MAE$\times100$ & RMSE$\times100$ & R$^2$ & r\\ \hline
+ABEV3 & 713 & 51,47 & 5,95 & 7,67 & -0,211 & -0,171\\
+B3SA3 & 688 & 53,20 & 7,39 & 9,03 & -0,050 & -0,008\\
+BBAS3 & 637 & 47,88 & 6,65 & 8,59 & -0,108 & -0,052\\
+BBDC4 & 688 & 47,67 & 7,43 & 9,25 & -0,158 & 0,155\\
+CMIG4 & 688 & 62,94 & 4,88 & 6,38 & -0,260 & -0,124\\
+EQTL3 & 713 & 51,05 & 5,07 & 6,18 & -0,007 & 0,062\\
+GGBR4 & 713 & 53,16 & 6,44 & 7,95 & -0,079 & 0,110\\
+ITUB4 & 713 & 52,59 & 5,56 & 7,01 & -0,277 & 0,121\\
+LREN3 & 688 & 48,84 & 10,34 & 13,01 & -0,108 & -0,091\\
+MGLU3 & 662 & 59,06 & 15,76 & 20,37 & -0,139 & -0,075\\
+PETR3 & 713 & 66,06 & 7,00 & 9,11 & -0,044 & 0,077\\
+PETR4 & 713 & 68,16 & 6,26 & 8,13 & 0,019 & 0,212\\
+PRIO3 & 688 & 56,54 & 8,37 & 10,21 & -0,230 & -0,068\\
+RADL3 & 713 & 57,22 & 7,51 & 10,24 & -0,052 & -0,013\\
+RAIL3 & 688 & 52,18 & 5,56 & 7,08 & -0,087 & -0,098\\
+SANB11 & 662 & 52,57 & 6,18 & 7,54 & -0,049 & 0,050\\
+SBSP3 & 713 & 64,94 & 5,44 & 6,67 & -0,121 & 0,023\\
+SUZB3 & 713 & 48,25 & 6,66 & 8,24 & -0,207 & -0,066\\
+VALE3 & 688 & 42,01 & 6,30 & 7,78 & -0,159 & -0,114\\
+WEGE3 & 688 & 58,87 & 6,28 & 7,71 & 0,094 & 0,409\\
+\hline\end{tabular}}\par\smallskip{\footnotesize Fonte: elaboração própria.}\end{table}
+
+\subsection{Como as previsões se transformam entre as camadas}
+
+A sequência quantitativa é $\widehat r_{XGB}\rightarrow Q\rightarrow\mu_{BL}$, combinada com o prior $\pi$ e a incerteza $\Omega$. O XGBoost estima o log-retorno no horizonte selecionado. Q mistura esse sinal com o componente textual. O posterior combina Q com o prior por meio da covariância e da confiança. Prior, Q e posterior não são previsores treinados para exatamente a mesma tarefa; sua avaliação requer uma convenção comum explícita.
+
+Usa-se a auditoria da rodada mensal atual: 240 pares ativo-data candidatos e 228 com alvo concluído até 30/12/2025. Foram excluídos 12 pares sem desfecho elegível. Todas as camadas são comparadas exatamente nos mesmos pares. Não se misturam os exports do antigo pipeline diário com os resultados atuais, pois possuem configurações distintas e o CSV legado de Q/Omega apresenta bytes inválidos.
+
+Na primeira comparação, o alvo é o log-retorno realizado no horizonte h dividido por h, menos a referência diária livre de risco. A previsão XGB recebe a mesma transformação $\widehat r_h/h-r_f$. Q, prior e posterior são utilizados na escala diária de excesso implementada pelo motor. A compatibilização entre log-retorno e o prior baseado em retornos simples é aproximada. O resultado mede alinhamento com retorno diário equivalente, não uma previsão independente de cada pregão nem uma estratégia financeira.
+
+\begin{table}[H]\centering
+\caption{Comparação pareada das camadas: alvo diário equivalente no horizonte de cada ativo.}
+{\footnotesize\begin{tabular}{lrrrrrr}\hline
+Camada & N & HR excesso (\%) & MAE (pb) & RMSE (pb) & R$^2$ & r\\ \hline
+XGB & 228 & 46,05 & 41,35 & 57,11 & -0,106 & -0,048\\
+Q & 228 & 46,93 & 41,61 & 57,46 & -0,119 & -0,088\\
+Prior & 228 & 54,39 & 39,47 & 54,18 & 0,005 & 0,082\\
+Posterior & 228 & 55,70 & 39,20 & 53,82 & 0,018 & 0,148\\
+\hline\end{tabular}}\par\smallskip{\footnotesize Fonte: elaboração própria.}\end{table}
+
+Os erros estão em pontos-base por dia (valor vezes 10.000). A acurácia de excesso compara sinais após descontar a referência diária e não coincide com a acurácia de retorno bruto apresentada nas tabelas do XGBoost.
+
+\begin{table}[H]\centering
+\caption{Sensibilidade da avaliação ao alvo: excesso de retorno simples no pregão seguinte ao sinal.}
+{\footnotesize\begin{tabular}{lrrrrr}\hline
+Camada & N & HR excesso (\%) & MAE (pb) & RMSE (pb) & R$^2$\\ \hline
+XGB & 228 & 50,88 & 132,33 & 186,05 & -0,020\\
+Q & 228 & 50,88 & 132,18 & 186,26 & -0,022\\
+Prior & 228 & 42,54 & 132,97 & 186,03 & -0,020\\
+Posterior & 228 & 47,37 & 132,28 & 185,33 & -0,012\\
+\hline\end{tabular}}\par\smallskip{\footnotesize Fonte: elaboração própria.}\end{table}
+
+A segunda comparação mantém os mesmos pares e altera somente o alvo para o retorno simples do fechamento do sinal ao fechamento seguinte, menos a referência diária. Ela testa alinhamento com a frequência diária do BL, mas não respeita o alvo nativo multiperíodo do XGBoost. Não se compara diretamente uma métrica dessa tabela com a da anterior como se o problema preditivo fosse o mesmo.
+
+\begin{figure}[H]\centering
+\caption{Relação entre as previsões das camadas nas mesmas decisões mensais.}
+\includegraphics[width=0.95\textwidth]{05_Resultados/predicao_xgb/relacao_camadas.png}
+\par\smallskip{\footnotesize Fonte: elaboração própria.}\end{figure}
+
+\begin{table}[H]\centering
+\caption{Transformação dos sinais nas mesmas observações.}
+{\footnotesize\begin{tabular}{lrrr}\hline
+Transição & Variação média absoluta (pb) & Mesmo sinal (\%) & r\\ \hline
+XGB / Q & 1,40 & 97,37 & 0,947\\
+Q / Posterior & 11,36 & 41,23 & -0,043\\
+Prior / Posterior & 1,39 & 88,16 & 0,420\\
+\hline\end{tabular}}\par\smallskip{\footnotesize Fonte: elaboração própria.}\end{table}
+
+A diagonal nos gráficos corresponde a previsões idênticas entre camadas. Pontos próximos dela para prior e posterior indicam pouca atualização, não maior qualidade preditiva por si só. A incerteza e a covariância determinam a força da atualização. Uma correlação elevada entre camadas tampouco demonstra correlação elevada com retornos realizados.
+
+\subsection{Alcance da avaliação conjunta}
+
+A comparação permite separar três perguntas: qual sinal foi previsto, qual magnitude foi estimada e quanto a integração alterou a previsão. O histórico completo, os recortes anuais e os folds são descrições dos artefatos existentes. A escolha original entre regressor e classificador e os ajustes de hiperparâmetros não foram refeitos de forma aninhada. Horizontes sobrepostos, empresas relacionadas e configurações selecionadas retrospectivamente limitam a independência das observações. Nenhuma dessas métricas, isoladamente, comprova rentabilidade ou ganho causal de uma camada.

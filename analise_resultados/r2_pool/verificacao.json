@@ -1,0 +1,7 @@
+{
+  "status": "passed",
+  "paired_asset_horizons": 60,
+  "existing_metrics_matched": 120,
+  "source_sha256": "b47ef4c9ef26d12ebb97ff58c849bbee55440472df6d3cfc72fddefa8e19b989",
+  "sample": "2025 test, same rows for both models"
+}

@@ -1,0 +1,300 @@
+1|Z|Comentário macro sem direção explícita
+2|N?|Disputa judicial com risco creditício
+3|P?|Reorganização apresentada com benefícios
+4|N|Concorrência volumes menores e queda
+5|N|Perda expressiva de valor
+6|P|Produção trimestral em máxima
+7|P?|Novo produto amplia oferta
+8|N|Prejuízo trimestral informado
+9|Z|Expectativas sem direção definida
+10|P|Avaliação favorável dos preços
+11|P|Recomendação explícita de compra
+12|P|Expansão da base de clientes
+13|N|Denúncia e ambiente desfavorável
+14|P?|Anúncio de remuneração ao acionista
+15|Z?|Mudança organizacional sem efeito demonstrado
+16|Z|Pergunta sem conclusão
+17|Z?|Perspectivas opostas entre prazos
+18|P?|Plano de diversificação e crescimento
+19|N?|Forte queda do lucro
+20|Z?|Dividendo favorável com ressalva indeterminada
+21|Z|Movimento geral sem efeito específico
+22|P?|Licença habilita exploração apesar de reação indefinida
+23|P?|Rejeição de contestação da privatização
+24|Z|Lista de empresas sem fatos específicos
+25|N|Redução do preço alvo e alerta
+26|P?|Acordo encerra ações regulatórias
+27|N|Interdição de instalação produtiva
+28|Z?|Lucro menor e surpresa operacional positiva
+29|N?|Posição relativa desfavorável nos dividendos
+30|N|Desempenho explicitamente decepcionante
+31|Z|Página genérica da ação
+32|Z?|Avaliação desfavorável contraposta a potencial
+33|Z|Comparação histórica sem vencedor informado
+34|Z|Calendário de proventos
+35|P?|Anúncio de remuneração ao acionista
+36|N|Juros elevados apresentados como entrave
+37|N?|Queda explícita com interpretação em aberto
+38|Z|Consequência para Petrobras não determinada
+39|Z?|Aquisição sem termos ou benefício claro
+40|N|Recomendação de venda e risco
+41|Z|Resultado em linha e forças compensatórias
+42|Z?|Lançamento de fundo sem efeito financeiro claro
+43|P?|Alta e novo guidance bem recebido
+44|Z|Contrato sem condições ou direção
+45|N|Problemas explícitos do banco
+46|P|Forte alta e encerramento de posição vendida
+47|Z|Comparação sem vencedor identificado
+48|P|Alta associada à escolha de CEO
+49|N|Queda explícita da Vale
+50|P?|Aprovação de dividendos
+51|Z|Manutenção da nota sem mudança
+52|P|Recorde de produção
+53|Z|Contratação sem efeito financeiro informado
+54|N?|Correção explicitamente apontada
+55|Z|Pergunta sem conclusão
+56|P?|Iniciativa amplia acesso ao mercado
+57|N|Queda explícita da Rumo
+58|Z|Negociação de outras ações sem efeito na B3
+59|P?|Recompra anunciada com investimentos
+60|P|Perspectiva favorável de demanda
+61|P|Banco considerado subavaliado
+62|Z|Página genérica da ação
+63|P?|Marco de expansão produtiva
+64|Z|Lista de ações sem direção
+65|Z|Ultrapassagem relativa não demonstra deterioração da Vale
+66|P|Inclusão em recomendações de dividendos
+67|Z|Calendário de pagamentos
+68|Z|Título sem resultado ou avaliação
+69|P|Elevação da recomendação
+70|Z|Manifestação sem conteúdo informado
+71|P|Recompra anunciada
+72|Z?|Geração maior e problema não especificado
+73|P?|Alta explícita apesar de prejuízo
+74|N|Redução de preço alvo
+75|Z|Lucro absoluto sem comparação
+76|P|Expansão explícita da produção
+77|P|Avaliação favorável frente à concorrência
+78|Z|Pagamento já programado
+79|Z|Cronograma de pagamentos
+80|P|Avanço de projeto
+81|P?|Anúncio de remuneração ao acionista
+82|Z|Pergunta sem conclusão
+83|P?|Crescimento expressivo do lucro
+84|P|Lucro e valorização destacados
+85|Z|Pergunta sobre calendário
+86|Z?|Elogio contraposto a risco concorrencial
+87|Z|Pagamento já programado
+88|Z|Lista de empresas sem direção
+89|Z?|Perspectiva otimista contraposta a risco macro
+90|N|Acusação contra a empresa
+91|P|Potencial de alta e compra
+92|P|Reiteração de compra
+93|P?|Negociação para ampliar atuação
+94|P?|Antecipação de dividendos
+95|P|Projeção de valorização adicional
+96|N|Queda explícita do banco
+97|Z|Emissão de dívida sem termos comparativos
+98|N|Avaliação pessimista explícita
+99|N|Incerteza sobre dividendos destacada
+100|Z?|Lucro maior e provento abaixo das projeções
+101|P|Perspectiva favorável de execução e dividendos
+102|Z?|Saídas sem causa ou efeito informado
+103|Z|Pergunta sem ação escolhida
+104|N|Forte queda do lucro
+105|N?|Conflito reputacional e medidas legais
+106|Z|Revisão de metas sem direção informada
+107|N?|Crise específica do banco apesar de otimismo macro
+108|Z?|Novo produto sem efeito financeiro informado
+109|N|Petróleo e ações em forte queda
+110|Z|Bonificação sem criação de valor demonstrada
+111|Z|Data limite de direito a proventos
+112|Z|Pergunta sem conclusão
+113|Z|Lista de ações sem direção
+114|N|Rebaixamento de recomendação
+115|P|Rentabilidade superior destacada
+116|N|Acusação e queda explícita
+117|N|Resultado explicitamente fraco
+118|Z|Pergunta sem conclusão
+119|P|Lucro recorde
+120|P|Recomendação de compra
+121|Z|Preferência por outra empresa não detalhada
+122|P|Inclusão em recomendações
+123|N|Desvalorização explícita
+124|N?|Queda passada explícita sem recuperação indicada
+125|N|Pressão nas margens e forte queda
+126|P|Superação das projeções e alta explícita
+127|Z?|Avanço contraposto a possível bloqueio
+128|P?|Possível parceria de distribuição
+129|N|Queda e pressões operacionais
+130|P|Avaliação favorável apesar do lucro menor
+131|P|Contrato com cliente destacado
+132|Z|Comparação sem conclusão
+133|Z|Página de cotação
+134|N|Revisão para baixo
+135|N|Projeção de queda
+136|Z?|Possível troca de comando sem direção explícita
+137|Z|Contratação sem efeito financeiro informado
+138|P?|Expansão de capacidade industrial
+139|P|Recuperação explícita das ações
+140|P?|Anúncio de remuneração ao acionista
+141|Z|Lista de temas sem direção para BB
+142|P|Ampliação explícita da capacidade
+143|Z|Página de cotação
+144|N|Recomendação reduzida para venda
+145|Z?|Volumes maiores e dificuldade simultânea
+146|N|Cotação mínima explícita
+147|Z|Pergunta sem conclusão
+148|Z|Calendário de pagamentos para Cemig
+149|P?|Parceria de descarbonização
+150|N|Queda após resultados
+151|N|Queda explícita da ação
+152|Z|Comparação sem banco recomendado identificado
+153|Z|Melhora de rentabilidade e receita tímida
+154|N?|Avaliação relativa desfavorável à Sabesp
+155|N|Redução de projeções
+156|N|Queda expressiva do lucro
+157|P?|Acordo voltado à eficiência operacional
+158|N?|Exposição a devedor em recuperação
+159|Z|Participação de executivo em evento
+160|P?|Proventos anunciados ao acionista
+161|N|Prejuízo e queda da ação
+162|P|Perspectiva de revisão favorável
+163|N|Forte queda explícita
+164|Z|Pergunta sobre datas de pagamento
+165|Z|Grupamento sem criação de valor demonstrada
+166|Z?|Ferramenta nova sem impacto financeiro claro
+167|P|Bons sinais explicitamente destacados
+168|N|Ação entre destaques negativos
+169|P|Crescimento do lucro
+170|P?|Minimização do risco político
+171|Z|Posição em ranking sem comparação temporal
+172|Z|Página genérica de dividendos
+173|P?|JCP e recompra anunciados
+174|Z?|Nomeação sem efeito financeiro definido
+175|Z?|Venda sem comparação de preço ou efeito
+176|N|Recuo da ação
+177|N|Queda após balanço
+178|P|Preço alvo elevado para ambas
+179|P|Programas de recompra
+180|N|Recomendação reduzida para venda
+181|Z|Metas sem direção informada
+182|N|Pressões de preços e produção
+183|N|Recuo explícito
+184|Z?|Renúncia sem causa ou efeito definido
+185|P?|Alta explícita apesar de alerta de custos
+186|N|Forte queda do lucro
+187|Z|Projeções sem valores ou direção
+188|N|Recomendação explícita de venda
+189|Z|Pergunta sem conclusão
+190|P|Revisão para cima da expansão
+191|N|Queda explícita
+192|Z|Retrospectiva institucional
+193|P?|Acordo para novo terminal
+194|Z|Pagamento já programado
+195|N|Forte queda após resultados
+196|Z?|Expansão do crédito com risco de juros
+197|P|Potencial de alta
+198|P|Compra e elevação de preço alvo
+199|Z|Expectativas sem conclusão
+200|P?|Aprovação de JCP
+201|Z|Comparação não demonstra deterioração da Petrobras
+202|P|Alta explícita da ação
+203|Z|Preço alvo sem referência ou recomendação
+204|Z|Agenda de resultados
+205|P|Crescimento do lucro
+206|N|Queda explícita
+207|Z|Desdobramento sem criação de valor demonstrada
+208|Z|Participação em concurso sem resultado
+209|P|Lucro forte e dívida em queda
+210|N?|Adiamento de remuneração
+211|P|Commodity em alta e perspectiva favorável
+212|N|Projeção de queda do lucro
+213|Z?|Investimento sem benefício ou comparação
+214|N|Recomendação de cautela
+215|N?|Indefinição específica sobre a empresa
+216|Z|Volume sem comparação ou avaliação
+217|N|Queda explícita
+218|P?|Anúncio de dividendos destacados
+219|P|Perspectiva de retomada do lucro
+220|N|Forte queda do lucro
+221|P?|Antecipação de remuneração
+222|P?|Investimento em nova atividade
+223|N|Produção menor
+224|P|Resultados sólidos e alta
+225|P|Expectativa explícita de expansão das vendas
+226|P|Início de cobertura com compra
+227|Z?|Lançamento de produto sem efeito demonstrado
+228|Z?|Mudança de política sem consequência direcional explícita
+229|P|Contrato de venda firmado
+230|P|Liderança em recomendações
+231|Z|Executivo já desligado do Santander
+232|P|Preferência reiterada por analista
+233|Z|Lucro absoluto sem comparação
+234|P?|Novo produto amplia oferta
+235|Z?|Aquisição em negociação sem termos
+236|Z|Troca de comando sem avaliação
+237|Z|Pagamento já programado
+238|P|Produção maior
+239|P?|Anúncio de JCP
+240|Z?|Parceria apenas em avaliação
+241|P|Potencial de alta
+242|P|Surpresa positiva e otimismo
+243|Z|Agenda de resultados
+244|P?|Aumento de participação institucional
+245|P|Elevação da nota de crédito
+246|N|Decepção nos resultados e queda
+247|P|Possível aumento dos dividendos
+248|Z?|Reorganização com objetivo sem resultado demonstrado
+249|N|Prejuízo e juros desfavoráveis
+250|P?|Ampliação industrial em mercado alvo
+251|Z?|Valuation relativo sem recomendação explícita
+252|Z|Simulação histórica sem resultado informado
+253|Z|Nomeação sem avaliação
+254|N|Queda e reação desfavorável do mercado
+255|Z|Lista de notícias sem conteúdo
+256|N?|Expectativa de trimestre desfavorável
+257|Z|Comparação sem conclusão
+258|Z|Comparação sem favorito identificado
+259|N|Lucro menor e fechamento de lojas
+260|Z|Favorito não identificado
+261|P?|Cancelamento de ações próprias
+262|P?|Anúncio de dividendos
+263|N|Contribuição expressiva para queda do índice
+264|P?|Anúncio de JCP
+265|N?|Acusação grave contestada pela empresa
+266|P|Crescimento do lucro
+267|P|Produção recorde
+268|Z|Agenda de balanços sem direção
+269|P?|Definição de distribuição de lucro
+270|Z?|Alternativa sugerida sem crítica direta ao ativo
+271|P?|Plano de melhoria da infraestrutura
+272|N|Queda no consumo
+273|Z|Pergunta sobre reestruturação sem conclusão
+274|P|Lucro dobra
+275|N?|Risco de bloqueio à privatização
+276|P|Forte alta explícita
+277|Z?|Corte de investimento sem motivo informado
+278|P|Produção recorde
+279|P|Recompra aprovada
+280|Z|Pagamento já programado
+281|P|Recompra aprovada
+282|P|Forte alta após balanço
+283|N|Queda explícita da Vale
+284|N|Greve e impacto operacional
+285|Z?|Possível sucessão sem definição ou avaliação
+286|Z|Benefício a clientes sem efeito financeiro claro
+287|N|Corte de preço alvo e queda
+288|P?|Anúncio de remuneração ao acionista
+289|Z|Calendário de direito a pagamento
+290|Z?|Plano de fábrica sem retorno ou custo definidos
+291|P?|Aumento de participação institucional na Renner
+292|N|Investimento descrito como frustrado
+293|N|Queda no consumo
+294|P|Superação de expectativas e lucro recorde
+295|N|Forte queda do lucro
+296|Z?|Prazo regulatório ampliado sem sanção informada
+297|P|Recomendação favorável
+298|P?|Aquisição em tecnologia industrial
+299|Z?|Incorporação proposta sem efeito definido
+300|P|Alta explícita da ação

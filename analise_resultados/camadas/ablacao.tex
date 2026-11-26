@@ -1,0 +1,43 @@
+\section{Ablação e diagnóstico das camadas intermediárias}
+
+A análise complementar é retrospectiva e utiliza o mesmo motor, custos de 10 bps e rebalanceamento mensal. As cardinalidades 5, 10 e 20 são ilustrativas. Não houve nova seleção de hiperparâmetros.
+
+\begin{table}[H]\centering\caption{Ablação com seleção própria em 2025.}
+
+\begin{tabular}{lrrrr}\hline Variante & n & Retorno (\%) & Sharpe & MDD (\%) \\ \hline
+
+Sem views & 5 & 59.24 & 1.60 & -10.73 \\
+
+Sem views & 10 & 42.63 & 1.22 & -10.54 \\
+
+Sem views & 20 & 28.21 & 0.74 & -8.46 \\
+
+XGB com gate & 5 & 40.26 & 1.02 & -16.30 \\
+
+XGB com gate & 10 & 33.78 & 0.87 & -13.82 \\
+
+XGB com gate & 20 & 20.30 & 0.35 & -13.67 \\
+
+XGB livre & 5 & -0.89 & -0.70 & -16.29 \\
+
+XGB livre & 10 & -0.70 & -0.69 & -16.12 \\
+
+XGB livre & 20 & -0.41 & -0.68 & -15.82 \\
+
+Textual & 5 & 51.48 & 1.41 & -11.94 \\
+
+Textual & 10 & 44.08 & 1.26 & -9.84 \\
+
+Textual & 20 & 26.53 & 0.63 & -9.89 \\
+
+Híbrido & 5 & 58.40 & 1.60 & -10.73 \\
+
+Híbrido & 10 & 40.14 & 1.13 & -10.20 \\
+
+Híbrido & 20 & 28.21 & 0.73 & -8.46 \\
+
+\hline\end{tabular}\par\smallskip{\footnotesize Fonte: elaboração própria.}\end{table}
+
+A variante XGB com gate preserva a confiança híbrida e remove somente a parcela textual de Q. Sua comparação com o híbrido avalia o efeito incremental dessa parcela sob a mesma regra de cobertura. XGB livre remove também a dependência de notícias e usa confiança quantitativa. A variante textual utiliza confiança de notícias, mas ainda herda escala e horizonte quantitativos; portanto, não representa um sistema textual inteiramente independente.
+
+Nos conjuntos comuns, as comparações são pareadas por subconjunto; os dados completos estão nos artefatos de auditoria. Com vinte ativos, elimina-se a diferença de elegibilidade entre as estratégias. O resultado descreve o efeito das intervenções neste motor e neste período, sem demonstrar generalização futura.
