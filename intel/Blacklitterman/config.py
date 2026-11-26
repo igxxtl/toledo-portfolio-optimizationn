@@ -90,7 +90,7 @@ W_MODEL_CONF = 0.659122
 W_NEWS_CONF = 0.340878
 
 # Gate de cobertura de notícias (Q + Ω) — não tunados no Optuna
-NEWS_COUNT_MIN = 5
+NEWS_COUNT_MIN = 3
 NEWS_OMEGA_BOOST = 3.79598
 HARD_PRIOR_WHEN_LOW_NEWS = True
 
