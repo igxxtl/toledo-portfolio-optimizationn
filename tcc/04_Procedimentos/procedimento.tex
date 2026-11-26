@@ -1,0 +1,1290 @@
+\chapter{PROCEDIMENTO EXPERIMENTAL}
+\label{cap:procedimento_experimental}
+
+Este capítulo descreve o procedimento experimental utilizado para comparar as estratégias de alocação de Markowitz e Black--Litterman em carteiras de ações negociadas na B3. O experimento utiliza séries históricas de mercado para estimar retornos com o XGBoost e manchetes financeiras para incorporar informações de sentimento às opiniões do modelo Black--Litterman. Em um experimento complementar, são comparados diferentes modelos de previsão de retorno utilizando os mesmos ativos, horizontes e datas de avaliação.
+
+São apresentados a base de dados, as etapas de pré-processamento,
+a configuração dos modelos e as regras da simulação financeira,
+realizada ao longo dos pregões de 2025. O capítulo também define
+as métricas utilizadas para avaliar as previsões, a classificação
+de sentimento e o desempenho das carteiras. O código desenvolvido
+neste trabalho está disponível publicamente%
+\footnote{\url{https://github.com/igxxtl/toledo-portfolio-optimizationn}}.
+
+\section{Base de Dados}
+\label{sec:base_dados}
+
+\subsection{Universo de ativos e fontes quantitativas}
+
+O universo do experimento contém vinte ativos negociados
+na B3, selecionados para contemplar diferentes setores
+e apresentar disponibilidade de dados históricos de
+mercado e de manchetes jornalísticas. Os códigos
+considerados são ABEV3, B3SA3, BBAS3, BBDC4, CMIG4, EQTL3,
+GGBR4, ITUB4, LREN3, MGLU3, PETR3, PETR4, PRIO3, RADL3,
+RAIL3, SANB11, SBSP3, SUZB3, VALE3 e WEGE3. A amostra inclui companhias dos setores financeiro, elétrico, industrial, de consumo, infraestrutura e \emph{commodities}. PETR3 e PETR4 possuem séries de preços distintas, mas compartilham informações textuais por pertencerem à mesma empresa. As carteiras avaliadas contêm de uma a vinte ações desse universo.
+
+As séries financeiras foram obtidas da Yahoo Finance
+por meio da biblioteca \texttt{yfinance} e armazenadas
+em arquivos locais. São utilizados registros diários
+de abertura, máxima, mínima, fechamento e volume.
+O histórico disponível inicia-se em janeiro de 2018.
+Os cálculos utilizam os preços de fechamento registrados
+nesses arquivos.
+
+\newpage Na construção dos atributos candidatos do XGBoost,
+utilizam-se duas séries exógenas ao histórico de cada ação:
+o Ibovespa, que representa o comportamento do mercado
+acionário brasileiro, e a taxa de câmbio entre o dólar
+americano e o real (USD/BRL), que fornece informação
+macroeconômica complementar. A seleção dos atributos
+utilizados pelo estimador é descrita na
+Seção~\ref{sec:estimador_xgb}.
+
+\subsection{Notícias financeiras e períodos de avaliação}
+
+A base textual reúne manchetes recuperadas pelo serviço
+Google News, utilizando sua interface RSS, com idioma
+português do Brasil e localização brasileira. As consultas
+consideram os códigos de negociação e os nomes das
+empresas, abrangendo janeiro de 2023 a dezembro de 2025.
+A unidade de análise é a manchete, o corpo das reportagens
+não participa da classificação.
+
+A coleta bruta contém 7.835 registros. Após deduplicação
+e filtragem de pertinência, a base classificada contém
+4.681 manchetes: 2.418 positivas, 1.253 negativas e
+1.010 neutras. A existência de uma notícia e a habilitação
+de uma opinião são condições distintas, pois a configuração
+de alocação exige pelo menos três manchetes no dia
+elegível.
+
+O ano de 2024 fornece os dados de validação quantitativa
+e a avaliação financeira corresponde aos 250 pregões
+entre 2 de janeiro e 30 de dezembro de 2025. A
+~\ref{tab:periodos_experimentais} resume os períodos
+utilizados.
+
+\begin{table}[H]
+\centering
+\caption{Períodos de referência do experimento.}
+\label{tab:periodos_experimentais}
+{\footnotesize
+\begin{tabular}{p{0.29\linewidth}p{0.25\linewidth}p{0.35\linewidth}}
+\hline
+Etapa & Período & Finalidade \\ \hline
+Histórico financeiro &
+Desde janeiro de 2018 &
+Construção de atributos e treinamento quantitativo \\
+
+Notícias financeiras &
+Janeiro de 2023 a dezembro de 2025 &
+Classificação e agregação de sentimento \\
+
+Validação quantitativa &
+Dois semestres de 2024 &
+Avaliação dos atributos e definição dos horizontes \\
+
+Previsões de avaliação &
+Quatro trimestres de 2025 &
+Geração de previsões por atualização temporal \\
+
+Simulação financeira &
+250 pregões de 2025 &
+Comparação das estratégias de investimento \\
+
+Estimação de risco &
+126 pregões até cada sinal &
+Cálculo da covariância, do prior e da média histórica \\
+\hline
+\end{tabular}}
+\par
+Fonte: Elaborado pelo autor
+\end{table}
+
+A ~\ref{fig:divisao_temporal} apresenta a divisão
+temporal do experimento. A validação utiliza os dois
+semestres de 2024, e o teste abrange os quatro trimestres
+de 2025. A cada janela, o modelo é retreinado com os
+dados anteriores ao seu início, utilizando apenas
+observações cujo retorno-alvo já era conhecido.
+
+\begin{figure}[htbp]
+    \centering
+    \caption{Divisão temporal do treinamento, da validação
+    e do teste do XGBoost.}
+    \label{fig:divisao_temporal}
+
+    \begin{tikzpicture}[
+        >=Stealth,
+        node distance=0.6cm,
+        etapa/.style={
+            draw,
+            thick,
+            rounded corners=4pt,
+            align=center,
+            text width=0.22\linewidth,
+            minimum height=1.7cm,
+            inner sep=4pt,
+            font=\small
+        }
+    ]
+        \node[etapa, fill=gray!15] (treino)
+            {\textbf{Treino inicial}\\2018--2023};
+
+        \node[etapa, fill=blue!10, right=of treino] (validacao)
+            {\textbf{Validação}\\2024\\Janelas semestrais};
+
+        \node[etapa, fill=green!10, right=of validacao] (teste)
+            {\textbf{Teste}\\2025\\Janelas trimestrais};
+
+        \draw[->, thick] (treino) -- (validacao);
+        \draw[->, thick] (validacao) -- (teste);
+    \end{tikzpicture}
+
+    \par\smallskip
+    Fonte: Elaborado pelo autor
+\end{figure}
+
+\section{Pré-processamento de Dados}
+\label{sec:pre_processamento}
+
+\subsection{Séries financeiras e atributos quantitativos}
+
+Os registros financeiros são ordenados cronologicamente
+e verificados quanto à existência de datas duplicadas,
+preços de fechamento inválidos e inconsistências.
+As séries são alinhadas pelas datas de pregão. Na
+simulação financeira, são utilizadas as datas com
+fechamento disponível para todas as ações do universo.
+
+Seja $P_{i,t}$ o preço de fechamento da ação $i$ no
+pregão $t$. O log-retorno diário é definido por
+\begin{equation}
+r_{i,t}
+=
+\ln\left(\frac{P_{i,t}}{P_{i,t-1}}\right).
+\label{eq:retornos_cap4}
+\end{equation}
+
+Utiliza-se o log-retorno porque ele é aditivo no tempo:
+a soma dos log-retornos diários ao longo de um horizonte
+equivale ao logaritmo da razão entre os preços de
+fechamento final e inicial. Essa propriedade permite
+expressar os retornos acumulados nos horizontes de
+5, 10 e 21 pregões utilizados como alvos do XGBoost.
+
+Os atributos quantitativos representam o comportamento
+histórico da ação e sua relação com o mercado. São
+considerados retornos defasados, momentum, volatilidade,
+volume, médias móveis, indicadores técnicos e medidas
+relativas ao Ibovespa. Os conjuntos candidatos também
+incluem atributos cambiais e medidas do comportamento
+conjunto das ações.
+
+Entre os atributos relativos ao mercado, utiliza-se
+a diferença entre o log-retorno acumulado da ação e
+o do Ibovespa:
+\begin{equation}
+s_{i,t}^{(N)}
+=
+\ln\left(\frac{P_{i,t}}{P_{i,t-N}}\right)
+-
+\ln\left(\frac{P_{m,t}}{P_{m,t-N}}\right),
+\label{eq:spread_retorno_cap4}
+\end{equation}
+em que $P_{m,t}$ representa o nível do índice e $N$
+é a janela retrospectiva.
+
+As famílias de atributos contemplam diferentes janelas,
+incluindo 3, 5, 14, 21, 42 e 63 pregões, além de medidas
+de momentum em períodos maiores. Os grupos de atributos
+são escolhidos por horizonte com dados da validação
+de 2024.
+
+Os atributos de entrada do XGBoost conjunto foram
+organizados em três grupos cumulativos. O grupo básico
+reúne retornos defasados, momentum, volatilidade, indicadores
+de volume e de análise técnica, beta, retornos do Ibovespa
+e do câmbio, além de posições relativas no ranking de
+retornos das ações. O segundo grupo acrescenta medidas
+intradiárias, indicadores de risco e retornos relativos
+ao Ibovespa. O terceiro inclui também medidas do
+comportamento conjunto das ações, como a mediana e a
+dispersão dos retornos e a proporção de ações em alta.
+
+O grupo básico foi utilizado no horizonte de 5 pregões,
+o segundo no de 10 pregões e o terceiro no de 21 pregões.
+Nos três horizontes, a identificação da ação também foi
+incluída por meio de variáveis binárias.
+
+A variável-alvo do XGBoost é o log-retorno acumulado
+no horizonte $h$:
+\begin{equation}
+    y_{i,t}^{(h)}
+    =
+    \ln\left(\frac{P_{i,t+h}}{P_{i,t}}\right),
+    \qquad h\in\{5,10,21\}.
+    \label{eq:alvo_cap4}
+\end{equation}
+
+Esse retorno somente se torna conhecido no encerramento
+do horizonte, em $t+h$. As etapas de treinamento e de
+atualização da confiança respeitam essa data de
+disponibilidade.
+
+\subsection{Higienização e agregação das notícias}
+
+As notícias passam por deduplicação e filtragem de
+pertinência ao ativo ou à empresa. A agregação utilizada
+pelo Black--Litterman considera a empresa emissora,
+permitindo compartilhar informações entre diferentes
+classes de ações.
+
+Cada manchete recebe um escore
+$s_k\in\{-1,0,+1\}$, correspondente às categorias
+negativa, neutra e positiva. Para a empresa associada
+à ação $i$, a média dos escores na data $d$ é
+\begin{equation}
+\bar{s}_{i,d}
+=
+\frac{1}{m_{i,d}}
+\sum_{k=1}^{m_{i,d}}s_k,
+\qquad m_{i,d}>0,
+\label{eq:sent_medio_cap4}
+\end{equation}
+em que $m_{i,d}$ é a quantidade de manchetes elegíveis.
+
+A ~\ref{tab:escores_noticias_trimestre} apresenta a
+distribuição dos escores das manchetes por trimestre de
+publicação. O escore médio trimestral é calculado pela
+diferença entre o número de manchetes positivas e negativas,
+dividida pelo total de manchetes no trimestre, incluindo
+as neutras. As manchetes positivas foram a categoria mais
+frequente em todos os trimestres do período.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Distribuição dos escores das manchetes por trimestre.}
+    \label{tab:escores_noticias_trimestre}
+    {\footnotesize
+    \begin{tabular}{lrrrr}
+        \hline
+        Trimestre & Negativas & Neutras & Positivas & Escore médio \\
+        \hline
+        2023-T1 &  79 &  43 & 112 & 0,141 \\
+        2023-T2 &  47 &  41 &  70 & 0,146 \\
+        2023-T3 &  56 &  38 & 112 & 0,272 \\
+        2023-T4 &  60 &  52 & 116 & 0,246 \\
+        2024-T1 &  94 &  76 & 142 & 0,154 \\
+        2024-T2 &  81 &  93 & 166 & 0,250 \\
+        2024-T3 &  68 & 106 & 234 & 0,407 \\
+        2024-T4 &  67 &  75 & 172 & 0,334 \\
+        2025-T1 & 120 &  79 & 204 & 0,208 \\
+        2025-T2 & 141 &  84 & 230 & 0,196 \\
+        2025-T3 & 231 & 132 & 316 & 0,125 \\
+        2025-T4 & 209 & 191 & 543 & 0,354 \\
+        \hline
+        Total & 1.253 & 1.010 & 2.417 & 0,249 \\
+        \hline
+    \end{tabular}}
+    \par\smallskip
+    Fonte: Elaborado pelo autor
+\end{table}
+
+O escore trimestral descreve a base textual. Para a
+construção das opiniões do Black--Litterman, os escores
+são agregados por empresa e por dia de publicação.
+
+O sinal agregado é definido por
+\begin{equation}
+\psi_{i,d}
+=
+\tanh\left[
+\bar{s}_{i,d}\ln(1+m_{i,d})
+\right].
+\label{eq:sent_suavizado_cap4}
+\end{equation}
+
+O logaritmo incorpora a quantidade de notícias com
+ganhos decrescentes, enquanto a tangente hiperbólica
+limita o sinal ao intervalo entre $-1$ e $1$.
+Na ausência de notícias, o sinal é definido como zero.
+
+Para cada decisão mensal, são consideradas somente
+as notícias do dia civil anterior ao sinal. Essa data
+pode corresponder a um dia sem pregão.
+
+Como o sentimento é adimensional, sua conversão para
+a escala de retorno utiliza a média dos valores
+absolutos dos últimos dezoito retornos-alvo já
+conhecidos, no horizonte selecionado para a ação.
+A rotina exige pelo menos nove erros de previsão
+maturados para construir o sinal e sua confiança.
+
+\section{Modelo Utilizado}
+\label{sec:modelos_utilizados}
+
+Na simulação das carteiras, utiliza-se o XGBoost com treinamento conjunto das 20 ações para estimar os retornos incorporados às opiniões do modelo Black--Litterman. Em um experimento complementar, uma configuração do XGBoost treinada separadamente para cada ativo e horizonte é comparada a outros modelos de previsão de retorno, conforme descrito na \hyperref[sec:comparacao_modelos_previsao]{Seção~\ref*{sec:comparacao_modelos_previsao}}.
+
+\subsection{Estimador quantitativo XGBoost}
+\label{sec:estimador_xgb}
+
+A configuração consolidada utiliza regressão XGBoost
+conjunta das vinte ações, denominada \emph{pool}.
+Para cada horizonte, os dados são reunidos e ordenados
+por data e ativo. A identificação da ação é incluída
+entre as variáveis de entrada por codificação binária.
+
+São utilizados modelos por horizonte, com atualização
+em janelas temporais sucessivas. A validação compreende
+os dois semestres de 2024, e a avaliação utiliza os
+quatro trimestres de 2025. Em cada etapa, o treinamento
+reúne o histórico anterior à janela prevista e apenas
+os alvos integralmente conhecidos antes de seu início.
+
+O estimador quantitativo utiliza uma regressão XGBoost
+com treinamento conjunto das 20 ações, abordagem
+denominada \emph{pool}. Em cada janela de treinamento,
+ajusta-se um modelo para cada horizonte de previsão
+(5, 10 e 21 pregões), reunindo os registros das 20 ações.
+Cada registro contém os atributos de uma ação em um
+pregão e variáveis binárias que identificam essa ação.
+Assim, o modelo pode aprender padrões comuns entre
+as ações e produzir uma previsão de retorno individual
+para cada uma. A ~\ref{tab:parametros_xgb}
+apresenta a configuração utilizada nos três horizontes.
+
+\begin{table}[H]
+\centering
+\caption{Configuração do XGBoost conjunto.}
+\label{tab:parametros_xgb}
+{\footnotesize
+\renewcommand{\arraystretch}{0.9}
+\begin{tabular}{p{0.55\linewidth}p{0.30\linewidth}}
+\hline
+Parâmetro & Valor \\ \hline
+Função objetivo & Erro quadrático \\
+Taxa de aprendizado & 0,03 \\
+Profundidade máxima & 4 \\
+Subamostragem de observações & 0,8 \\
+Subamostragem de atributos & 0,8 \\
+Peso mínimo por folha & 10 \\
+Regularização L1 & 0,1 \\
+Regularização L2 & 1,0 \\
+Número máximo de árvores & 400 \\
+Interrupção antecipada & 20 iterações sem melhora \\
+Semente de aleatoriedade & 42 \\
+\hline
+\end{tabular}}
+\par
+Fonte: Elaborado pelo autor
+\end{table}
+
+O XGBoost conjunto utilizou uma configuração fixa de
+referência, com erro quadrático e pesos iguais entre
+as observações. Os valores da taxa de aprendizado, das
+frações de subamostragem, da profundidade máxima, do
+peso mínimo por folha e das penalizações L1 e L2 foram
+retomados da configuração padrão do código de treinamento.
+Esses valores foram mantidos nos três horizontes para
+comparar os conjuntos de atributos e os métodos de
+treinamento sob os mesmos hiperparâmetros.
+
+Em cada janela, o número de árvores foi determinado
+por validação temporal interna. Os primeiros 80\% dos
+registros de treinamento foram destinados ao ajuste,
+com exclusão das observações cujo retorno-alvo ainda
+não era conhecido no início dos 20\% finais. Nessa
+parcela final, monitorou-se o RMSE por até 400 iterações,
+com interrupção após 20 iterações sem melhora.
+Selecionado o número de árvores correspondente ao menor
+RMSE, o modelo foi ajustado novamente com todos os
+registros cujos retornos-alvo já eram conhecidos antes
+do início da janela de previsão.
+
+O XGBoost é treinado com log-retornos padronizados pela
+média e pelo desvio-padrão dos dados usados no ajuste.
+Antes de compor as opiniões do Black--Litterman, as
+previsões voltam à escala original de log-retorno.
+
+Para cada ação, escolheu-se um horizonte de 5, 10 ou
+21 pregões com base no acerto direcional em 2024. A
+escolha considerou apenas previsões cujos retornos já
+eram conhecidos antes de 2025. Na simulação de 2025,
+usou-se a previsão do XGBoost conjunto para o horizonte
+escolhido de cada ação.
+
+\subsection{Modelo de linguagem e classificação de sentimento}
+
+A classificação das manchetes utiliza o modelo de
+linguagem \texttt{gpt-5.6-luna}, em regime
+\emph{zero-shot}, sem exemplos de classificação no
+prompt. Em cada requisição, os campos
+\texttt{\{ticker\}} e \texttt{\{headline\}} são
+substituídos pelo código de negociação da ação e
+pelo título da notícia, respectivamente.
+
+\par\smallskip
+\noindent
+\begingroup
+\setlength{\fboxsep}{5pt}
+\fbox{%
+    \begin{minipage}{\dimexpr\linewidth-2\fboxsep-2\fboxrule\relax}
+        \small\raggedright
+        \setlength{\parindent}{0pt}
+        \setlength{\parskip}{0pt}
+
+        \textbf{Prompt de classificação}\par
+        Classifique o sentimento da manchete abaixo em relação
+        ao impacto no preço da ação \texttt{\{ticker\}}.\par
+        Responda apenas com uma palavra: positivo, negativo ou neutro.\par
+        Manchete: \texttt{\{headline\}}
+    \end{minipage}%
+}
+\endgroup
+\par\smallskip
+
+Para esta tarefa de análise de sentimento, não é realizado treinamento supervisionado adicional com as manchetes da amostra. Os rótulos são armazenados em arquivo estruturado e reaproveitados para pares de ativo e título já processados.
+
+\subsection{Configuração do Black--Litterman}
+\label{sec:configuracao_bl_cap4}
+
+A integração utiliza expectativas diárias de retorno
+excedente à referência livre de risco. A taxa anual
+constante de 15\% é convertida para a frequência diária:
+\begin{equation}
+r_{f,d}
+=
+(1+0,15)^{1/252}-1.
+\label{eq:selic_cap4}
+\end{equation}
+
+Em cada data de sinal, a matriz de covariância
+$\Sigma_t$ é estimada com os retornos simples dos
+últimos 126 pregões, incluindo uma regularização
+diagonal de $10^{-7}$. A expectativa utilizada por
+Markowitz corresponde à média desses retornos,
+descontada de $r_{f,d}$.
+
+O \emph{prior} do Black--Litterman é calculado por
+\begin{equation}
+    \pi_t
+    =
+    \delta\Sigma_t w^{\mathrm{eq}},
+    \qquad
+    w_i^{\mathrm{eq}}=\frac{1}{20},
+    \qquad
+    \delta=3.
+    \label{eq:prior_experimental}
+\end{equation}
+
+Adotou-se $\delta=3$ como coeficiente fixo de aversão
+ao risco, conforme a Subseção~\ref{subsec:otimizacao_pesos}.
+O mesmo valor foi utilizado no cálculo dos retornos de
+equilíbrio e na otimização das carteiras de Markowitz
+e Black--Litterman.
+
+A construção do \emph{prior} utiliza pesos de equilíbrio
+iguais para as vinte ações do universo. Os pesos finais
+de cada carteira são determinados pela otimização.
+
+Seja $m_{i,t}$ a quantidade de notícias do dia elegível
+para o sinal em $t$. A cobertura normalizada é
+\begin{equation}
+c_{i,t}
+=
+\min\left(1,\frac{m_{i,t}}{3}\right).
+\label{eq:cobertura_cap4}
+\end{equation}
+
+A opinião híbrida no horizonte da ação é
+\begin{equation}
+Q_{i,t}^{(h)}
+=
+\left[
+\alpha+(1-\alpha)(1-c_{i,t})
+\right]\widehat{y}_{i,t}^{(h)}
++
+(1-\alpha)c_{i,t}
+\psi_{i,t}\rho_{i,t}^{(h)},
+\label{eq:q_hibrido_cap4}
+\end{equation}
+em que $\widehat{y}_{i,t}^{(h)}$ é a previsão quantitativa,
+$\rho_{i,t}^{(h)}$ é a escala de retorno do sentimento
+e $\alpha=0,386251$.
+
+A conversão para a escala diária excedente é
+\begin{equation}
+Q_{i,t}^{d}
+=
+\frac{Q_{i,t}^{(h)}}{h}
+-
+r_{f,d}.
+\label{eq:q_daily_cap4}
+\end{equation}
+
+A divisão por $h$ produz uma taxa logarítmica diária
+equivalente. Sua compatibilidade com os retornos
+aritméticos do prior é aproximada.
+
+\subsection{Controle de confiança das opiniões}
+
+A confiança quantitativa utiliza os últimos dezoito
+erros absolutos cujos retornos-alvo já foram realizados.
+Seja $\mathcal{H}_{i,t}$ esse conjunto histórico e
+$e_{i,u}$ o erro absoluto correspondente. Define-se
+\begin{equation}
+C_{i,t}^{\mathrm{modelo}}
+=
+\frac{1}{|\mathcal{H}_{i,t}|}
+\sum_{u\in\mathcal{H}_{i,t}}
+\exp\left(
+-\frac{e_{i,u}}{\widetilde{e}_{i,t}}
+\right),
+\label{eq:confianca_modelo}
+\end{equation}
+em que $\widetilde{e}_{i,t}$ é a mediana desses erros,
+limitada inferiormente por $10^{-8}$.
+
+A confiança de notícias cresce com a quantidade
+de manchetes:
+\begin{equation}
+C_{i,t}^{\mathrm{noticias}}
+=
+1-\exp\left(-\frac{m_{i,t}}{3}\right).
+\label{eq:confianca_noticias}
+\end{equation}
+
+A combinação recebe pesos de 0,659122 para o componente
+quantitativo e 0,340878 para o textual. O resultado
+é limitado ao intervalo de 0,0575035 a 0,937247.
+
+A variância diária equivalente da opinião é estimada
+pela variância amostral dos retornos-alvo maturados,
+dividida por $h^2$, com limite inferior de $10^{-8}$.
+Denotando essa estimativa por $v_{i,t}^{d}$, a incerteza
+básica é
+\begin{equation}
+\omega_{i,t}
+=
+\tau v_{i,t}^{d}
+\frac{1-C_{i,t}}{C_{i,t}},
+\qquad
+\tau=0,0147235.
+\label{eq:omega_cap4}
+\end{equation}
+
+Quando há menos de três manchetes, o mecanismo de
+\emph{hard prior} reduz a confiança para $10^{-8}$ e
+multiplica a incerteza resultante por 3,79598. Esse
+aumento reduz a influência da opinião sobre o retorno
+esperado, aproximando-o do retorno de equilíbrio.
+O multiplicador foi mantido da configuração obtida
+na calibração conjunta dos parâmetros do
+Black--Litterman com o Optuna, que buscou valores
+entre 1 e 6 na validação de 2024. A matriz $\Omega_t$
+reúne essas incertezas na diagonal, com valores finais
+limitados inferiormente por $10^{-8}$.
+
+Como as opiniões são associadas diretamente às ações,
+a atualização das expectativas pode ser expressa por
+\begin{equation}
+\mu_t^{\mathrm{BL}}
+=
+\pi_t
++
+\tau\Sigma_t
+\left(
+\tau\Sigma_t+\Omega_t
+\right)^{-1}
+\left(
+Q_t^{d}-\pi_t
+\right).
+\label{eq:posterior_experimental}
+\end{equation}
+\noindent onde, $\mu_t^{\mathrm{BL}}$ é o vetor de retornos
+esperados atualizados, $\pi_t$ é o vetor de retornos de
+equilíbrio (\emph{prior}) e $Q_t^{d}$ é o vetor de opiniões
+em escala diária equivalente. A matriz $\Sigma_t$ representa
+a covariância dos retornos, $\tau$ é o fator de escala da
+incerteza do \emph{prior} e $\Omega_t$ reúne as incertezas
+das opiniões. O termo $Q_t^{d}-\pi_t$ expressa o desvio das
+opiniões em relação ao equilíbrio. Quanto maior a incerteza
+de uma opinião, menor sua influência na atualização.
+
+Segue o trecho completo atualizado. As tabelas têm uma única linha para o **XGBoost por ativo**, e o resultado da combinação XGBoost–LightGBM aparece em um parágrafo separado. Mantive as duas subseções e os rótulos existentes.
+
+\subsection{Comparação complementar entre modelos de previsão}
+\label{sec:comparacao_modelos_previsao}
+
+Foi realizado um experimento complementar para comparar o desempenho de diferentes modelos na previsão de retorno. Foram utilizadas as mesmas 20 ações da base quantitativa, com o log-retorno futuro de fechamento como variável-alvo. A comparação considera os horizontes de 5, 10 e 21 pregões. Para cada horizonte, os modelos são avaliados nos mesmos pares de ativo e data. São incluídas apenas as previsões cujo horizonte termina até o último pregão de 2025, de modo que o retorno realizado possa ser calculado dentro do período de avaliação.
+
+A comparação utiliza como referência as previsões do XGBoost conjunto descrito na \hyperref[sec:estimador_xgb]{Seção~\ref*{sec:estimador_xgb}}, que foram incorporadas às opiniões do modelo Black--Litterman na simulação das carteiras. Para cada horizonte e trimestre, o LightGBM, a regressão Ridge e a rede recorrente do tipo GRU são ajustados com os dados reunidos das 20 ações. Assim, cada modelo é treinado conjuntamente e produz previsões individuais para cada ativo.
+
+O LightGBM e a regressão Ridge utilizam os mesmos atributos tabulares do XGBoost. A regressão Ridge constitui uma referência linear com regularização L2. A GRU utiliza sequências de atributos dos últimos 35 pregões para estimar o retorno futuro. Na configuração denominada Lag-Llama com Ridge, os históricos de log-retornos de cada ativo são utilizados para extrair representações do Lag-Llama pré-treinado. Essas representações são utilizadas como entrada de uma regressão Ridge ajustada conjuntamente com os dados das 20 ações.
+
+A avaliação é realizada nos quatro trimestres de 2025. Os modelos são ajustados no início de cada trimestre com os dados das janelas anteriores, utilizando apenas observações cujos retornos-alvo já eram conhecidos. Além da avaliação por horizonte, considera-se um recorte que reúne, para cada ação, as previsões no horizonte adotado na simulação das carteiras. Esse recorte é denominado Horizontes do TCC nas tabelas de resultados.
+
+Para interpretar a acurácia direcional, considera-se a proporção de retornos positivos, que corresponde à taxa de acerto obtida ao prever alta em todas as observações. As métricas utilizadas são apresentadas na \hyperref[sec:desempenho_das_previsoes_quantitativas]{Seção~\ref*{sec:desempenho_das_previsoes_quantitativas}}.
+
+\subsection{Resultados da comparação entre modelos}
+\label{sec:resultados_comparacao_modelos}
+
+A avaliação compreende 4.900, 4.800 e 4.580 pares de ativo e data para os horizontes de 5, 10 e 21 pregões, respectivamente. O número de observações diminui à medida que o horizonte aumenta, pois uma parcela maior das previsões realizadas no final do ano tem seu horizonte encerrado após o período de avaliação. Também são avaliadas 4.683 observações no recorte denominado Horizontes do TCC, que utiliza, para cada ação, o horizonte adotado na simulação das carteiras.
+
+A Tabela~\ref{tab:comparacao_modelos_rmse} apresenta o MAE e o RMSE calculados sobre todas as observações de cada recorte. A linha Lag-Llama com Ridge corresponde à configuração em que as representações do modelo pré-treinado são utilizadas em uma regressão ajustada conjuntamente com os dados das 20 ações.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Erros das previsões de retorno por modelo e horizonte em 2025 (\%).}
+    \label{tab:comparacao_modelos_rmse}
+    {\small
+    \setlength{\tabcolsep}{4pt}
+    \begin{tabular}{@{}lrrrrrrrr@{}}
+        \hline
+        & \multicolumn{2}{c}{5 pregões}
+        & \multicolumn{2}{c}{10 pregões}
+        & \multicolumn{2}{c}{21 pregões}
+        & \multicolumn{2}{c}{Horizontes do TCC} \\
+        \cline{2-9}
+        Modelo & MAE & RMSE & MAE & RMSE & MAE & RMSE & MAE & RMSE \\
+        \hline
+        XGBoost             & 3,099 & \textbf{4,309} & 4,539 & \textbf{6,177} & 6,719 & 9,085 & 5,654 & 8,082 \\
+        LightGBM            & \textbf{3,098} & 4,318 & \textbf{4,533} & 6,177 & \textbf{6,714} & \textbf{9,077} & \textbf{5,648} & \textbf{8,070} \\
+        GRU                 & 3,139 & 4,355 & 4,591 & 6,245 & 7,004 & 9,388 & 5,841 & 8,279 \\
+        Lag-Llama com Ridge & 3,176 & 4,384 & 4,674 & 6,378 & 7,103 & 9,615 & 5,986 & 8,527 \\
+        Ridge               & 3,147 & 4,366 & 4,706 & 6,408 & 7,449 & 9,946 & 6,176 & 8,742 \\
+        \hline
+    \end{tabular}
+    }
+    \par\smallskip
+    Fonte: Elaborado pelo autor
+\end{table}
+
+O XGBoost conjunto apresentou MAE e RMSE menores que os da GRU, do Lag-Llama com Ridge e da Ridge conjunta nos três horizontes. Os erros do XGBoost e do LightGBM foram próximos. No recorte dos horizontes do TCC, o LightGBM apresentou RMSE de 8,070\%, frente a 8,082\% do XGBoost conjunto. A diferença de RMSE entre LightGBM e XGBoost foi de $-0{,}012$ ponto percentual, com intervalo de confiança de 95\% de $-0{,}022$ a $-0{,}002$ ponto percentual.
+
+A ~\ref{tab:comparacao_modelos_direcao} apresenta a acurácia direcional por horizonte e a acurácia balanceada no recorte dos horizontes do TCC. A acurácia balanceada atribui o mesmo peso às classes de retorno positivo e não positivo.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Acurácia direcional e balanceada das previsões de retorno em 2025 (\%).}
+    \label{tab:comparacao_modelos_direcao}
+    {\small
+    \setlength{\tabcolsep}{4pt}
+    \begin{tabular}{@{}lrrrrr@{}}
+        \hline
+        & \multicolumn{3}{c}{Acurácia direcional por horizonte}
+        & \multicolumn{2}{c}{Horizontes do TCC} \\
+        \cline{2-4}\cline{5-6}
+        Modelo & 5 pregões & 10 pregões & 21 pregões & Direcional & Balanceada \\
+        \hline
+        XGBoost             & \textbf{53,92} & 56,21 & 58,41 & \textbf{56,46} & \textbf{50,25} \\
+        LightGBM            & 53,14 & \textbf{56,67} & \textbf{58,43} & 56,18 & 50,03 \\
+        GRU                 & 49,55 & 51,12 & 45,59 & 47,23 & 46,03 \\
+        Lag-Llama com Ridge & 49,78 & 51,06 & 50,04 & 48,49 & 48,01 \\
+        Ridge               & 50,69 & 49,96 & 47,03 & 46,57 & 45,94 \\
+        \hline
+    \end{tabular}
+    }
+    \par\smallskip
+    Fonte: Elaborado pelo autor
+\end{table}
+
+Nos horizontes de 10 e 21 pregões, o LightGBM apresentou a maior acurácia direcional, com valores próximos aos do XGBoost conjunto. No recorte dos horizontes do TCC, o XGBoost apresentou acurácia direcional de 56,46\%, frente a 56,18\% do LightGBM. A diferença entre LightGBM e XGBoost foi de $-0{,}28$ ponto percentual, com intervalo de confiança de 95\% de $-0{,}80$ a $0{,}15$ ponto percentual. O intervalo inclui zero, indicando que a diferença observada é inconclusiva.
+
+Nesse mesmo recorte, 56,44\% dos retornos realizados foram positivos, valor que corresponde à acurácia direcional obtida ao prever alta em todas as observações. O XGBoost conjunto apresentou acurácia balanceada de 50,25\%, frente a 50,00\% da regra de sempre prever alta. Assim, a acurácia direcional observada deve ser interpretada à luz da proporção de altas no período.
+
+Na comparação de 2025, o XGBoost conjunto apresentou erros menores e maior acurácia direcional que a GRU, o Lag-Llama com Ridge e a Ridge conjunta. O LightGBM apresentou desempenho próximo ao do XGBoost nas duas dimensões, com pequena vantagem no erro de magnitude no recorte dos horizontes do TCC. Esses resultados se referem à previsão dos retornos. O desempenho financeiro das carteiras é avaliado na simulação Black--Litterman com o XGBoost conjunto.
+
+\section{Protocolo de Alocação e Simulação}
+\label{sec:protocolo_experimental}
+
+\subsection{Restrições e otimização}
+
+O capital inicial de R\$~100.000 é utilizado como
+referência para apresentar a evolução do patrimônio e
+os custos de negociação em reais. Como os pesos e os
+custos de negociação são proporcionais ao capital, seu
+valor inicial não altera os pesos ótimos nem os
+retornos percentuais da carteira.
+
+A simulação exige pesos positivos para todas as ações
+selecionadas, o que impede posições vendidas. A soma
+dos pesos é igual a~1, de modo que todo o capital
+disponível é alocado sem recorrer a empréstimos.
+Para uma carteira com $n$ ações, os pesos são obtidos
+pela maximização de
+\begin{equation}
+\max_w
+\left[
+\mu_t^\top w
+-
+\frac{\delta}{2}
+w^\top\Sigma_t w
+\right],
+\label{eq:otimizacao_experimental}
+\end{equation}
+sujeita a
+\begin{equation}
+\sum_{i=1}^{n}w_i=1,
+\qquad
+0,001\leq w_i\leq
+\max\left(0,341677,\frac{1}{n}\right).
+\label{eq:restricoes_experimentais}
+\end{equation}
+
+O piso mantém uma participação mínima de 0,1\% por
+ação selecionada. O teto se ajusta à quantidade de
+ativos para permitir carteiras com uma ou duas ações.
+A aversão ao risco é fixada em $\delta=3$.
+
+\subsection{Ativos comuns e seleção própria}
+
+A partir de um universo fixo de 20 ações, a simulação
+avalia carteiras com $n$ ações, de 1 a 20, em dois
+cenários: ativos comuns e seleção própria.
+
+No cenário de ativos comuns, cada grupo é um subconjunto
+de $n$ ações do universo. O mesmo grupo é utilizado por
+todas as configurações comparadas e permanece fixo durante
+o ano. A cada rebalanceamento, são recalculados apenas os
+pesos, o que permite comparar as configurações sob a mesma
+composição de ativos.
+
+Para cada tamanho de carteira entre 2 e 18 ações,
+sorteiam-se 30 combinações distintas de $n$ ações entre
+as possíveis no universo de 20. Por exemplo, para $n=2$,
+sorteiam-se 30 dos 190 pares possíveis. Dessa forma,
+um mesmo tamanho de carteira é avaliado com diferentes
+composições.
+
+Para $n=1$ e $n=19$, são avaliadas as 20 combinações
+possíveis de cada tamanho. Para $n=20$, avalia-se apenas
+a carteira que reúne todas as ações. Ao todo, o cenário
+de ativos comuns inclui 551 combinações por configuração.
+O sorteio utiliza a mesma semente aleatória para permitir a
+reprodução das combinações selecionadas.
+
+No cenário de seleção própria, cada configuração
+seleciona mensalmente as $n$ ações com maior pontuação,
+calculada por
+\begin{equation}
+    a_{i,t}
+    =
+    \frac{\mu_{i,t}}{\sqrt{\Sigma_{ii,t}}},
+    \label{eq:ranking_selecao}
+\end{equation}
+em que $\mu_{i,t}$ é o retorno excedente esperado da
+ação $i$ na data $t$ e $\sqrt{\Sigma_{ii,t}}$ é a
+volatilidade estimada dessa ação. Após a seleção,
+os pesos são calculados pelo mesmo otimizador. Tanto
+a composição quanto os pesos da carteira podem mudar
+a cada rebalanceamento.
+
+A comparação entre Black--Litterman e Markowitz totaliza
+1.142 simulações. Para cada estratégia, são realizadas
+551 simulações com ativos comuns e 20 com seleção própria,
+uma para cada valor de $n$. Os controles com \emph{prior}
+sem opiniões e XGBoost direto seguem o mesmo desenho e
+somam outras 1.142 simulações. A carteira de pesos iguais
+é avaliada no cenário de ativos comuns, acrescentando
+uma simulação para cada um dos 551 grupos de ações.
+
+O calendário de rebalanceamento é o mesmo para todas
+as configurações em cada cenário. A frequência mensal permite
+atualizar as carteiras com as informações disponíveis a
+cada mês, com menos ocasiões de negociação do que em um
+rebalanceamento diário. O sinal de alocação é calculado
+no fechamento do primeiro pregão de cada mês, e a nova
+alocação é executada no fechamento do pregão seguinte.
+
+Até a primeira compra de ações, o dinheiro fica em caixa
+e rende à taxa livre de risco adotada na simulação. Nos
+rebalanceamentos seguintes, calcula-se primeiro o valor
+da carteira existente com os preços de fechamento do
+dia. Em seguida, as compras e vendas são feitas a esses
+mesmos preços. A nova carteira começa a render a partir
+do pregão seguinte.
+
+Entre rebalanceamentos, a quantidade de ações de cada
+empresa permanece a mesma. A participação de cada ação
+no valor da carteira, porém, muda com os preços. Por
+exemplo, se uma ação sobe enquanto as demais mantêm
+seus preços, ela passa a representar uma parcela maior
+da carteira.
+
+\subsection{Custos e evolução do patrimônio}
+
+O custo de negociação é calculado multiplicando o
+patrimônio antes da operação pelo turnover e pela
+taxa de 0,1\%. O turnover considera as mudanças
+nos valores investidos em cada ação e no caixa.
+
+Sejam $C_t^{-}$ o patrimônio imediatamente antes
+da negociação, $H_{i,t}^{-}$ o valor de cada posição
+existente e $B_t^{-}$ o caixa disponível. Para os
+pesos-alvo $w_{i,t}$, o turnover é
+\begin{equation}
+\mathrm{TO}_t
+=
+\frac{
+\displaystyle
+\sum_i
+\left|
+w_{i,t}C_t^{+}-H_{i,t}^{-}
+\right|
++
+|B_t^{-}|
+}{
+2C_t^{-}
+},
+\label{eq:turnover_cap4}
+\end{equation}
+em que $C_t^{+}$ é o patrimônio após o pagamento
+dos custos:
+\begin{equation}
+C_t^{+}
+=
+C_t^{-}
+\left(
+1-0,001\,\mathrm{TO}_t
+\right).
+\label{eq:custo_autofinanciado}
+\end{equation}
+
+As duas expressões são resolvidas conjuntamente,
+pois o custo reduz o valor disponível para formar
+as novas posições. Esse procedimento incorpora
+a movimentação efetiva e o financiamento dos custos
+pelo próprio patrimônio.
+
+O retorno líquido diário e o retorno acumulado são
+calculados por
+\begin{equation}
+R_t^{p}
+=
+\frac{C_t}{C_{t-1}}-1,
+\qquad
+R_{\mathrm{acum}}
+=
+\frac{C_T}{C_0}-1.
+\label{eq:ret_acumulado_cap4}
+\end{equation}
+
+O cenário sem custos mantém os pesos-alvo e o
+calendário de operações, retirando apenas a cobrança
+financeira. Não há nova otimização nesse cenário.
+A simulação não inclui liquidação terminal das
+posições.
+
+\subsection{Configurações de comparação}
+
+A ~\ref{tab:configuracoes_alocacao} apresenta as
+configurações avaliadas na simulação financeira.
+
+\begin{table}[H]
+    \centering
+    \caption{Configurações de alocação avaliadas.}
+    \label{tab:configuracoes_alocacao}
+    {\footnotesize
+    \renewcommand{\arraystretch}{1.25}
+    \setlength{\tabcolsep}{5pt}
+    \begin{tabular}{@{}p{0.22\linewidth}p{0.74\linewidth}@{}}
+        \hline
+        \textbf{Configuração} &
+        \textbf{Retorno esperado ou regra de alocação}
+        \tabularnewline
+        \hline
+
+        BL híbrido &
+        \raggedright Retorno atualizado a partir do \emph{prior},
+        da previsão do XGBoost e do sentimento das manchetes.
+        \tabularnewline
+
+        Markowitz &
+        \raggedright Média dos retornos simples dos últimos
+        126 pregões, menos a taxa livre de risco diária.
+        \tabularnewline
+
+        \emph{Prior} sem opiniões &
+        \raggedright Retorno de equilíbrio $\pi_t$ usado
+        diretamente na otimização.
+        \tabularnewline
+
+        XGBoost direto &
+        \raggedright Previsão do XGBoost dividida pelo horizonte,
+        menos a taxa livre de risco diária.
+        \tabularnewline
+
+        Pesos iguais ($1/n$) &
+        \raggedright Em cada rebalanceamento, cada ação recebe
+        $1/n$ do capital.
+        \tabularnewline
+
+        \hline
+    \end{tabular}}
+    \par\smallskip
+    Fonte: Elaborado pelo autor
+\end{table}
+
+As quatro configurações que calculam os pesos por
+otimização utilizam a mesma matriz de covariância,
+o mesmo coeficiente de aversão ao risco e as mesmas
+restrições. A carteira de pesos iguais usa os mesmos
+grupos de ações, o mesmo calendário mensal e a mesma
+regra de custos. Como seus pesos são definidos diretamente
+por $w_i=1/n$, ela serve de referência para avaliar o
+efeito da otimização dos pesos em carteiras com as mesmas
+ações. A referência de renda fixa corresponde à
+capitalização da taxa constante de 15\% ao ano.
+\newpage
+A ~\ref{tab:parametros_vigentes_cap4}
+reúne as principais condições da simulação.
+
+\begin{table}[H]
+\centering
+\caption{Parâmetros da simulação financeira consolidada.}
+\label{tab:parametros_vigentes_cap4}
+{\footnotesize
+\renewcommand{\arraystretch}{0.9}
+\begin{tabular}{p{0.55\linewidth}p{0.32\linewidth}}
+\hline
+Parâmetro & Valor \\ \hline
+Capital inicial & R\$ 100.000 \\
+Quantidade de ações & De 1 a 20 \\
+Janela de estimação & 126 pregões \\
+Aversão ao risco & 3 \\
+Regularização da covariância & $10^{-7}$ \\
+Pesos de equilíbrio do prior & Iguais entre as vinte ações \\
+Peso quantitativo, $\alpha$ & 0,386251 \\
+Escala do prior, $\tau$ & 0,0147235 \\
+Gate de notícias & 3 manchetes \\
+Histórico de erros maturados & Últimas 18 observações \\
+Mínimo de erros maturados & 9 observações \\
+Piso por ação & 0,1\% \\
+Teto por ação & $\max(34,1677\%;1/n)$ \\
+Rebalanceamento & Mensal \\
+Execução & Fechamento seguinte ao sinal \\
+Custo de negociação & 0,1\% sobre o turnover \\
+Referência livre de risco & 15\% ao ano, constante \\
+\hline
+\end{tabular}}
+\par
+Fonte: Elaborado pelo autor
+\end{table}
+
+\section{Métricas de Avaliação}
+\label{sec:metricas_experimentais}
+
+\subsection{Desempenho das previsões quantitativas}
+\label{sec:desempenho_das_previsoes_quantitativas}
+
+A acurácia direcional, ou \emph{hit ratio} (HR),
+mede a proporção de previsões cujo sinal coincide
+com o retorno realizado:
+\begin{equation}
+\mathrm{HR}
+=
+\frac{1}{J}
+\sum_{j=1}^{J}
+\mathbf{1}
+\left\{
+\operatorname{sgn}(\widehat{y}_j)
+=
+\operatorname{sgn}(y_j)
+\right\}.
+\label{eq:hr_cap4}
+\end{equation}
+
+A comparação inclui a acurácia majoritária,
+correspondente à frequência da classe de retorno
+mais comum entre positiva, nula e negativa.
+Essa referência indica o acerto obtido ao prever
+sempre a mesma classe.
+
+O erro absoluto médio e a raiz do erro quadrático
+médio são definidos por
+\begin{equation}
+\mathrm{MAE}
+=
+\frac{1}{J}
+\sum_{j=1}^{J}
+|\widehat{y}_j-y_j|,
+\label{eq:mae_cap4}
+\end{equation}
+\begin{equation}
+\mathrm{RMSE}
+=
+\sqrt{
+\frac{1}{J}
+\sum_{j=1}^{J}
+(\widehat{y}_j-y_j)^2
+}.
+\label{eq:rmse_cap4}
+\end{equation}
+
+O coeficiente de determinação é
+\begin{equation}
+R^2
+=
+1-
+\frac{
+\sum_{j=1}^{J}(y_j-\widehat{y}_j)^2
+}{
+\sum_{j=1}^{J}(y_j-\bar{y})^2
+},
+\label{eq:r2_cap4}
+\end{equation}
+em que $\bar{y}$ é a média dos retornos realizados
+na amostra avaliada.
+
+As métricas são calculadas por ativo e horizonte.
+Os resumos entre ações utilizam médias simples
+dos indicadores individuais. Quando todas as
+observações são reunidas antes do cálculo,
+o resultado é identificado como agregado.
+
+A avaliação de erros em 2025 considera somente
+previsões com retorno-alvo disponível até o
+encerramento do período. Assim, cada ação possui
+245, 240 ou 229 pares de previsão e realização,
+respectivamente, para os horizontes de 5, 10
+e 21 pregões. A simulação financeira utiliza
+também previsões disponíveis para decisão cujo
+resultado completo ainda não era conhecido
+ao final do ano.
+
+\subsection{Avaliação da classificação de sentimento}
+
+A classificação textual é comparada com uma
+referência estabelecida por um único avaliador
+humano em uma amostra aleatória simples de
+300 manchetes selecionadas aleatoriamente.
+A definição dos rótulos conta com apoio de IA
+na discussão de casos ambíguos.
+
+São calculadas a concordância total, a precisão,
+a revocação e o F1 de cada classe. Para uma
+classe $c$, essas medidas são
+\begin{equation}
+\mathrm{Precisao}_c
+=
+\frac{\mathrm{VP}_c}
+{\mathrm{VP}_c+\mathrm{FP}_c},
+\qquad
+\mathrm{Revocacao}_c
+=
+\frac{\mathrm{VP}_c}
+{\mathrm{VP}_c+\mathrm{FN}_c},
+\label{eq:precisao_revocacao}
+\end{equation}
+\begin{equation}
+\mathrm{F1}_c
+=
+\frac{
+2\,\mathrm{Precisao}_c\,\mathrm{Revocacao}_c
+}{
+\mathrm{Precisao}_c+\mathrm{Revocacao}_c
+},
+\label{eq:f1_sentimento}
+\end{equation}
+em que VP, FP e FN representam verdadeiros
+positivos, falsos positivos e falsos negativos
+da classe considerada.
+
+O macro-F1 corresponde à média dos valores de F1
+das três classes. O kappa de Cohen desconta
+a concordância esperada pelas frequências
+das classificações:
+\begin{equation}
+\kappa
+=
+\frac{p_o-p_e}{1-p_e},
+\label{eq:kappa_sentimento}
+\end{equation}
+em que $p_o$ é a concordância observada e $p_e$
+é a concordância esperada pelas frequências
+marginais.
+
+Os rótulos humanos são utilizados na avaliação
+da classificação e não substituem os rótulos
+das notícias utilizados na simulação financeira.
+
+\subsection{Avaliação preditiva das camadas intermediárias}
+
+A análise complementar das camadas utiliza
+as previsões e os sinais da execução de referência
+registrada para essa finalidade, apresentada
+separadamente da rodada financeira consolidada
+com o modelo conjunto.
+
+São comparados XGBoost, Q completo, Q sem polaridade
+textual, BL com XGBoost, BL sem polaridade,
+BL completo e prior sem views. Nos controles
+sem polaridade, o sentimento é fixado em zero,
+preservando a cobertura, os pesos quantitativos,
+a confiança, o gate e a covariância. No BL com
+XGBoost, a opinião recebe apenas a previsão
+quantitativa, mantendo a matriz de incerteza
+da referência.
+
+O alvo principal é o retorno excedente diário
+equivalente:
+\begin{equation}
+z_{i,t}^{(h)}
+=
+\frac{1}{h}
+\ln\left(
+\frac{P_{i,t+h}}{P_{i,t}}
+\right)
+-
+r_{f,d}.
+\label{eq:alvo_diario_camadas}
+\end{equation}
+
+A avaliação utiliza 228 pares ativo-data com
+resultado disponível no horizonte selecionado.
+Também é realizada uma avaliação contra o
+retorno simples excedente do pregão seguinte:
+\begin{equation}
+z_{i,t}^{(1)}
+=
+\frac{P_{i,t+1}}{P_{i,t}}
+-1-r_{f,d},
+\label{eq:alvo_pregao_seguinte}
+\end{equation}
+com os 240 pares das decisões mensais.
+
+Na avaliação do pregão seguinte, as previsões
+logarítmicas de XGBoost e Q são convertidas
+para retornos simples por exponenciação,
+com o ajuste da referência livre de risco.
+Prior e posterior mantêm sua escala aritmética
+diária excedente.
+
+Além de HR, MAE, RMSE e $R^2$, utiliza-se
+a acurácia balanceada:
+\begin{equation}
+\mathrm{BA}
+=
+\frac{1}{K}
+\sum_{c=1}^{K}
+\frac{
+\text{acertos na classe }c
+}{
+\text{observacoes da classe }c
+},
+\label{eq:acuracia_balanceada}
+\end{equation}
+em que $K$ é a quantidade de classes de sinal
+presentes na amostra.
+
+As diferenças entre configurações são calculadas
+sobre as mesmas observações. A redução relativa
+do erro quadrático ao passar da configuração
+$A$ para $B$ é
+\begin{equation}
+\mathrm{ReducaoMSE}_{A\rightarrow B}
+=
+100\left(
+1-\frac{\mathrm{MSE}_B}{\mathrm{MSE}_A}
+\right).
+\label{eq:reducao_mse_camadas}
+\end{equation}
+
+Valores positivos indicam redução do erro.
+As diferenças de HR são apresentadas em pontos
+percentuais. Os erros diários equivalentes
+são expressos em pontos-base, sendo
+100 pontos-base iguais a um ponto percentual.
+
+\subsection{Desempenho financeiro e risco}
+
+O retorno acumulado é acompanhado pela
+volatilidade anualizada dos retornos líquidos:
+\begin{equation}
+\sigma_{\mathrm{anual}}
+=
+s(R^p)\sqrt{252},
+\label{eq:volatilidade_anual}
+\end{equation}
+em que $s(R^p)$ é o desvio-padrão amostral
+dos retornos diários da carteira.
+
+O índice de Sharpe utiliza o retorno excedente
+à referência livre de risco:
+\begin{equation}
+\mathrm{Sharpe}
+=
+\frac{
+\overline{R^p-r_{f,d}}
+}{
+s(R^p-r_{f,d})
+}
+\sqrt{252}.
+\label{eq:sharpe_cap4}
+\end{equation}
+
+O drawdown representa a queda do patrimônio
+em relação ao maior valor anteriormente atingido:
+\begin{equation}
+\mathrm{DD}_t
+=
+\frac{
+C_t
+}{
+\max_{0\leq u\leq t}C_u
+}
+-1,
+\qquad
+\mathrm{MDD}
+=
+\min_t\mathrm{DD}_t.
+\label{eq:drawdown_cap4}
+\end{equation}
+
+A avaliação também registra o turnover acumulado,
+os custos pagos e a diferença entre os retornos
+com e sem custos.
+
+\subsection{Comparação entre grupos de ações}
+
+No cenário de ativos comuns, os resultados
+são resumidos por mediana e percentis para
+cada quantidade de ações. Cada indicador
+é calculado separadamente entre os grupos
+avaliados.
+
+A diferença de retorno entre os modelos
+é calculada primeiro em cada grupo:
+\begin{equation}
+\Delta_j
+=
+R_j^{\mathrm{BL}}
+-
+R_j^{\mathrm{MV}}.
+\label{eq:diferenca_grupo}
+\end{equation}
+
+Em seguida, apresenta-se a mediana dessas
+diferenças, denominada $\Delta$ mediano.
+Também é calculado o percentual de grupos
+em que o retorno do BL supera estritamente
+o de Markowitz. Os empates não são contabilizados
+como vitórias.
+
+A carteira de pesos iguais é comparada ao BL híbrido
+e a Markowitz grupo a grupo, com base no retorno
+líquido. Para cada comparação, calcula-se a mediana
+das diferenças de retorno e a proporção de grupos
+em que cada estratégia obteve o maior retorno.
+A análise também considera separadamente os grupos
+com três a vinte ações, pois, com uma ou duas ações,
+as restrições impõem os mesmos pesos no cenário
+de ativos comuns.
+
+Na seleção própria, são apresentados diretamente
+os indicadores da simulação de cada configuração
+e quantidade de ações, pois existe uma carteira
+dinâmica por combinação avaliada.

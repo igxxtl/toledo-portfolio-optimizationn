@@ -1,0 +1,157 @@
+\chapter{CONCLUSÃO}
+\label{cap:conclusao}
+
+Este trabalho desenvolveu e avaliou uma abordagem de alocação
+de ações brasileiras que integra previsões do XGBoost e
+sentimento de manchetes ao modelo Black--Litterman.
+A avaliação contemplou as etapas de previsão, formação
+das opiniões e distribuição dos pesos, além do desempenho
+financeiro das carteiras.
+
+\section{Síntese do Trabalho e Atendimento dos Objetivos}
+\label{sec:conclusao_sintese}
+
+O objetivo de implementar uma abordagem híbrida de otimização
+de portfólios foi atendido. O sistema reúne dados históricos
+de mercado, atributos quantitativos e notícias, transformando
+essas informações em expectativas de retorno e decisões
+simuladas de investimento. O registro das previsões, das
+opiniões e das operações permitiu acompanhar o funcionamento
+das etapas e verificar seus resultados.
+
+Na configuração consolidada, o componente quantitativo
+utilizou modelos de regressão XGBoost treinados com dados
+das vinte ações em conjunto, para horizontes de cinco,
+dez e vinte e um pregões. O horizonte de cada ação foi
+definido pela acurácia direcional em 2024, considerando
+apenas resultados conhecidos antes de 2025. As previsões
+foram produzidas pelo procedimento \emph{walk-forward}.
+
+O componente textual classificou as manchetes em positivas,
+negativas ou neutras. Esses sinais foram combinados às
+previsões quantitativas para formar as opiniões de retorno,
+cuja influência no Black--Litterman foi regulada pela
+cobertura de notícias e pela confiança estimada. Na
+configuração avaliada, o mínimo de três manchetes elegíveis
+habilitou a opinião híbrida.
+
+A avaliação financeira considerou carteiras de uma a vinte
+ações em dois cenários: grupos de ações comuns aos modelos
+e seleção própria por estratégia. Foram realizadas 1.142
+simulações na comparação entre Black--Litterman e Markowitz,
+além de 1.142 simulações com as referências de prior sem
+views e XGBoost direto. As operações incorporaram custos
+de negociação e execução no fechamento seguinte ao sinal.
+
+\section{Principais Conclusões e Contribuições}
+\label{sec:conclusao_contribuicoes}
+
+Com vinte ativos, o Black--Litterman híbrido apresentou
+retorno líquido de 27,79\%, frente a 19,10\% de Markowitz
+e 14,87\% da referência livre de risco no período.
+O Sharpe foi de 0,70 para o híbrido e 0,29 para Markowitz,
+enquanto a queda máxima do patrimônio foi de 8,46\%
+e 12,78\%, respectivamente. Nessa configuração, o híbrido
+apresentou maior retorno e menor risco realizado que
+Markowitz.
+
+Entretanto, o prior sem views obteve retorno de 28,21\%,
+Sharpe de 0,74 e menor custo de negociação. Portanto,
+a inclusão das opiniões quantitativas e textuais não
+melhorou esses indicadores em relação ao prior na
+carteira de vinte ativos. Esse resultado evidencia a
+importância das expectativas de equilíbrio na configuração
+analisada.
+
+Nos grupos de ações comuns, o retorno mediano do
+Black--Litterman superou o de Markowitz para todas as
+quantidades de ativos a partir de três. Com uma ação,
+os resultados coincidiram e com duas, o teto de 50\%
+por ativo impôs pesos iguais. A comparação mostrou,
+assim, que os limites de concentração também influenciam
+as diferenças entre os modelos.
+
+Na seleção própria, o Black--Litterman apresentou maior
+retorno em dezenove das vinte quantidades de ações
+avaliadas. A exceção foi a carteira com uma única ação,
+que perdeu 10,37\%. A separação entre os dois cenários
+permitiu distinguir o desempenho da distribuição dos
+pesos daquele associado à escolha dos ativos.
+
+A avaliação intermediária mostrou limitações nas previsões
+quantitativas. A acurácia direcional média entre as ações
+foi de 56,52\%, mas dezenove dos vinte ativos apresentaram
+$R^2$ negativo. Esses resultados indicam que o acerto
+de direção não foi acompanhado de precisão consistente
+na estimativa da magnitude dos retornos.
+
+Na classificação de sentimento, a concordância com a
+referência humana definida com apoio de IA foi de 73\%.
+A principal dificuldade foi reconhecer manchetes neutras,
+cuja revocação alcançou 41,03\%. A comparação identificou
+diferenças nos critérios de atribuição de polaridade,
+especialmente positiva.
+
+Na avaliação preditiva complementar, a inclusão da
+polaridade textual aumentou o erro quadrático de Q,
+mas reduziu o erro do posterior BL. A atualização pelo
+prior e pela covariância modificou, portanto, o efeito
+do sinal textual sobre as expectativas. Já na avaliação
+do pregão seguinte ao sinal, as previsões apresentaram
+capacidade limitada de antecipar a direção dos retornos.
+
+A cobertura de notícias também restringiu a participação
+direta das opiniões: apenas seis dos 240 pares ativo-data
+atingiram o mínimo de três manchetes, distribuídos em
+três rebalanceamentos mensais. Esse resultado ajuda a
+explicar a relevância do prior e destaca a relação entre
+a janela de coleta das notícias e a frequência de decisão.
+
+A principal contribuição do trabalho é a implementação
+de um fluxo verificável que conecta previsão quantitativa,
+classificação textual, controle de confiança e alocação.
+A avaliação por etapas permitiu identificar que a vantagem
+financeira sobre Markowitz coexistiu com limitações
+preditivas e com desempenho próximo ao prior sem views.
+A comparação entre grupos comuns e seleção própria
+também permitiu examinar separadamente os efeitos da
+composição e da distribuição dos pesos.
+
+\section{Trabalhos Futuros}
+\label{sec:conclusao_trabalhos_futuros}
+
+Trabalhos futuros podem avaliar os resultados em outros
+períodos e condições de mercado, utilizando validação
+temporal para selecionar horizontes, atributos, parâmetros
+de confiança e quantidade de ações.
+
+A simulação de carteiras utilizou o XGBoost como único
+estimador quantitativo de retornos. Em trabalhos futuros,
+outros estimadores poderão ser avaliados com os mesmos
+ativos, horizontes e períodos, mantendo fixas as regras
+de alocação. Isso permitirá verificar se a escolha do
+estimador afeta a qualidade das previsões e o desempenho
+das carteiras.
+
+Outra extensão é ampliar as comparações entre versões
+do Black--Litterman com prior, previsões quantitativas,
+sentimento e combinação completa, mantendo as mesmas
+condições de execução para examinar a contribuição de
+cada componente.
+
+No componente textual, podem ser utilizadas janelas de
+notícias mais amplas, ponderadas pelo tempo desde a publicação,
+e o conteúdo integral das reportagens. A classificação
+também pode ser avaliada em novas amostras por diferentes
+avaliadores humanos, com critérios previamente definidos.
+
+A confiança das opiniões pode ser calibrada pelo erro
+das previsões, pela qualidade da classificação textual
+e pela cobertura de notícias. Também podem ser comparados
+rebalanceamentos diários, semanais e mensais.
+
+Na dimensão operacional, o \emph{paper trading} permitiria
+acompanhar o sistema em atualização contínua. A simulação
+pode incorporar spread, impacto de mercado, tributação
+e liquidação das posições, além de dados históricos
+de composição do universo e de capitalização.
