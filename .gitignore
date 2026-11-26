@@ -40,3 +40,6 @@ Thumbs.db
 # checkpoints/
 # modelo_7h_vwap/
 # *.zip
+
+# Caches gerados por scripts
+cache_matplotlib/
