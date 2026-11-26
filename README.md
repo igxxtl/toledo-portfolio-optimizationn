@@ -2,7 +2,7 @@
 
 Pipeline de pesquisa para **otimização de portfólio na B3** combinando views quantitativas (XGBoost), sentimento de manchetes e o modelo **Black-Litterman**.
 
-Fonte de verdade dos parâmetros: [`intel/Blacklitterman/config.py`](intel/Blacklitterman/config.py), gravada a partir de [`outputs/optimize/melhorias_bl_wf_best.json`](intel/Blacklitterman/outputs/optimize/melhorias_bl_wf_best.json) (walk-forward, **k\* = 5**, escolhido na validação 2024). Não usar os defaults antigos (universo de 5 ativos, α = 0,50, τ = 0,025, teto 35%).
+**Estado atual:** a rodada oficial do TCC é a simulação do XGBoost conjunto em [`analise_resultados/simulacao_pool/`](analise_resultados/simulacao_pool/), executada pelo motor de [`intel/Blacklitterman/simular_dois_cenarios.py`](intel/Blacklitterman/simular_dois_cenarios.py) (gate de 3 manchetes com hard prior, prior equiponderado, janela de 126 pregões e horizontes escolhidos na validação de 2024). Para metodologia, resultados e ressalvas, comece pelo [guia técnico](docs/GUIA_TECNICO.md). Os testes posteriores estão no [catálogo dos experimentos](docs/CATALOGO_EXPERIMENTOS.md).
 
 ```
 tickers_data + dados_diarios + notícias (2023–2025)
@@ -50,6 +50,11 @@ toledo-portfolio-optimizationn/
 ├── dados_diarios/                 # OHLCV diário + features vs IBOV
 ├── tickers_data/                  # barras horárias 60 min (só PI_incerteza.py)
 ├── criacao_modelo_xgb/            # artefatos XGB (entrada Q do BL)
+├── analise_resultados/            # simulação oficial, diagnósticos e capítulo de resultados
+├── experimentos/                  # testes de 20 a 25/11/2026 (ver docs/CATALOGO_EXPERIMENTOS.md)
+├── benchmarks/                    # benchmark temporal de modelos de previsão
+├── docs/                          # guia técnico e catálogo dos experimentos
+├── tcc/                           # fonte LaTeX e PDF do TCC
 └── intel/
     ├── model_training/            # download → features → treino XGB
     ├── data_acquisition/          # RSS → limpeza → sentimento GPT
@@ -115,7 +120,7 @@ cd intel/model_training
 python pipeline.py              # download + features + treino
 ```
 
-Horizontes competindo: **5, 10 e 21** dias. O vencedor por ticker é o maior `dir_acc` OOF (regressor vs classificador).
+Horizontes competindo: **5, 10 e 21** dias. Na rodada oficial, o horizonte da carteira é escolhido por ação pela acurácia direcional na validação de 2024, só com desfechos conhecidos antes de 2025.
 
 ### 3. Notícias (quando for regenerar sentimento)
 
@@ -146,6 +151,16 @@ python otimizar_parametros.py
 python melhorias_bl_wf.py
 python sensibilidade_universo.py
 python sensibilidade_tamanho_universo.py
+```
+
+Rodada oficial (na raiz do repositório):
+
+```bash
+python -m intel.Blacklitterman.simular_dois_cenarios --repeticoes 30
+python -m intel.model_training.exportar_pool_simulacao
+python -m intel.Blacklitterman.simular_pool_vs_atual
+python -m analise_resultados.resumir_simulacao_pool
+python -m analise_resultados.verificar_simulacao_pool
 ```
 
 ---
@@ -185,17 +200,17 @@ flowchart TD
     BL --> EVAL["backtest / score / baselines / k*"]
 ```
 
-Gate de cobertura (`NEWS_COUNT_MIN = 5`):
+Gate de cobertura (`NEWS_COUNT_MIN = 3`):
 
 \[
-c = \min(1,\ n / 5)
+c = \min(1,\ n / 3)
 \]
 
 \[
 Q_h = [\alpha + (1-\alpha)(1-c)]\, r_{\mathrm{pred}} + (1-\alpha)\, c \cdot (\mathrm{sentimento} \times \mathrm{escala})
 \]
 
-Sem notícias, \(Q = r_{\mathrm{pred}}\). Com cobertura cheia, mistura clássica. Depois \(Q = Q_h / h\) para alinhar ao prior diário. Com `HARD_PRIOR_WHEN_LOW_NEWS = True`, se \(n < 5\) a view é ignorada (confiança vai a epsilon) e o dia fica no prior de mercado. Abaixo do mínimo, Ω também é multiplicado por `NEWS_OMEGA_BOOST` ≈ 3,80.
+Sem notícias, \(Q = r_{\mathrm{pred}}\). Com cobertura cheia, mistura clássica. Depois \(Q = Q_h / h\) para alinhar ao prior diário. Com `HARD_PRIOR_WHEN_LOW_NEWS = True`, se \(n < 3\) a view é ignorada (confiança vai a epsilon) e o dia fica no prior de mercado. Abaixo do mínimo, Ω também é multiplicado por `NEWS_OMEGA_BOOST` ≈ 3,80.
 
 α vigente ≈ **0,386** (mais peso no sentimento quando a cobertura está cheia; na prática o gate anula o sentimento na maior parte dos dias).
 
@@ -207,19 +222,20 @@ Posterior:
 
 Pesos: long-only, teto ≈ **34,2%** por ativo, rebalance **monthly** (também gera daily e weekly). Prior rolling com no mínimo **80** observações estritamente anteriores ao dia. τ ≈ **0,0147**.
 
-### Resultado vigente (k\* = 5, teste 2025)
+### Resultado oficial (teste 2025, 20 ações)
 
-Escolha de k na validação 2024; teste congelado. Subconjunto top-5, parâmetros do `config.py`:
+Fonte: [`analise_resultados/simulacao_pool/RELATORIO.txt`](analise_resultados/simulacao_pool/RELATORIO.txt). Rebalanceamento mensal, R$ 100 mil, 10 bps, 250 pregões.
 
-| Estratégia | Sharpe | Retorno | Capital final | Max drawdown |
-|------------|--------|---------|---------------|--------------|
-| BL no top-5 | 0,85 | +15,2% | R$ 114,0 mil | −9,6% |
-| Híbrido (rank XGB + Markowitz) | 0,40 | +7,4% | R$ 106,0 mil | −11,3% |
-| Markowitz clássico no mesmo top-5 | −0,12 | −2,5% | R$ 96,2 mil | −18,4% |
+| Configuração | Retorno líquido | Sharpe | Queda máxima |
+|--------------|----------------:|-------:|-------------:|
+| Black-Litterman com pool XGB | 27,79% | 0,70 | −8,46% |
+| Prior sem views | 28,21% | 0,74 | −8,46% |
+| Markowitz | 19,10% | 0,29 | −12,78% |
+| XGBoost direto (pool) | 3,27% | −0,58 | −20,13% |
 
-Arquivos: `outputs/optimize/melhorias_bl_wf_best.json`, `outputs/score/melhorias_bl_wf_kstar_metricas.csv`, `outputs/figures/melhorias_bl_wf_kstar_capital.png`.
+A Selic no período acumulou 14,87%, e a carteira de pesos iguais ficou em cerca de 28,21%. O BL supera o Markowitz, mas fica ligeiramente abaixo do prior: com o gate de 3 manchetes, só 6 de 240 pares ativo-data recebem view. Sem o hard prior o BL cai para −11,57% ([teste](experimentos/hard_prior_2026_11_20/RELATORIO.txt)), e com a base de notícias ampliada cai para 9,18% ([teste](experimentos/backtest_base_noticias_2026_11_25/)). O gate e o destaque do pool foram escolhidos depois de observar 2025, então a avaliação é retrospectiva.
 
-`outputs/optimize/optimization_summary.json` e `outputs/markowitz/bl_vs_markowitz_resumo.csv` são de um Optuna anterior (teto ≈ 42,7%, mínimo de 2 notícias, hard prior desligado). Não misturar com os números acima.
+Os números de rodadas anteriores (k\* = 5, gate 5, rodada de 3/11/2026) em outros READMEs e em `TCC_MATERIAL_REPOSITORIO.md` são históricos.
 
 ---
 
@@ -231,7 +247,7 @@ Arquivos: `outputs/optimize/melhorias_bl_wf_best.json`, `outputs/score/melhorias
 | `ALPHA_Q` | 0,386251 | Peso do XGB vs sentimento (cobertura cheia) |
 | `TAU` | 0,0147235 | Escala da incerteza do prior |
 | `MAX_WEIGHT_PER_ASSET` | 0,341677 | Teto long-only |
-| `NEWS_COUNT_MIN` | 5 | Gate de manchetes |
+| `NEWS_COUNT_MIN` | 3 | Gate de manchetes |
 | `NEWS_OMEGA_BOOST` | 3,79598 | Multiplica Ω se n < mínimo |
 | `HARD_PRIOR_WHEN_LOW_NEWS` | True | View ignorada se n < mínimo |
 | `ROLLING_MIN_OBS` | 80 | Mínimo do prior rolling |
@@ -261,4 +277,7 @@ Arquivos: `outputs/optimize/melhorias_bl_wf_best.json`, `outputs/score/melhorias
 - [`intel/Blacklitterman/README.md`](intel/Blacklitterman/README.md) — módulo BL
 - [`intel/Blacklitterman/COMO_FUNCIONA.md`](intel/Blacklitterman/COMO_FUNCIONA.md) — fluxo narrativo
 - [`intel/Blacklitterman/outputs/README.md`](intel/Blacklitterman/outputs/README.md) — mapa das saídas
-- [`TCC_MATERIAL_REPOSITORIO.md`](TCC_MATERIAL_REPOSITORIO.md) — metodologia completa
+- [`docs/GUIA_TECNICO.md`](docs/GUIA_TECNICO.md) — metodologia, resultados e ressalvas da versão consolidada
+- [`docs/CATALOGO_EXPERIMENTOS.md`](docs/CATALOGO_EXPERIMENTOS.md) — índice dos experimentos
+- [`intel/Blacklitterman/DOIS_CENARIOS.md`](intel/Blacklitterman/DOIS_CENARIOS.md) — motor da rodada oficial
+- [`TCC_MATERIAL_REPOSITORIO.md`](TCC_MATERIAL_REPOSITORIO.md) — metodologia histórica
