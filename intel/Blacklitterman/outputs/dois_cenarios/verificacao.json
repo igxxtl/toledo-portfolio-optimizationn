@@ -1,0 +1,18 @@
+{
+  "status": "passed",
+  "news_gate": 3,
+  "simulations": 1142,
+  "daily_rows": 285500,
+  "n_days": 250,
+  "checks": [
+    "input hashes match the completed run",
+    "80 scenario/n/model groups; finite metrics; unique simulation IDs",
+    "common n=1 and n=2 identical across models",
+    "n=20 identical across scenarios for each model",
+    "exactly n positive target holdings, budget, floor and cap respected",
+    "same assets in paired scenario; signal strictly before execution",
+    "matured outcomes and news dates precede allowed cutoff",
+    "same dates count, returns compound to reported capital",
+    "Selic benchmark aligned; valid SVG"
+  ]
+}
